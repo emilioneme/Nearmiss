@@ -9,7 +9,10 @@ public class DroneMovement : MonoBehaviour
     [SerializeField]
     public float flyingSpeedMultiplier = 1.0f;
     float flyingSpeed = 1.5f;
+
+    [SerializeField]
     float flyingSpeedMax = 2;
+    [SerializeField]
     float flyingSpeedMin = 1;
 
     [Header("Acceleration")]
@@ -34,6 +37,10 @@ public class DroneMovement : MonoBehaviour
     private void Awake()
     {
         cc = GetComponent<CharacterController>();
+    }
+    private void Start()
+    {
+        flyingSpeed = (flyingSpeedMax + flyingSpeedMin)/2;
     }
 
     public void FlyForward() 

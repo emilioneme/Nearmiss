@@ -82,6 +82,14 @@ public class DroneMovement : MonoBehaviour
     {
         float loookAmount = x * lookSpeed * lookSpeedMultiplier * Time.deltaTime;
         transform.rotation = transform.rotation * Quaternion.Euler(0, loookAmount, 0);
+        if(x > 0) 
+        {
+            RotateRight();
+        }
+        else if (x < 0)
+        {
+            RotateLeft();
+        }
     }
 
 }

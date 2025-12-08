@@ -73044,10 +73044,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flyingSpeedMultiplier: 20
-  flyingSpeedMax: 2
-  flyingSpeedMin: 1
-  deaccelerationSpeedMultiplier: 1
-  accelerationSpeedMultiplier: 1
+  minFlyingSpeed: 0.1
+  maxFlyingSpeed: 1
   rotationSpeedMultiplier: 100
   lookSpeedMultiplier: 100
 --- !u!96 &2949186804031599038

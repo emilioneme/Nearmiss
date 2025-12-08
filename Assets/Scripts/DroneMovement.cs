@@ -7,27 +7,18 @@ public class DroneMovement : MonoBehaviour
     CharacterController cc;
     [Header("Flight Forward")]
     [SerializeField]
-    public float flyingSpeedMultiplier = 1.0f;
-    float flyingSpeed = 1.5f;
+    public float flyingSpeedMultiplier = 100f;
+    
 
-    [SerializeField]
-    float flyingSpeedMax = 2;
-    [SerializeField]
-    float flyingSpeedMin = 1;
-
-    [Header("Acceleration")]
-    [SerializeField]
-    float deaccelerationSpeedMultiplier = 1f;
-    [SerializeField]
-    float accelerationSpeedMultiplier = 1f;
-
-    float deaccelerationSpeed = .1f;
-    float accelerationSpeed = .1f;
-
-    [Header("Rotation")]
+    [Header("Turning Rotation")]
     [SerializeField]
     public float rotationSpeedMultiplier = 1.0f;
     float rotationSpeed = 1;
+
+    [SerializeField]
+    float yRotationInputThershhold = 3;
+    [SerializeField]
+    float xRotationInputThershhold = 3;
 
     [Header("Look")]
     [SerializeField]
@@ -38,58 +29,43 @@ public class DroneMovement : MonoBehaviour
     {
         cc = GetComponent<CharacterController>();
     }
-    private void Start()
-    {
-        flyingSpeed = (flyingSpeedMax + flyingSpeedMin)/2;
-    }
-
     public void FlyForward() 
     {
-        float currentSpeed = flyingSpeed * flyingSpeedMultiplier * Time.deltaTime;
+        float currentSpeed =  flyingSpeedMultiplier * Time.deltaTime;
         cc.Move(transform.forward * currentSpeed);
-        //rb.MovePosition(rb.position + transform.forward * currentSpeed);
+        //Debug.Log(cc.velocity.sqrMagnitude);
     }
-    public void Deaccelerate() 
-    {
-        float deaccelerateAmount = deaccelerationSpeed * deaccelerationSpeedMultiplier * Time.deltaTime;
-        flyingSpeed = Mathf.Clamp(
-            flyingSpeed - deaccelerateAmount,
-            flyingSpeedMin,
-            flyingSpeedMax);
-    }
-    public void Accelerate()
-    {
-        float accelerateAmount = accelerationSpeed * accelerationSpeedMultiplier * Time.deltaTime;
-        flyingSpeed = Mathf.Clamp(flyingSpeed + accelerateAmount,
-            flyingSpeedMin, flyingSpeedMax);
-    }
-    public void RotateLeft()
+
+
+    #region Rotate
+    //int diection -1 for left, 1 for right
+    public void Rotate(int direction)
     {
         float rotationAmount = rotationSpeed * rotationSpeedMultiplier * Time.deltaTime;
-        transform.rotation = transform.rotation * Quaternion.Euler(0, 0, rotationAmount);
+        transform.rotation = transform.rotation * Quaternion.Euler(0, 0, rotationAmount * direction);
     }
-    public void RotateRight()
-    {
-        float rotationAmount = rotationSpeed * rotationSpeedMultiplier * Time.deltaTime;
-        transform.rotation = transform.rotation * Quaternion.Euler(0, 0, -rotationAmount);
-    }
+    #endregion
+
+    #region Look
     public void LookUpDown(float y)
     {
-        float loookAmount = -y * lookSpeed * lookSpeedMultiplier * Time.deltaTime;
+        float yClamped = Mathf.Clamp(y, -yRotationInputThershhold, yRotationInputThershhold);
+        float loookAmount = -yClamped * lookSpeed * lookSpeedMultiplier * Time.deltaTime;
         transform.rotation = transform.rotation * Quaternion.Euler(loookAmount, 0, 0);
     }
     public void LookLeftRight(float x)
     {
-        float loookAmount = x * lookSpeed * lookSpeedMultiplier * Time.deltaTime;
+        float xClamped = Mathf.Clamp(x, -xRotationInputThershhold, xRotationInputThershhold);
+        float loookAmount = xClamped * lookSpeed * lookSpeedMultiplier * Time.deltaTime;
         transform.rotation = transform.rotation * Quaternion.Euler(0, loookAmount, 0);
         if(x > 0) 
         {
-            RotateRight();
+            Rotate(-1);
         }
         else if (x < 0)
         {
-            RotateLeft();
+            Rotate(1);
         }
     }
-
+    #endregion
 }

@@ -21,13 +21,9 @@ public class PlayerManager : MonoBehaviour
         droneMovement.FlyForward(); 
 
         if (playerInput.RotateLeftPressed)
-            droneMovement.RotateLeft();
+            droneMovement.Rotate(1);
         if (playerInput.RotateRightPressed)
-            droneMovement.RotateRight();
-        if (playerInput.AcceleratePressed)
-            droneMovement.Accelerate();
-        if (playerInput.DeacceleratePressed)
-            droneMovement.Deaccelerate();
+            droneMovement.Rotate(-1);
         if (playerInput.LoookInput.y != 0)
             droneMovement.LookUpDown(playerInput.LoookInput.y);
         if (playerInput.LoookInput.x != 0)

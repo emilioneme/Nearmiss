@@ -7,8 +7,12 @@ public class DroneMovement : MonoBehaviour
     CharacterController cc;
     [Header("Flight Forward")]
     [SerializeField]
-    public float flyingSpeedMultiplier = 100f;
-    
+    public float flyingSpeed = 20f;
+
+    [Header("NoseDive")]
+    [SerializeField]
+    public float noseDiveSpeedMultiplier = 20f;
+
 
     [Header("Turning Rotation")]
     [SerializeField]
@@ -29,11 +33,25 @@ public class DroneMovement : MonoBehaviour
     {
         cc = GetComponent<CharacterController>();
     }
-    public void FlyForward() 
+
+
+    public void Fly() 
     {
-        float currentSpeed =  flyingSpeedMultiplier * Time.deltaTime;
-        cc.Move(transform.forward * currentSpeed);
-        //Debug.Log(cc.velocity.sqrMagnitude);
+        cc.Move(transform.forward * (CurrentSpeed() * Time.deltaTime));
+    }
+
+    public float CurrentSpeed() 
+    {
+        float baseSpeed = flyingSpeed;
+        float noseDiveSpeed = NoseDiveSpeed() * noseDiveSpeedMultiplier;
+        return baseSpeed + noseDiveSpeed;
+    }
+
+    public float NoseDiveSpeed() 
+    {
+        float noseDiveAngle = -.5f;
+        float distanceFromAngle = Mathf.Abs(noseDiveAngle - transform.rotation.x);
+        return distanceFromAngle;
     }
 
 

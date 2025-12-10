@@ -16,6 +16,10 @@ public class PlayerManager : MonoBehaviour
     bool rotating = true;
     [SerializeField]
     bool looking = true;
+    [SerializeField]
+    bool lookRotation = true;
+    [SerializeField]
+    bool gravity = true;
 
     [Header("UI")]
     [SerializeField] TMP_Text SpeedText;
@@ -31,6 +35,9 @@ public class PlayerManager : MonoBehaviour
     {
         if(flying)
             droneMovement.Fly();
+
+        if (gravity)
+            droneMovement.ApplyGravity();
 
         if (rotating) 
         {
@@ -48,8 +55,9 @@ public class PlayerManager : MonoBehaviour
                 droneMovement.LookLeftRight(playerInput.LoookInput.x);
         }
         
+        droneMovement.lookRotation = lookRotation;
 
 
-        SpeedText.text = (int)droneMovement.CurrentSpeed() + "m/s";
+        SpeedText.text = ((int)droneMovement.CurrentForwardSpeed()).ToString();
     }
 }

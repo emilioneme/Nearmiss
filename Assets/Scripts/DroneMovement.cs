@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEditor.FilePathAttribute;
 
 [RequireComponent(typeof(CharacterController))]
 public class DroneMovement : MonoBehaviour
@@ -11,7 +12,14 @@ public class DroneMovement : MonoBehaviour
 
     [Header("NoseDive")]
     [SerializeField]
-    public float noseDiveSpeedMultiplier = 20f;
+    public float xRotationMultiplier = 20f;
+
+    [SerializeField][Range(1, 50)]
+    public float noseDiveSpeedMultiplier = 10f;
+
+    [Header("Gravity")]
+    [SerializeField]
+    float gravityForceMultiplier = 1.9f;
 
 
     [Header("Turning Rotation")]
@@ -28,33 +36,58 @@ public class DroneMovement : MonoBehaviour
     [SerializeField]
     public float lookSpeedMultiplier = 1.0f;
     float lookSpeed = 1;
+    [HideInInspector]
+    public bool lookRotation;
 
     private void Awake()
     {
         cc = GetComponent<CharacterController>();
     }
 
-
+    #region FlyForward
     public void Fly() 
     {
-        cc.Move(transform.forward * (CurrentSpeed() * Time.deltaTime));
+        cc.Move(transform.forward * (CurrentForwardSpeed() * Time.deltaTime));
     }
 
-    public float CurrentSpeed() 
+    public float CurrentForwardSpeed() 
     {
         float baseSpeed = flyingSpeed;
-        float noseDiveSpeed = NoseDiveSpeed() * noseDiveSpeedMultiplier;
+        float noseDiveSpeed = NoseDiveSpeed() * xRotationMultiplier;
         return baseSpeed + noseDiveSpeed;
     }
 
     public float NoseDiveSpeed() 
     {
         float dist = Mathf.Abs(transform.rotation.eulerAngles.x + 90);
-
         float normalizedDist = Mathf.InverseLerp(0, 360, dist > 360 ? dist - 360 : dist);
-
         return normalizedDist; 
     }
+    #endregion
+
+
+    #region Gravity
+    public void ApplyGravity()
+    {
+        cc.Move(Vector3.down * (CurrentDownSpeed() * Time.deltaTime));
+    }
+
+    public float CurrentDownSpeed()
+    {
+        float downSpeed = gravityForceSpeed() * gravityForceMultiplier;
+        return downSpeed;
+    }
+
+    public float gravityForceSpeed() 
+    {
+        float rotation = transform.rotation.eulerAngles.z;
+        rotation  = rotation > 180? rotation - 180 : rotation;
+
+        float distFromFlat = Mathf.Abs(rotation - 90);
+        float nomralizedDist = Mathf.InverseLerp(0, 90, distFromFlat);
+        return 1 - nomralizedDist;
+    }
+    #endregion
 
 
     #region Rotate
@@ -78,14 +111,10 @@ public class DroneMovement : MonoBehaviour
         float xClamped = Mathf.Clamp(x, -xRotationInputThershhold, xRotationInputThershhold);
         float loookAmount = xClamped * lookSpeed * lookSpeedMultiplier * Time.deltaTime;
         transform.rotation = transform.rotation * Quaternion.Euler(0, loookAmount, 0);
-        if(x > 0) 
-        {
+        if(x > 0 && lookRotation) 
             Rotate(-1);
-        }
-        else if (x < 0)
-        {
+        else if (x < 0 && lookRotation)
             Rotate(1);
-        }
     }
     #endregion
 }

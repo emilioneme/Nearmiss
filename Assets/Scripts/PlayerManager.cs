@@ -21,6 +21,17 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     bool gravity = true;
 
+    [Header("SPeedometer")]
+    [SerializeField] SpeedometerMode speedometerMode = 0;
+    [SerializeField] int speedometerMultiplier = 10;
+    [SerializeField] int maxStringLength = 4;
+
+    enum SpeedometerMode 
+    {
+        VELOCITY,
+        FORWARDSPEED,
+    }
+
     [Header("UI")]
     [SerializeField] TMP_Text SpeedText;
 
@@ -49,7 +60,7 @@ public class PlayerManager : MonoBehaviour
 
         if(looking) 
         {
-            if (playerInput.LoookInput.y != 0)
+            if (playerInput.LoookInput.y != 0) 
                 droneMovement.LookUpDown(playerInput.LoookInput.y);
             if (playerInput.LoookInput.x != 0)
                 droneMovement.LookLeftRight(playerInput.LoookInput.x);
@@ -57,7 +68,15 @@ public class PlayerManager : MonoBehaviour
         
         droneMovement.lookRotation = lookRotation;
 
+        string text = "";
+        if (speedometerMode == SpeedometerMode.VELOCITY) 
+            text = (droneMovement.GetVelocity() * speedometerMultiplier).ToString();
+            
+        if (speedometerMode == SpeedometerMode.FORWARDSPEED) 
+            text = (droneMovement.CurrentForwardSpeed() * speedometerMultiplier).ToString();
 
-        SpeedText.text = ((int)droneMovement.CurrentForwardSpeed()).ToString();
+        if (text.Length > maxStringLength)
+            text = text.Substring(0, maxStringLength);
+        SpeedText.text = text;
     }
 }

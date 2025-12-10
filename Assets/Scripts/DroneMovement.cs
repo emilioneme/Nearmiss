@@ -7,18 +7,15 @@ public class DroneMovement : MonoBehaviour
 {
     CharacterController cc;
     [Header("Flight Forward")]
-    [SerializeField]
+    [SerializeField][Range(1, 50)]
     public float flyingSpeed = 20f;
 
     [Header("NoseDive")]
-    [SerializeField]
-    public float xRotationMultiplier = 20f;
-
     [SerializeField][Range(1, 50)]
     public float noseDiveSpeedMultiplier = 10f;
 
     [Header("Gravity")]
-    [SerializeField]
+    [SerializeField][Range(1, 50)]
     float gravityForceMultiplier = 1.9f;
 
 
@@ -53,18 +50,16 @@ public class DroneMovement : MonoBehaviour
     public float CurrentForwardSpeed() 
     {
         float baseSpeed = flyingSpeed;
-        float noseDiveSpeed = NoseDiveSpeed() * xRotationMultiplier;
+        float noseDiveSpeed = NoseDiveSpeed() * noseDiveSpeedMultiplier;
         return baseSpeed + noseDiveSpeed;
     }
 
     public float NoseDiveSpeed() 
     {
-        float dist = Mathf.Abs(transform.rotation.eulerAngles.x + 90);
-        float normalizedDist = Mathf.InverseLerp(0, 360, dist > 360 ? dist - 360 : dist);
-        return normalizedDist; 
+        float dot = Vector3.Dot(transform.forward, Vector3.down);
+        return Mathf.InverseLerp(-1f, 1f, dot);
     }
     #endregion
-
 
     #region Gravity
     public void ApplyGravity()
@@ -74,21 +69,18 @@ public class DroneMovement : MonoBehaviour
 
     public float CurrentDownSpeed()
     {
-        float downSpeed = gravityForceSpeed() * gravityForceMultiplier;
+        float downSpeed = GravityForceSpeed() * gravityForceMultiplier;
         return downSpeed;
     }
 
-    public float gravityForceSpeed() 
+    public float GravityForceSpeed() 
     {
-        float rotation = transform.rotation.eulerAngles.z;
-        rotation  = rotation > 180? rotation - 180 : rotation;
-
-        float distFromFlat = Mathf.Abs(rotation - 90);
-        float nomralizedDist = Mathf.InverseLerp(0, 90, distFromFlat);
-        return 1 - nomralizedDist;
+        float dot = Vector3.Dot(transform.up,Vector3.up);
+        float flatAmount = Mathf.Abs(dot);
+        float gravityFactor = 1f - flatAmount;  // 0 when flat, 1 when vertical
+        return gravityFactor;
     }
     #endregion
-
 
     #region Rotate
     //int diection -1 for left, 1 for right
@@ -117,4 +109,9 @@ public class DroneMovement : MonoBehaviour
             Rotate(1);
     }
     #endregion
+
+    public float GetVelocity() 
+    {
+        return cc.velocity.sqrMagnitude;
+    }
 }

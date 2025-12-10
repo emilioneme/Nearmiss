@@ -49,9 +49,11 @@ public class DroneMovement : MonoBehaviour
 
     public float NoseDiveSpeed() 
     {
-        float noseDiveAngle = -.5f;
-        float distanceFromAngle = Mathf.Abs(noseDiveAngle - transform.rotation.x);
-        return distanceFromAngle;
+        float dist = Mathf.Abs(transform.rotation.eulerAngles.x + 90);
+
+        float normalizedDist = Mathf.InverseLerp(0, 360, dist > 360 ? dist - 360 : dist);
+
+        return normalizedDist; 
     }
 
 

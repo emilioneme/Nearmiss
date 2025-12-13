@@ -6,37 +6,48 @@ public class PlayerInput : MonoBehaviour
 {
     [SerializeField]
     private InputAction lookAction;
+
     [SerializeField]
     private InputAction rotateLeftAction;
     [SerializeField]
     private InputAction rotateRightAction;
+
     [SerializeField]
-    private InputAction deaccelerateAction;
+    private InputAction dashLeftAction;
     [SerializeField]
-    private InputAction accelerateAction;
+    private InputAction dashRightAction;
+
 
     public Vector2 LoookInput { get; private set; }
     public bool RotateLeftPressed { get; private set; }
     public bool RotateRightPressed { get; private set; }
+
+    public bool DashLeftPressed { get; private set; }
+    public bool DashRightPressed { get; private set; }
+
     public bool DeacceleratePressed { get; private set; }
     public bool AcceleratePressed { get; private set; }
 
     private void OnEnable()
     {
         lookAction.Enable();
+
         rotateLeftAction.Enable();
         rotateRightAction.Enable();
-        deaccelerateAction.Enable();
-        accelerateAction.Enable();
+
+        dashLeftAction.Enable();
+        dashRightAction.Enable();
     }
 
     private void OnDisable()
     {
         lookAction.Disable();
+
         rotateLeftAction.Disable();
         rotateRightAction.Disable();
-        deaccelerateAction.Disable();
-        accelerateAction.Disable();
+
+        dashLeftAction.Disable();
+        dashRightAction.Disable();
     }
 
 
@@ -49,9 +60,11 @@ public class PlayerInput : MonoBehaviour
     private void Update()
     {
         LoookInput = lookAction.ReadValue<Vector2>();
-        DeacceleratePressed = deaccelerateAction.IsPressed();
-        AcceleratePressed = accelerateAction.IsPressed();
+
         RotateLeftPressed = rotateLeftAction.IsPressed();
         RotateRightPressed = rotateRightAction.IsPressed();
+
+        DashLeftPressed = dashLeftAction.IsPressed();
+        DashRightPressed = dashRightAction.IsPressed();
     }
 }

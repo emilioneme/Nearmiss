@@ -3,9 +3,16 @@ using UnityEngine.InputSystem;
 using static UnityEditor.FilePathAttribute;
 
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(Rigidbody))]
 public class DroneMovement : MonoBehaviour
 {
-    CharacterController cc;
+
+    [HideInInspector]
+    public CharacterController cc;
+    [HideInInspector]
+    public Rigidbody rb;
+
+
     [Header("Flight Forward")]
     [SerializeField][Range(1, 50)]
     public float flyingSpeed = 20f;
@@ -33,17 +40,25 @@ public class DroneMovement : MonoBehaviour
     [SerializeField]
     public float lookSpeedMultiplier = 1.0f;
     float lookSpeed = 1;
-    [HideInInspector]
-    public bool lookRotation;
+
+    [Header("Settings Toggles")]
+    [SerializeField]
+    public bool flying;
+    public bool rotating, looking, lookRotation, gravity, dashing = true;
 
     private void Awake()
     {
         cc = GetComponent<CharacterController>();
+        rb = GetComponent<Rigidbody>();
+        rb.isKinematic = false;
     }
+
 
     #region FlyForward
     public void Fly() 
     {
+        if (!flying)
+            return;
         cc.Move(transform.forward * (CurrentForwardSpeed() * Time.deltaTime));
     }
 
@@ -64,6 +79,8 @@ public class DroneMovement : MonoBehaviour
     #region Gravity
     public void ApplyGravity()
     {
+        if(!gravity)
+            return;
         cc.Move(Vector3.down * (CurrentDownSpeed() * Time.deltaTime));
     }
 
@@ -83,23 +100,40 @@ public class DroneMovement : MonoBehaviour
     #endregion
 
     #region Rotate
-    //int diection -1 for left, 1 for right
     public void Rotate(int direction)
     {
         float rotationAmount = rotationSpeed * rotationSpeedMultiplier * Time.deltaTime;
         transform.rotation = transform.rotation * Quaternion.Euler(0, 0, rotationAmount * direction);
+    }
+
+    public void RotateLeft()
+    {
+        if (!rotating)
+            return;
+        Rotate(1);
+    }
+
+    public void RotateRight()
+    {
+        if (!rotating)
+            return;
+        Rotate(-1);
     }
     #endregion
 
     #region Look
     public void LookUpDown(float y)
     {
+        if (!looking)
+            return;
         float yClamped = Mathf.Clamp(y, -yRotationInputThershhold, yRotationInputThershhold);
         float loookAmount = -yClamped * lookSpeed * lookSpeedMultiplier * Time.deltaTime;
         transform.rotation = transform.rotation * Quaternion.Euler(loookAmount, 0, 0);
     }
     public void LookLeftRight(float x)
     {
+        if (!looking)
+            return;
         float xClamped = Mathf.Clamp(x, -xRotationInputThershhold, xRotationInputThershhold);
         float loookAmount = xClamped * lookSpeed * lookSpeedMultiplier * Time.deltaTime;
         transform.rotation = transform.rotation * Quaternion.Euler(0, loookAmount, 0);
@@ -110,8 +144,52 @@ public class DroneMovement : MonoBehaviour
     }
     #endregion
 
+    #region Dash
+    public void DashLeft() 
+    {
+        if(dashing) 
+            return;
+    }
+
+    public void DashRight()
+    {
+        if (dashing)
+            return;
+    }
+
+    #endregion
     public float GetVelocity() 
     {
         return cc.velocity.sqrMagnitude;
+    }
+
+    private void OnEnable()
+    {
+        cc.enabled = true;
+    }
+
+    private void OnDisable()
+    {
+        cc.enabled = false;
+    }
+
+    public void DisableAllMovement() 
+    {
+        rotating = false;
+        rotating = false;
+        looking = false;
+        lookRotation = false;
+        gravity = false;
+        dashing = false;
+    }
+
+    public void EnableAllMovement()
+    {
+        rotating = true;
+        rotating = true;
+        looking = true;
+        lookRotation = true;
+        gravity = true;
+        dashing = true;
     }
 }

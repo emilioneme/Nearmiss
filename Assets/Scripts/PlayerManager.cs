@@ -19,24 +19,6 @@ public class PlayerManager : MonoBehaviour
     public PlayerUIManager playerUIManager;
     #endregion
 
-    [Header("TotalPoints")]
-    public float totalPoints;
-
-    [Header("VelocityPoints")]
-    [SerializeField]
-    float velocityMultiplier = 1f;
-
-    [Header("DistancePoints")]
-    [SerializeField]
-    float distanceMultiplier = 1f;
-
-
-    [Header("Collider Transfrom")]
-    [SerializeField]
-    Transform NearmissCollider;
-    float nearmissColliderRadious = 2.5f;
-
-
     private void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -44,13 +26,6 @@ public class PlayerManager : MonoBehaviour
         playerUIManager = GetComponent<PlayerUIManager>();
     }
 
-    private void OnEnable()
-    {
-        if (NearmissCollider != null)
-            nearmissColliderRadious = NearmissCollider.localScale.x / 2;
-    }
-
-    // Update is called once per frame
     private void Update()
     {
         droneMovement.Fly();
@@ -91,16 +66,5 @@ public class PlayerManager : MonoBehaviour
         droneMovement.flying = true;
         droneMovement.gravity = true;
     }
-
-    public void PlayerNearmiss(Collider collider)
-    {
-        Debug.Log("Player Nearmissed: " + collider.gameObject.name);
-        totalPoints += VelocityPoints();
-    }
-
-    float VelocityPoints() 
-    {
-        return droneMovement.GetTotalSpeed() + velocityMultiplier;
-    }
-
+    
 }

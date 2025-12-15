@@ -51,8 +51,8 @@ public class PlayerUIManager : MonoBehaviour
 
     void HandlePointsText() 
     {
-        string text = ClampText(playerManager.totalPoints.ToString());
-        PointsText.text = text;
+        //string text = ClampText(playerManager.totalPoints.ToString());
+        //PointsText.text = text;
     }
 
     string FilterSpeedToText(float speed) 

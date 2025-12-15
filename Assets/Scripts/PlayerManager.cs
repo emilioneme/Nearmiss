@@ -10,12 +10,31 @@ using System.Collections;
 
 public class PlayerManager : MonoBehaviour
 {
+    #region Managers
     [HideInInspector]
     public PlayerInput playerInput;
+    [HideInInspector]
     public DroneMovement droneMovement;
+    [HideInInspector]
     public PlayerUIManager playerUIManager;
+    #endregion
 
-    public UnityEvent<ControllerColliderHit> PlayerCollided;
+    [Header("TotalPoints")]
+    public float totalPoints;
+
+    [Header("VelocityPoints")]
+    [SerializeField]
+    float velocityMultiplier = 1f;
+
+    [Header("DistancePoints")]
+    [SerializeField]
+    float distanceMultiplier = 1f;
+
+
+    [Header("Collider Transfrom")]
+    [SerializeField]
+    Transform NearmissCollider;
+    float nearmissColliderRadious = 2.5f;
 
 
     private void Awake()
@@ -23,6 +42,12 @@ public class PlayerManager : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         droneMovement = GetComponent<DroneMovement>();
         playerUIManager = GetComponent<PlayerUIManager>();
+    }
+
+    private void OnEnable()
+    {
+        if (NearmissCollider != null)
+            nearmissColliderRadious = NearmissCollider.localScale.x / 2;
     }
 
     // Update is called once per frame
@@ -49,12 +74,6 @@ public class PlayerManager : MonoBehaviour
 
     }
 
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (hit.gameObject.CompareTag("RigidObstacle"))
-            PlayerCollided.Invoke(hit);
-    }
-
     public void PlayerCrashed(ControllerColliderHit hit)
     {
         playerUIManager.TriggerCrashUI(hit);
@@ -71,8 +90,17 @@ public class PlayerManager : MonoBehaviour
         yield return new WaitForSeconds(2f);
         droneMovement.flying = true;
         droneMovement.gravity = true;
+    }
 
+    public void PlayerNearmiss(Collider collider)
+    {
+        Debug.Log("Player Nearmissed: " + collider.gameObject.name);
+        totalPoints += VelocityPoints();
+    }
 
+    float VelocityPoints() 
+    {
+        return droneMovement.GetTotalSpeed() + velocityMultiplier;
     }
 
 }

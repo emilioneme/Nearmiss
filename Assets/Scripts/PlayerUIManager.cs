@@ -15,10 +15,12 @@ public class PlayerUIManager : MonoBehaviour
     {
         VELOCITY,
         FORWARDSPEED,
+        TOTALSPEED,
     }
 
     [Header("UI")]
     [SerializeField] TMP_Text SpeedText;
+    [SerializeField] TMP_Text PointsText;
 
     private void Awake()
     {
@@ -27,22 +29,45 @@ public class PlayerUIManager : MonoBehaviour
 
     private void Update()
     {
+        HandleSpeedometerText();
+
+        HandlePointsText();
+    }
+
+    void HandleSpeedometerText() 
+    {
         string text = "";
+
         if (speedometerMode == SpeedometerMode.VELOCITY)
-            text = (playerManager.droneMovement.GetVelocity() * speedometerMultiplier).ToString();
+            text = FilterSpeedToText(playerManager.droneMovement.GetVelocity());
 
         if (speedometerMode == SpeedometerMode.FORWARDSPEED)
-            text = (playerManager.droneMovement.CurrentForwardSpeed() * speedometerMultiplier).ToString();
+            text = FilterSpeedToText(playerManager.droneMovement.CurrentForwardSpeed());
+        if (speedometerMode == SpeedometerMode.TOTALSPEED)
+            text = FilterSpeedToText(playerManager.droneMovement.GetTotalSpeed());
 
+        SpeedText.text = ClampText(text);
+    }
+
+    void HandlePointsText() 
+    {
+        string text = ClampText(playerManager.totalPoints.ToString());
+        PointsText.text = text;
+    }
+
+    string FilterSpeedToText(float speed) 
+    {
+        return (speed * speedometerMultiplier).ToString();
+    }
+
+    string ClampText(string text) 
+    {
         if (text.Length > maxStringLength)
             text = text.Substring(0, maxStringLength);
 
         if (text[text.Length - 1] == '.')
-               text = text.Substring(0, text.Length - 1);
-        
-
-
-        SpeedText.text = text;
+            text = text.Substring(0, text.Length - 1);
+        return text;
     }
 
     public void TriggerCrashUI(ControllerColliderHit hit) 

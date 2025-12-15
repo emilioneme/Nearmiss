@@ -3,19 +3,18 @@ using UnityEngine.InputSystem;
 using static UnityEditor.FilePathAttribute;
 
 [RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(Rigidbody))]
 public class DroneMovement : MonoBehaviour
 {
 
     [HideInInspector]
     public CharacterController cc;
-    [HideInInspector]
-    public Rigidbody rb;
 
 
     [Header("Flight Forward")]
     [SerializeField][Range(1, 50)]
     public float flyingSpeed = 20f;
+    [SerializeField][Range(1, 50)]
+    public float totalFlyingSpeedMultiplier = 1f;
 
     [Header("NoseDive")]
     [SerializeField][Range(1, 50)]
@@ -49,8 +48,6 @@ public class DroneMovement : MonoBehaviour
     private void Awake()
     {
         cc = GetComponent<CharacterController>();
-        rb = GetComponent<Rigidbody>();
-        rb.isKinematic = false;
     }
 
 
@@ -66,7 +63,7 @@ public class DroneMovement : MonoBehaviour
     {
         float baseSpeed = flyingSpeed;
         float noseDiveSpeed = NoseDiveSpeed() * noseDiveSpeedMultiplier;
-        return baseSpeed + noseDiveSpeed;
+        return (baseSpeed + noseDiveSpeed) * totalFlyingSpeedMultiplier;
     }
 
     public float NoseDiveSpeed() 
@@ -158,6 +155,11 @@ public class DroneMovement : MonoBehaviour
     }
 
     #endregion
+
+    public float GetTotalSpeed() 
+    {
+        return CurrentDownSpeed() + CurrentForwardSpeed();
+    }
     public float GetVelocity() 
     {
         return cc.velocity.sqrMagnitude;
@@ -172,24 +174,5 @@ public class DroneMovement : MonoBehaviour
     {
         cc.enabled = false;
     }
-
-    public void DisableAllMovement() 
-    {
-        rotating = false;
-        rotating = false;
-        looking = false;
-        lookRotation = false;
-        gravity = false;
-        dashing = false;
-    }
-
-    public void EnableAllMovement()
-    {
-        rotating = true;
-        rotating = true;
-        looking = true;
-        lookRotation = true;
-        gravity = true;
-        dashing = true;
-    }
+  
 }

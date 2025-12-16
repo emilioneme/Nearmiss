@@ -3,15 +3,23 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     #region Singleton
-    static GameObject Instance { get; set; }
+    public static GameManager Instance { get; private set; }
 
     private void Awake()
     {
-        if(Instance != null)
-               Destroy(gameObject);
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
 
-        Instance = this.gameObject;
+        Instance = this;
     }
     #endregion
+
+    [SerializeField]
+    public float highScore = 0;
+
+
 
 }

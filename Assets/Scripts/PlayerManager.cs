@@ -7,11 +7,23 @@ using System.Collections;
 [RequireComponent(typeof(PlayerInput))]
 [RequireComponent(typeof(DroneMovement))]
 [RequireComponent(typeof(PlayerUIManager))]
-[RequireComponent(typeof(PointsManager))]
-[RequireComponent(typeof(NearmissHandler))]
-[RequireComponent(typeof(CollisionHandler))]
+
 public class PlayerManager : MonoBehaviour
 {
+    [SerializeField]
+    public float totalPoints;
+
+    [SerializeField]
+    public float maxDistancePoints = 10;
+    [SerializeField]
+    public float speedPointsMultiplier = .5f;
+
+    [SerializeField]
+    UnityEvent HighScoreChange;
+
+    [SerializeField]
+    UnityEvent PointsChange;
+
     #region Managers
     [HideInInspector]
     public PlayerInput playerInput;
@@ -19,9 +31,6 @@ public class PlayerManager : MonoBehaviour
     public DroneMovement droneMovement;
     [HideInInspector]
     public PlayerUIManager playerUIManager;
-    [HideInInspector]
-    public PointsManager pointsManager;
-  
     #endregion
 
     private void Awake()
@@ -29,7 +38,6 @@ public class PlayerManager : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         droneMovement = GetComponent<DroneMovement>();
         playerUIManager = GetComponent<PlayerUIManager>();
-        pointsManager = GetComponent<PointsManager>();
     }
 
     private void Update()
@@ -55,7 +63,23 @@ public class PlayerManager : MonoBehaviour
 
     }
 
+    public void PlayerNearmissed(float normalizedDistance) //This is a float from 0 to 1
+    {
+        totalPoints += DistancePoints(normalizedDistance) * SpeedPointsMultiplier();
+        PointsChange.Invoke();
+    }
 
+    float DistancePoints(float normalizedDistance) 
+    {
+        return (normalizedDistance * maxDistancePoints);
+    }
+
+    float SpeedPointsMultiplier() 
+    {
+        return droneMovement.GetTotalSpeed() * speedPointsMultiplier;
+    }
+
+    #region CrashHandler
     public void PlayerCrashed(ControllerColliderHit hit)
     {
         playerUIManager.TriggerCrashUI(hit);
@@ -69,9 +93,22 @@ public class PlayerManager : MonoBehaviour
         droneMovement.enabled = true;
         droneMovement.flying = false;
         droneMovement.gravity = false;
+        ResetPoints();
         yield return new WaitForSeconds(2f);
         droneMovement.flying = true;
         droneMovement.gravity = true;
     }
-    
+
+    void ResetPoints() 
+    {
+        if(GameManager.Instance.highScore < totalPoints) 
+        {
+            GameManager.Instance.highScore = totalPoints;
+            HighScoreChange.Invoke();
+        }
+        totalPoints = 0;
+        PointsChange.Invoke();
+    }
+    #endregion
+
 }

@@ -22,7 +22,7 @@ public class DroneMovement : MonoBehaviour
 
     [Header("Gravity")]
     [SerializeField][Range(1, 50)]
-    float gravityForceMultiplier = 1.9f;
+    public float gravityForceMultiplier = 1.9f;
 
 
     [Header("Turning Rotation")]

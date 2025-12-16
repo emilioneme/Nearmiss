@@ -35,10 +35,8 @@ public class NearmissHandler : MonoBehaviour
 
 
     [SerializeField]
-    UnityEvent<float> Nearmissed;
+    UnityEvent<float> NearmissEvent;
 
-    [SerializeField]
-    UnityEvent NearmissSuccesfull;
 
     private void Update()
     {
@@ -56,10 +54,9 @@ public class NearmissHandler : MonoBehaviour
             ShootRayCircle(transform.position, Vector3.up, Vector3.right);
         }
 
-        if (hitAtleastOnce) 
-            Nearmissed.Invoke(minDistance / rayDistance); //1 = as close as it can get, 0, is not close at all
+        if (hitAtleastOnce)
+            NearmissEvent.Invoke(minDistance / rayDistance); //1 = as close as it can get, 0, is not close at all
     }
-
 
 
     #region RayShooting

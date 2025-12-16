@@ -20,7 +20,9 @@ public class PlayerUIManager : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] TMP_Text SpeedText;
+    [SerializeField] TMP_Text AirResistanceText;
     [SerializeField] TMP_Text PointsText;
+    [SerializeField] TMP_Text HighScoreText;
 
     private void Awake()
     {
@@ -30,48 +32,56 @@ public class PlayerUIManager : MonoBehaviour
     private void Update()
     {
         HandleSpeedometerText();
-
-        HandlePointsText();
     }
 
+    #region Points Text
+    public void UpdatePointsText()
+    {
+        PointsText.text = ProcessFloat(playerManager.totalPoints);
+    }
+
+    public void UpdateHighScoreText()
+    {
+        HighScoreText.text = ProcessFloat(GameManager.Instance.highScore);
+    }
+    #endregion
+
+    #region Speedotemeter
     void HandleSpeedometerText() 
     {
-        string text = "";
+        float speed = 0;
 
         if (speedometerMode == SpeedometerMode.VELOCITY)
-            text = FilterSpeedToText(playerManager.droneMovement.GetVelocity());
-
+            speed = playerManager.droneMovement.GetVelocity() * speedometerMultiplier;
         if (speedometerMode == SpeedometerMode.FORWARDSPEED)
-            text = FilterSpeedToText(playerManager.droneMovement.CurrentForwardSpeed());
+            speed = playerManager.droneMovement.CurrentForwardSpeed() * speedometerMultiplier;
         if (speedometerMode == SpeedometerMode.TOTALSPEED)
-            text = FilterSpeedToText(playerManager.droneMovement.GetTotalSpeed());
+            speed = playerManager.droneMovement.GetTotalSpeed() * speedometerMultiplier;
 
-        SpeedText.text = ClampText(text);
+        SpeedText.text = ProcessFloat(speed);
     }
+    #endregion
 
-    public void HandlePointsText() 
+    #region Text Filters
+    string ProcessFloat(float f) 
     {
-        string text = ClampText(playerManager.pointsManager.totalPoints.ToString());
-        PointsText.text = text;
+        float number = f;
+        string unit = "";
+
+        if (f >= 1_000_000_000f) { number = f / 1_000_000_000f; unit = "b"; }
+        else if (f >= 1_000_000f) { number = f / 1_000_000f; unit = "m"; }
+        else if (f >= 1_000f) { number = f / 1_000f; unit = "k"; }
+        else { return Mathf.Round(f).ToString(); }
+
+        number = Mathf.Round(number * 10f) / 10f;   // 1 decimal place
+        return number.ToString("0.#") + unit;
     }
+    #endregion
 
-    string FilterSpeedToText(float speed) 
-    {
-        return (speed * speedometerMultiplier).ToString();
-    }
-
-    string ClampText(string text) 
-    {
-        if (text.Length > maxStringLength)
-            text = text.Substring(0, maxStringLength);
-
-        if (text[text.Length - 1] == '.')
-            text = text.Substring(0, text.Length - 1);
-        return text;
-    }
-
+    #region CrashUI
     public void TriggerCrashUI(ControllerColliderHit hit) 
     {
         Debug.Log("Plyer Crashed with: " + hit.gameObject.name + "\n In position: " + hit.point);
     }
+    #endregion
 }

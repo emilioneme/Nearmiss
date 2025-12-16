@@ -7,7 +7,9 @@ using System.Collections;
 [RequireComponent(typeof(PlayerInput))]
 [RequireComponent(typeof(DroneMovement))]
 [RequireComponent(typeof(PlayerUIManager))]
-
+[RequireComponent(typeof(PointsManager))]
+[RequireComponent(typeof(NearmissHandler))]
+[RequireComponent(typeof(CollisionHandler))]
 public class PlayerManager : MonoBehaviour
 {
     #region Managers
@@ -17,6 +19,9 @@ public class PlayerManager : MonoBehaviour
     public DroneMovement droneMovement;
     [HideInInspector]
     public PlayerUIManager playerUIManager;
+    [HideInInspector]
+    public PointsManager pointsManager;
+  
     #endregion
 
     private void Awake()
@@ -24,6 +29,7 @@ public class PlayerManager : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         droneMovement = GetComponent<DroneMovement>();
         playerUIManager = GetComponent<PlayerUIManager>();
+        pointsManager = GetComponent<PointsManager>();
     }
 
     private void Update()
@@ -48,6 +54,7 @@ public class PlayerManager : MonoBehaviour
             droneMovement.Rotate(-1);
 
     }
+
 
     public void PlayerCrashed(ControllerColliderHit hit)
     {

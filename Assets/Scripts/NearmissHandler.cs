@@ -6,11 +6,15 @@ public class NearmissHandler : MonoBehaviour
 {
     [Header("Rays")]
     [SerializeField]
-    float rayDistance = 10;
+    public float rayDistance = 10;
     [SerializeField]
     int numberOfRays = 10;
 
+    [SerializeField]
+    bool cylinderShoot = false;
 
+
+    [Header("Cylinder Rays")]
     [SerializeField]
     int cylinderSteps = 4;
     [SerializeField]
@@ -26,6 +30,9 @@ public class NearmissHandler : MonoBehaviour
     [SerializeField]
     bool drawGizmos = false;
 
+    float minDistance;
+    bool hitAtleastOnce;
+
 
     [SerializeField]
     UnityEvent<float> Nearmissed;
@@ -35,63 +42,103 @@ public class NearmissHandler : MonoBehaviour
 
     private void Update()
     {
-        float minDistance = rayDistance;
-        bool hitAtleastOnce = false;
+        minDistance = rayDistance;
+        hitAtleastOnce = false;
 
+        if (cylinderShoot)
+        {
+            ShootRayCycleOnCylinder();
+        }
+        else 
+        {
+            ShootRayCircle(transform.position, Vector3.forward, Vector3.right);
+            ShootRayCircle(transform.position, Vector3.right, Vector3.forward);
+            ShootRayCircle(transform.position, Vector3.up, Vector3.right);
+        }
+
+        if (hitAtleastOnce) 
+            Nearmissed.Invoke(minDistance / rayDistance); //1 = as close as it can get, 0, is not close at all
+    }
+
+
+
+    #region RayShooting
+
+    void ShootRayCycleOnCylinder() 
+    {
         for (int c = 0; c <= cylinderSteps - 1; c++)
         {
             float height = (float)c / cylinderSteps;
             float heightStep = Mathf.Lerp(cylinderStartOffset, cylinderEndOffset, height);
             Vector3 rayOrigin = transform.position + transform.forward * heightStep;
 
-            for (int a = 0; a < numberOfRays; a++)
-            {
-                float stepSize = 360 / numberOfRays;
-                float eulerAngle = a * stepSize;
-                Vector3 direction = transform.rotation * (Quaternion.AngleAxis(eulerAngle, Vector3.forward) * Vector3.right);
-                Ray ray = new Ray(rayOrigin, direction.normalized);
-                RaycastHit hit;
-                if(Physics.Raycast(ray, out hit, rayDistance, layerMask))
-                {
-                    hitAtleastOnce = true;
-                    if(hit.distance < minDistance) 
-                    {
-                        minDistance = hit.distance;
-                    }
-                }
-            }
-        }
-
-        if(hitAtleastOnce) 
-        {
-            Nearmissed.Invoke(minDistance);
+            ShootRayCircle(rayOrigin, Vector3.forward, Vector3.right);
         }
     }
 
+    void ShootRayCircle(Vector3 rayOrigin, Vector3 onAxis, Vector3 toAxis) 
+    {
+        for (int a = 0; a <= numberOfRays; a++)
+        {
+            float stepSize = 360 / numberOfRays;
+            float eulerAngle = a * stepSize;
+            Vector3 direction = transform.rotation * (Quaternion.AngleAxis(eulerAngle, onAxis) * toAxis);
+            Ray ray = new Ray(rayOrigin, direction.normalized);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, rayDistance, layerMask))
+            {
+                hitAtleastOnce = true;
+                if (hit.distance < minDistance)
+                {
+                    minDistance = hit.distance;
+                }
+            }
+        }
+    }
+    #endregion
+
+    #region Gizmos
     private void OnDrawGizmos()
     {
         if (!drawGizmos)
             return;
 
-        Gizmos.color = Color.cyan;
+        if (cylinderShoot)
+        {
+            Gizmos.color = Color.cyan;
+            ShootRayCycleOnCylinderGizmo();
+        }
+        else
+        {
+            Gizmos.color = Color.cyan;
+            ShootRayCircleGizmo(transform.position, Vector3.forward, Vector3.right);
+            Gizmos.color = Color.blue;
+            ShootRayCircleGizmo(transform.position, Vector3.right, Vector3.forward);
+            Gizmos.color = Color.red;
+            ShootRayCircleGizmo(transform.position, Vector3.up, Vector3.right);
+        }
+    }
 
+    void ShootRayCycleOnCylinderGizmo()
+    {
         for (int c = 0; c <= cylinderSteps - 1; c++)
         {
             float height = (float)c / cylinderSteps;
             float heightStep = Mathf.Lerp(cylinderStartOffset, cylinderEndOffset, height);
             Vector3 rayOrigin = transform.position + transform.forward * heightStep;
-
-            for (int a = 0; a < numberOfRays; a++)
-            {
-                float stepSize = 360 / numberOfRays;
-                float eulerAngle = a * stepSize;
-                Vector3 direction = transform.rotation * (Quaternion.AngleAxis(eulerAngle, Vector3.forward) * Vector3.right);
-                Ray ray = new Ray(rayOrigin, direction.normalized);
-                Vector3 endPoint = rayOrigin + direction.normalized * rayDistance;
-                Gizmos.DrawLine(rayOrigin, endPoint);
-            }
+            ShootRayCircleGizmo(rayOrigin, Vector3.forward, Vector3.right);
+        }
+    } 
+    void ShootRayCircleGizmo(Vector3 rayOrigin, Vector3 onAxis, Vector3 toAxis)
+    {
+        for (int a = 0; a <= numberOfRays; a++)
+        {
+            float stepSize = 360 / numberOfRays;
+            float eulerAngle = a * stepSize;
+            Vector3 direction = transform.rotation * (Quaternion.AngleAxis(eulerAngle, onAxis) * toAxis);
+            Vector3 endPoint = rayOrigin + direction.normalized * rayDistance;
+            Gizmos.DrawLine(rayOrigin, endPoint);
         }
     }
-
-
-}   
+    #endregion
+}

@@ -50,8 +50,6 @@ public class DroneMovement : MonoBehaviour
     [SerializeField]
     public float dashDuration = .75f;
     float lastTimeDashed = 0;
-    [HideInInspector]
-    public bool isDashing;
 
     [SerializeField]
     UnityEvent<int, Vector3, float> DashStarted;
@@ -66,6 +64,7 @@ public class DroneMovement : MonoBehaviour
     {
         cc = GetComponent<CharacterController>();
     }
+
 
 
     #region FlyForward
@@ -177,33 +176,34 @@ public class DroneMovement : MonoBehaviour
         if(!CanDash()) 
             return;
         lastTimeDashed = Time.time;
-        StartCoroutine(DashCoroutine(direction, animateAxis));
+
+        Vector3 localDirection =
+            (animateAxis == Vector3.forward) ? transform.right * direction :
+            (animateAxis == Vector3.right) ? transform.forward * direction :
+            Vector3.zero;
+
+        StartCoroutine(DashCoroutine(localDirection));
         DashStarted.Invoke(direction, animateAxis, dashDuration);
     }
 
-    IEnumerator DashCoroutine(int direction, Vector3 animateAxis)
+    IEnumerator DashCoroutine(Vector3 direction)
     {
-        isDashing = true;
         float timer = 0f;
         while (timer < dashDuration)
         {
-            if (animateAxis == Vector3.forward) //side dash
-                cc.Move(transform.right * direction * dashSpeed * Time.deltaTime);
-            if (animateAxis == Vector3.right) //forwardsa
-                cc.Move(transform.forward * direction * dashSpeed * Time.deltaTime);
+            cc.Move(direction * dashSpeed * Time.deltaTime);
             timer += Time.deltaTime;
             yield return null;
         }
-        isDashing = false;
     }
 
     #endregion
 
     public float GetTotalSpeed() 
     {
-        float currentDashSpeed = isDashing ? dashSpeed : 0;
-        return CurrentDownSpeed() + CurrentForwardSpeed() + currentDashSpeed;
+        return CurrentDownSpeed() + CurrentForwardSpeed();
     }
+
     public float GetVelocity() 
     {
         return cc.velocity.magnitude;

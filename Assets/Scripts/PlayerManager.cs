@@ -84,15 +84,9 @@ public class PlayerManager : MonoBehaviour
 
     float SpeedPointsMultiplier() 
     {
-        return droneMovement.GetTotalSpeed() * speedPointsMultiplier * DashPoints();
+        return droneMovement.GetTotalSpeed() * speedPointsMultiplier;
     }
 
-    float DashPoints()
-    {
-        if(droneMovement.isDashing) 
-            return dashPointsMultiplier;
-        return 1;
-    }
     #endregion
 
     #region CrashHandler

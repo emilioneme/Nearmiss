@@ -17,6 +17,8 @@ public class PlayerManager : MonoBehaviour
     public float maxDistancePoints = 10;
     [SerializeField]
     public float speedPointsMultiplier = .5f;
+    [SerializeField]
+    public float dashPointsMultiplier = 1.3f;
 
     [SerializeField]
     UnityEvent HighScoreChange;
@@ -57,12 +59,18 @@ public class PlayerManager : MonoBehaviour
             droneMovement.LookLeftRight(playerInput.LoookInput.x);
 
         if (playerInput.DashLeftPressed)
-            droneMovement.Rotate(1);
+            droneMovement.Dash(-1, Vector3.forward);
         if (playerInput.DashRightPressed)
-            droneMovement.Rotate(-1);
+            droneMovement.Dash(1, Vector3.forward);
+
+        if (playerInput.DashBackwardPressed)
+            droneMovement.Dash(-1, Vector3.right);
+        if (playerInput.DashForwardPressed)
+            droneMovement.Dash(1, Vector3.right);
 
     }
 
+    #region NearmissHandler
     public void PlayerNearmissed(float normalizedDistance) //This is a float from 0 to 1
     {
         totalPoints += DistancePoints(normalizedDistance) * SpeedPointsMultiplier();
@@ -76,8 +84,16 @@ public class PlayerManager : MonoBehaviour
 
     float SpeedPointsMultiplier() 
     {
-        return droneMovement.GetTotalSpeed() * speedPointsMultiplier;
+        return droneMovement.GetTotalSpeed() * speedPointsMultiplier * DashPoints();
     }
+
+    float DashPoints()
+    {
+        if(droneMovement.isDashing) 
+            return dashPointsMultiplier;
+        return 1;
+    }
+    #endregion
 
     #region CrashHandler
     public void PlayerCrashed(ControllerColliderHit hit)
@@ -91,12 +107,15 @@ public class PlayerManager : MonoBehaviour
         droneMovement.enabled = false;
         transform.position = new Vector3(0, 10, 0); // spawn pints
         droneMovement.enabled = true;
-        droneMovement.flying = false;
-        droneMovement.gravity = false;
+
+        droneMovement.flyingEnabled = false;
+        droneMovement.gravityEnabled = false;
+        droneMovement.dashingEnabled = false;
         ResetPoints();
         yield return new WaitForSeconds(2f);
-        droneMovement.flying = true;
-        droneMovement.gravity = true;
+        droneMovement.flyingEnabled = true;
+        droneMovement.gravityEnabled = true;
+        droneMovement.dashingEnabled = true;
     }
 
     void ResetPoints() 

@@ -17,6 +17,12 @@ public class PlayerInput : MonoBehaviour
     [SerializeField]
     private InputAction dashRightAction;
 
+    [SerializeField]
+    private InputAction dashForwardAction;
+    [SerializeField]
+    private InputAction dashBackwardAction;
+
+
 
     public Vector2 LoookInput { get; private set; }
     public bool RotateLeftPressed { get; private set; }
@@ -25,8 +31,9 @@ public class PlayerInput : MonoBehaviour
     public bool DashLeftPressed { get; private set; }
     public bool DashRightPressed { get; private set; }
 
-    public bool DeacceleratePressed { get; private set; }
-    public bool AcceleratePressed { get; private set; }
+    public bool DashForwardPressed { get; private set; }
+    public bool DashBackwardPressed { get; private set; }
+
 
     private void OnEnable()
     {
@@ -37,6 +44,9 @@ public class PlayerInput : MonoBehaviour
 
         dashLeftAction.Enable();
         dashRightAction.Enable();
+
+        dashForwardAction.Enable();
+        dashBackwardAction.Enable();
     }
 
     private void OnDisable()
@@ -48,6 +58,9 @@ public class PlayerInput : MonoBehaviour
 
         dashLeftAction.Disable();
         dashRightAction.Disable();
+
+        dashForwardAction.Disable();
+        dashBackwardAction.Disable();
     }
 
 
@@ -66,5 +79,8 @@ public class PlayerInput : MonoBehaviour
 
         DashLeftPressed = dashLeftAction.IsPressed();
         DashRightPressed = dashRightAction.IsPressed();
+
+        DashForwardPressed = dashForwardAction.IsPressed();
+        DashBackwardPressed = dashBackwardAction.IsPressed();
     }
 }

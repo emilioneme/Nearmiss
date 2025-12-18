@@ -53,10 +53,10 @@ public class PlayerManager : MonoBehaviour
         if (playerInput.RotateRightPressed)
             droneMovement.RotateRight();
 
-        if (playerInput.LoookInput.y != 0) 
-            droneMovement.LookUpDown(playerInput.LoookInput.y);
-        if (playerInput.LoookInput.x != 0)
-            droneMovement.LookLeftRight(playerInput.LoookInput.x);
+        if (playerInput.LookInput.y != 0) 
+            droneMovement.LookUpDown(playerInput.LookInput.y);
+        if (playerInput.LookInput.x != 0)
+            droneMovement.LookLeftRight(playerInput.LookInput.x);
 
         if (playerInput.DashLeftPressed)
             droneMovement.Dash(-1, Vector3.forward);

@@ -9,7 +9,6 @@ public class PlayerUIManager : MonoBehaviour
     [Header("Speedometer")]
     [SerializeField] SpeedometerMode speedometerMode = 0;
     [SerializeField] int speedometerMultiplier = 10;
-    [SerializeField] int maxStringLength = 3;
 
     enum SpeedometerMode
     {

@@ -24,7 +24,7 @@ public class PlayerInput : MonoBehaviour
 
 
 
-    public Vector2 LoookInput { get; private set; }
+    public Vector2 LookInput { get; private set; }
     public bool RotateLeftPressed { get; private set; }
     public bool RotateRightPressed { get; private set; }
 
@@ -72,7 +72,33 @@ public class PlayerInput : MonoBehaviour
 
     private void Update()
     {
-        LoookInput = lookAction.ReadValue<Vector2>();
+        Vector2 raw = lookAction.ReadValue<Vector2>();
+        var device = lookAction.activeControl?.device;
+        if (device is Mouse)
+        {
+            // Mouse is already a "delta this frame"
+            Vector2 scaled = raw * GameManager.Instance.mouseSensitivity;
+
+            // optional clamp if you really want it
+            scaled.x = Mathf.Clamp(scaled.x, -5f, 5f);
+            scaled.y = Mathf.Clamp(scaled.y, -5f, 5f);
+
+            LookInput = scaled;
+        }
+        else // assume stick (gamepad / joystick)
+        {
+
+            // curve so small movements are fine, big movements ramp up
+            Vector2 v = new Vector2(
+                Mathf.Sign(raw.x) * Mathf.Pow(Mathf.Abs(raw.x), GameManager.Instance.stickExponent),
+                Mathf.Sign(raw.y) * Mathf.Pow(Mathf.Abs(raw.y), GameManager.Instance.stickExponent)
+            );
+
+            // convert to "delta this frame" using deg/sec * dt
+            Vector2 scaled = v * GameManager.Instance.stickSensitivity * Time.deltaTime;
+
+            LookInput = scaled;
+        }
 
         RotateLeftPressed = rotateLeftAction.IsPressed();
         RotateRightPressed = rotateRightAction.IsPressed();

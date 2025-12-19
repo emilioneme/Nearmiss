@@ -65,10 +65,14 @@ public class DroneMovement : MonoBehaviour
         cc = GetComponent<CharacterController>();
     }
 
-
+    private void Update()
+    {
+        ForwardVelocity();
+        GravityVelocity();
+    }
 
     #region FlyForward
-    public void Fly() 
+    public void ForwardVelocity() 
     {
         if (!flyingEnabled)
             return;
@@ -90,7 +94,7 @@ public class DroneMovement : MonoBehaviour
     #endregion
 
     #region Gravity
-    public void ApplyGravity()
+    public void GravityVelocity()
     {
         if(!gravityEnabled)
             return;
@@ -199,6 +203,7 @@ public class DroneMovement : MonoBehaviour
 
     #endregion
 
+    #region Oher
     public float GetTotalSpeed() 
     {
         return CurrentDownSpeed() + CurrentForwardSpeed();
@@ -218,5 +223,6 @@ public class DroneMovement : MonoBehaviour
     {
         cc.enabled = false;
     }
-  
+    #endregion
+
 }

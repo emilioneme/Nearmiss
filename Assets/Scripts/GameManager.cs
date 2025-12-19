@@ -26,6 +26,6 @@ public class GameManager : MonoBehaviour
     public float stickSensitivity = 180;
     [Range(1f, 4f)]
     public float stickExponent = 2.0f; // curve: higher = faster near edge
-
+    
 
 }

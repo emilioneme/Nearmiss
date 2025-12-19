@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEditor.Events;
 using UnityEngine.Events;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(PlayerInput))]
 [RequireComponent(typeof(DroneMovement))]
@@ -19,6 +20,9 @@ public class PlayerManager : MonoBehaviour
     public float speedPointsMultiplier = .5f;
     [SerializeField]
     public float dashPointsMultiplier = 1.3f;
+
+    [SerializeField]
+    Transform spawnTransform;
 
     [SerializeField]
     UnityEvent HighScoreChange;
@@ -44,9 +48,11 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
-        droneMovement.Fly();
-
-        droneMovement.ApplyGravity();
+        if(droneMovement.movementEnabled)
+        {
+            droneMovement.ForwardVelocity();
+            droneMovement.GravityVelocity();
+        }
 
         if (playerInput.RotateLeftPressed)
             droneMovement.RotateLeft();
@@ -99,7 +105,7 @@ public class PlayerManager : MonoBehaviour
     IEnumerator CouritineSpawn() 
     {
         droneMovement.enabled = false;
-        transform.position = new Vector3(0, 10, 0); // spawn pints
+        transform.position = spawnTransform.position;
         droneMovement.enabled = true;
 
         droneMovement.flyingEnabled = false;
@@ -110,6 +116,7 @@ public class PlayerManager : MonoBehaviour
         droneMovement.flyingEnabled = true;
         droneMovement.gravityEnabled = true;
         droneMovement.dashingEnabled = true;
+        //SceneManager.LoadScene(0);
     }
 
     void ResetPoints() 

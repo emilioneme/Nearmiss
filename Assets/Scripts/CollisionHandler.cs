@@ -7,7 +7,7 @@ public class CollisionHandler : MonoBehaviour
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (hit.gameObject.CompareTag("RigidObstacle"))
+        if (!hit.gameObject.CompareTag("Player"))
             PlayerCrashed.Invoke(hit);
     }
 

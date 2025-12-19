@@ -37,7 +37,6 @@ public class NearmissHandler : MonoBehaviour
     [SerializeField]
     UnityEvent<float> NearmissEvent;
 
-
     private void Update()
     {
         minDistance = rayDistance;
@@ -87,6 +86,7 @@ public class NearmissHandler : MonoBehaviour
                 hitAtleastOnce = true;
                 if (hit.distance < minDistance)
                 {
+                    Debug.DrawLine(rayOrigin, hit.point, Color.black);
                     minDistance = hit.distance;
                 }
             }
@@ -126,6 +126,7 @@ public class NearmissHandler : MonoBehaviour
             ShootRayCircleGizmo(rayOrigin, Vector3.forward, Vector3.right);
         }
     } 
+
     void ShootRayCircleGizmo(Vector3 rayOrigin, Vector3 onAxis, Vector3 toAxis)
     {
         for (int a = 0; a <= numberOfRays; a++)

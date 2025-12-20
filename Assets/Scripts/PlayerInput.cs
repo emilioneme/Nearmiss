@@ -7,32 +7,28 @@ public class PlayerInput : MonoBehaviour
     [SerializeField]
     private InputAction lookAction;
 
-    [SerializeField]
-    private InputAction rotateLeftAction;
-    [SerializeField]
-    private InputAction rotateRightAction;
+    [HideInInspector]
+    public Vector2 LookInput;
 
     [SerializeField]
-    private InputAction dashLeftAction;
+    public InputAction rotateLeftAction;
     [SerializeField]
-    private InputAction dashRightAction;
+    public InputAction rotateRightAction;
 
     [SerializeField]
-    private InputAction dashForwardAction;
+    public InputAction dashLeftAction;
     [SerializeField]
-    private InputAction dashBackwardAction;
+    public InputAction dashRightAction;
 
+    [SerializeField]
+    public InputAction dashUpAction;
+    [SerializeField]
+    public InputAction dashDownAction;
 
-
-    public Vector2 LookInput { get; private set; }
-    public bool RotateLeftPressed { get; private set; }
-    public bool RotateRightPressed { get; private set; }
-
-    public bool DashLeftPressed { get; private set; }
-    public bool DashRightPressed { get; private set; }
-
-    public bool DashForwardPressed { get; private set; }
-    public bool DashBackwardPressed { get; private set; }
+    [SerializeField]
+    public InputAction dashForwardAction;
+    [SerializeField]
+    public InputAction dashBackwardAction;
 
 
     private void OnEnable()
@@ -44,6 +40,8 @@ public class PlayerInput : MonoBehaviour
 
         dashLeftAction.Enable();
         dashRightAction.Enable();
+        dashUpAction.Enable();
+        dashDownAction.Enable();
 
         dashForwardAction.Enable();
         dashBackwardAction.Enable();
@@ -58,6 +56,8 @@ public class PlayerInput : MonoBehaviour
 
         dashLeftAction.Disable();
         dashRightAction.Disable();
+        dashUpAction.Disable();
+        dashDownAction.Disable();
 
         dashForwardAction.Disable();
         dashBackwardAction.Disable();
@@ -73,40 +73,13 @@ public class PlayerInput : MonoBehaviour
     private void Update()
     {
         Vector2 raw = lookAction.ReadValue<Vector2>();
-        var device = lookAction.activeControl?.device;
-        if (device is Mouse)
-        {
-            // Mouse is already a "delta this frame"
-            Vector2 scaled = raw * GameManager.Instance.mouseSensitivity;
+        Vector3 look;
+        if (lookAction.activeControl?.device is Mouse)
+            look = raw * GameManager.Instance.mouseSensitivity;
+        else
+            look = raw * GameManager.Instance.stickSensitivity;
 
-            // optional clamp if you really want it
-            scaled.x = Mathf.Clamp(scaled.x, -5f, 5f);
-            scaled.y = Mathf.Clamp(scaled.y, -5f, 5f);
-
-            LookInput = scaled;
-        }
-        else // assume stick (gamepad / joystick)
-        {
-
-            // curve so small movements are fine, big movements ramp up
-            Vector2 v = new Vector2(
-                Mathf.Sign(raw.x) * Mathf.Pow(Mathf.Abs(raw.x), GameManager.Instance.stickExponent),
-                Mathf.Sign(raw.y) * Mathf.Pow(Mathf.Abs(raw.y), GameManager.Instance.stickExponent)
-            );
-
-            // convert to "delta this frame" using deg/sec * dt
-            Vector2 scaled = v * GameManager.Instance.stickSensitivity * Time.deltaTime;
-
-            LookInput = scaled;
-        }
-
-        RotateLeftPressed = rotateLeftAction.IsPressed();
-        RotateRightPressed = rotateRightAction.IsPressed();
-
-        DashLeftPressed = dashLeftAction.IsPressed();
-        DashRightPressed = dashRightAction.IsPressed();
-
-        DashForwardPressed = dashForwardAction.IsPressed();
-        DashBackwardPressed = dashBackwardAction.IsPressed();
+        LookInput = look;
     }
+
 }

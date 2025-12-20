@@ -48,31 +48,41 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
+        //Moving
         if(droneMovement.movementEnabled)
         {
             droneMovement.ForwardVelocity();
             droneMovement.GravityVelocity();
         }
 
-        if (playerInput.RotateLeftPressed)
-            droneMovement.RotateLeft();
-        if (playerInput.RotateRightPressed)
-            droneMovement.RotateRight();
-
+        //Look
         if (playerInput.LookInput.y != 0) 
             droneMovement.LookUpDown(playerInput.LookInput.y);
         if (playerInput.LookInput.x != 0)
             droneMovement.LookLeftRight(playerInput.LookInput.x);
 
-        if (playerInput.DashLeftPressed)
-            droneMovement.Dash(-1, Vector3.forward);
-        if (playerInput.DashRightPressed)
-            droneMovement.Dash(1, Vector3.forward);
+        //Dashing
+        if (playerInput.dashRightAction.IsPressed())
+            droneMovement.Dash(Vector3.right, Vector3.back);
+        if (playerInput.dashLeftAction.IsPressed())
+            droneMovement.Dash(Vector3.left, Vector3.forward);
+        if (playerInput.dashUpAction.IsPressed())
+            droneMovement.Dash(Vector3.up, Vector3.down);
+        if (playerInput.dashDownAction.IsPressed())
+            droneMovement.Dash(Vector3.down, Vector3.up);
 
-        if (playerInput.DashBackwardPressed)
-            droneMovement.Dash(-1, Vector3.right);
-        if (playerInput.DashForwardPressed)
-            droneMovement.Dash(1, Vector3.right);
+       
+        if (playerInput.dashBackwardAction.IsPressed())
+            droneMovement.Dash(Vector3.back, Vector3.left);
+        if (playerInput.dashForwardAction.IsPressed())
+            droneMovement.Dash(Vector3.forward, Vector3.right);
+
+        //Rotation
+        if (playerInput.rotateLeftAction.IsPressed())
+            droneMovement.RotateLeft();
+        if (playerInput.rotateRightAction.IsPressed())
+            droneMovement.RotateRight();
+
 
     }
 
@@ -90,7 +100,7 @@ public class PlayerManager : MonoBehaviour
 
     float SpeedPointsMultiplier() 
     {
-        return droneMovement.GetTotalSpeed() * speedPointsMultiplier;
+        return droneMovement.GetTotalVelocity().magnitude * speedPointsMultiplier;
     }
 
     #endregion

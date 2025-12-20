@@ -51,8 +51,17 @@ public class DroneMovement : MonoBehaviour
     public float dashDuration = .75f;
     float lastTimeDashed = 0;
 
+    [HideInInspector]
+    public bool isDashing = false;
+
+    Vector3 dashDirection;
+    float dashCurrentSpeed;
+
     [SerializeField]
-    UnityEvent<int, Vector3, float> DashStarted;
+    AnimationCurve dashSpeedOverTime;
+
+    [SerializeField]
+    UnityEvent<Vector3, Vector3, float> DashStarted;
 
 
     [Header("Settings Toggles")]
@@ -69,6 +78,11 @@ public class DroneMovement : MonoBehaviour
     {
         ForwardVelocity();
         GravityVelocity();
+
+#if UNITY_EDITOR
+        if(!lookingEnabled)
+            lookRotationEnabled = false;
+#endif
     }
 
     #region FlyForward
@@ -76,7 +90,12 @@ public class DroneMovement : MonoBehaviour
     {
         if (!flyingEnabled)
             return;
-        cc.Move(transform.forward * (CurrentForwardSpeed() * Time.deltaTime));
+        cc.Move(CurrentForwardVelocity() * Time.deltaTime);
+    }
+
+    public Vector3 CurrentForwardVelocity() 
+    {
+        return transform.forward * CurrentForwardSpeed();
     }
 
     public float CurrentForwardSpeed() 
@@ -98,7 +117,12 @@ public class DroneMovement : MonoBehaviour
     {
         if(!gravityEnabled)
             return;
-        cc.Move(Vector3.down * (CurrentDownSpeed() * Time.deltaTime));
+        cc.Move(CurrentDownVelocity() * Time.deltaTime);
+    }
+
+    public Vector3 CurrentDownVelocity()
+    {
+        return Vector3.down * CurrentDownSpeed();
     }
 
     public float CurrentDownSpeed()
@@ -120,6 +144,12 @@ public class DroneMovement : MonoBehaviour
     public void Rotate(int direction)
     {
         float rotationAmount = rotationSpeed * rotationSpeedMultiplier * Time.deltaTime;
+        transform.rotation = transform.rotation * Quaternion.Euler(0, 0, rotationAmount * direction);
+    }
+
+    public void Manuver(float magnitude, int direction)
+    {
+        float rotationAmount = rotationSpeed * rotationSpeedMultiplier * magnitude * Time.deltaTime;
         transform.rotation = transform.rotation * Quaternion.Euler(0, 0, rotationAmount * direction);
     }
 
@@ -154,10 +184,10 @@ public class DroneMovement : MonoBehaviour
         float xClamped = Mathf.Clamp(x, -xRotationInputThershhold, xRotationInputThershhold);
         float loookAmount = xClamped * lookSpeed * lookSpeedMultiplier * Time.deltaTime;
         transform.rotation = transform.rotation * Quaternion.Euler(0, loookAmount, 0);
-        if(x > 0 && lookRotationEnabled) 
-            Rotate(-1);
+        if (x > 0 && lookRotationEnabled)
+            Manuver(x, -1);//Rotate(-1);
         else if (x < 0 && lookRotationEnabled)
-            Rotate(1);
+            Manuver(x, -1);//Rotate(-1);
     }
     #endregion
 
@@ -175,45 +205,55 @@ public class DroneMovement : MonoBehaviour
         return cooldown < 1 ? cooldown : 1;
     }
 
-    public void Dash(int direction, Vector3 animateAxis) 
+    public void Dash(Vector3 direction, Vector3 animateAxis) 
     {
         if(!CanDash()) 
             return;
         lastTimeDashed = Time.time;
 
-        Vector3 localDirection =
-            (animateAxis == Vector3.forward) ? transform.right * direction :
-            (animateAxis == Vector3.right) ? transform.forward * direction :
-            Vector3.zero;
-
-        StartCoroutine(DashCoroutine(localDirection));
+        dashDirection = transform.rotation * direction; //set it wihtin class scope
+        StartCoroutine(DashCoroutine()); //takes direction from the classes scope
         DashStarted.Invoke(direction, animateAxis, dashDuration);
     }
 
-    IEnumerator DashCoroutine(Vector3 direction)
+    IEnumerator DashCoroutine()
     {
+        isDashing = true;
         float timer = 0f;
         while (timer < dashDuration)
         {
-            cc.Move(direction * dashSpeed * Time.deltaTime);
+            //float t = Mathf.Abs((timer / dashDuration) - 1);
+            float t = timer / dashDuration;
+            dashCurrentSpeed = dashSpeed * dashSpeedOverTime.Evaluate(t);
+            cc.Move(CurrentDashVelocity() * Time.deltaTime);
             timer += Time.deltaTime;
             yield return null;
         }
+        isDashing = false;
+    }
+
+    Vector3 CurrentDashVelocity() // so we can add it to total velocity
+    {
+        if (!isDashing)
+            return Vector3.zero;
+        return dashDirection * dashCurrentSpeed;
     }
 
     #endregion
 
-    #region Oher
-    public float GetTotalSpeed() 
+    #region Total Velocity
+    public Vector3 GetTotalVelocity()
     {
-        return CurrentDownSpeed() + CurrentForwardSpeed();
+        return CurrentDownVelocity() + CurrentForwardVelocity() + CurrentDashVelocity();
     }
 
-    public float GetVelocity() 
+    public float GetVelocity() //does not work
     {
         return cc.velocity.magnitude;
     }
+    #endregion
 
+    #region Other
     private void OnEnable()
     {
         cc.enabled = true;

@@ -10,18 +10,6 @@ public class NearmissHandler : MonoBehaviour
     [SerializeField]
     int numberOfRays = 10;
 
-    [SerializeField]
-    bool cylinderShoot = false;
-
-
-    [Header("Cylinder Rays")]
-    [SerializeField]
-    int cylinderSteps = 4;
-    [SerializeField]
-    float cylinderStartOffset = -.5f;
-    [SerializeField]
-    float cylinderEndOffset = .5f;
-
     [Header("LayerMask")]
     [SerializeField]
     LayerMask layerMask;
@@ -41,37 +29,14 @@ public class NearmissHandler : MonoBehaviour
     {
         minDistance = rayDistance;
         hitAtleastOnce = false;
-
-        if (cylinderShoot)
-        {
-            ShootRayCycleOnCylinder();
-        }
-        else 
-        {
-            ShootRayCircle(transform.position, Vector3.forward, Vector3.right);
-            ShootRayCircle(transform.position, Vector3.right, Vector3.forward);
-            ShootRayCircle(transform.position, Vector3.up, Vector3.right);
-        }
-
+        ShootRayCircle(transform.position, Vector3.forward, Vector3.right);
+        ShootRayCircle(transform.position, Vector3.right, Vector3.forward);
+        ShootRayCircle(transform.position, Vector3.up, Vector3.right);
         if (hitAtleastOnce)
             NearmissEvent.Invoke(minDistance / rayDistance); //1 = as close as it can get, 0, is not close at all
     }
 
-
     #region RayShooting
-
-    void ShootRayCycleOnCylinder() 
-    {
-        for (int c = 0; c <= cylinderSteps - 1; c++)
-        {
-            float height = (float)c / cylinderSteps;
-            float heightStep = Mathf.Lerp(cylinderStartOffset, cylinderEndOffset, height);
-            Vector3 rayOrigin = transform.position + transform.forward * heightStep;
-
-            ShootRayCircle(rayOrigin, Vector3.forward, Vector3.right);
-        }
-    }
-
     void ShootRayCircle(Vector3 rayOrigin, Vector3 onAxis, Vector3 toAxis) 
     {
         for (int a = 0; a <= numberOfRays; a++)
@@ -99,33 +64,14 @@ public class NearmissHandler : MonoBehaviour
     {
         if (!drawGizmos)
             return;
-
-        if (cylinderShoot)
-        {
-            Gizmos.color = Color.cyan;
-            ShootRayCycleOnCylinderGizmo();
-        }
-        else
-        {
-            Gizmos.color = Color.cyan;
-            ShootRayCircleGizmo(transform.position, Vector3.forward, Vector3.right);
-            Gizmos.color = Color.blue;
-            ShootRayCircleGizmo(transform.position, Vector3.right, Vector3.forward);
-            Gizmos.color = Color.red;
-            ShootRayCircleGizmo(transform.position, Vector3.up, Vector3.right);
-        }
+        
+        Gizmos.color = Color.cyan;
+        ShootRayCircleGizmo(transform.position, Vector3.forward, Vector3.right);
+        Gizmos.color = Color.blue;
+        ShootRayCircleGizmo(transform.position, Vector3.right, Vector3.forward);
+        Gizmos.color = Color.red;
+        ShootRayCircleGizmo(transform.position, Vector3.up, Vector3.right);
     }
-
-    void ShootRayCycleOnCylinderGizmo()
-    {
-        for (int c = 0; c <= cylinderSteps - 1; c++)
-        {
-            float height = (float)c / cylinderSteps;
-            float heightStep = Mathf.Lerp(cylinderStartOffset, cylinderEndOffset, height);
-            Vector3 rayOrigin = transform.position + transform.forward * heightStep;
-            ShootRayCircleGizmo(rayOrigin, Vector3.forward, Vector3.right);
-        }
-    } 
 
     void ShootRayCircleGizmo(Vector3 rayOrigin, Vector3 onAxis, Vector3 toAxis)
     {

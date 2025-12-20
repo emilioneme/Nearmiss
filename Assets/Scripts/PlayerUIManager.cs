@@ -14,7 +14,8 @@ public class PlayerUIManager : MonoBehaviour
     {
         VELOCITY,
         FORWARDSPEED,
-        TOTALSPEED,
+        DOWN,
+        DASH,
     }
 
     [Header("UI")]
@@ -49,13 +50,10 @@ public class PlayerUIManager : MonoBehaviour
     void HandleSpeedometerText() 
     {
         float speed = 0;
-
         if (speedometerMode == SpeedometerMode.VELOCITY)
-            speed = playerManager.droneMovement.GetVelocity() * speedometerMultiplier;
+            speed = playerManager.droneMovement.GetTotalVelocity().magnitude * speedometerMultiplier;
         if (speedometerMode == SpeedometerMode.FORWARDSPEED)
             speed = playerManager.droneMovement.CurrentForwardSpeed() * speedometerMultiplier;
-        if (speedometerMode == SpeedometerMode.TOTALSPEED)
-            speed = playerManager.droneMovement.GetTotalSpeed() * speedometerMultiplier;
 
         SpeedText.text = ProcessFloat(speed);
     }

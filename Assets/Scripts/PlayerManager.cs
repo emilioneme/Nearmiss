@@ -8,7 +8,6 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(PlayerInput))]
 [RequireComponent(typeof(DroneMovement))]
 [RequireComponent(typeof(PlayerUIManager))]
-
 public class PlayerManager : MonoBehaviour
 {
     [SerializeField]
@@ -37,6 +36,12 @@ public class PlayerManager : MonoBehaviour
     public DroneMovement droneMovement;
     [HideInInspector]
     public PlayerUIManager playerUIManager;
+    [HideInInspector]
+    public NearmissHandler nearmissHandler;
+    [HideInInspector]
+    public CollisionHandler collisionHandler;
+    [HideInInspector]
+    public PlayerModelHandler playerModelHandler;
     #endregion
 
     private void Awake()
@@ -44,6 +49,14 @@ public class PlayerManager : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         droneMovement = GetComponent<DroneMovement>();
         playerUIManager = GetComponent<PlayerUIManager>();
+        nearmissHandler = GetComponent<NearmissHandler>();
+        collisionHandler = GetComponent<CollisionHandler>();
+        playerModelHandler = GetComponentInChildren<PlayerModelHandler>();
+    }
+
+    private void Start()
+    {
+        StartCoroutine(CouritineSpawn());
     }
 
     private void Update()
@@ -87,22 +100,19 @@ public class PlayerManager : MonoBehaviour
     }
 
     #region NearmissHandler
-    public void PlayerNearmissed(float normalizedDistance) //This is a float from 0 to 1
+    public void PlayerNearmissed(float normalizedDistance, float distance, Vector3 playerPos, RaycastHit hit) //This is a float from 0 to 1
     {
         totalPoints += DistancePoints(normalizedDistance) * SpeedPointsMultiplier();
         PointsChange.Invoke();
     }
-
     float DistancePoints(float normalizedDistance) 
     {
         return (normalizedDistance * maxDistancePoints);
     }
-
     float SpeedPointsMultiplier() 
     {
         return droneMovement.GetTotalVelocity().magnitude * speedPointsMultiplier;
     }
-
     #endregion
 
     #region CrashHandler
@@ -117,17 +127,23 @@ public class PlayerManager : MonoBehaviour
         droneMovement.enabled = false;
         transform.position = spawnTransform.position;
         droneMovement.enabled = true;
-
-        droneMovement.flyingEnabled = false;
-        droneMovement.gravityEnabled = false;
-        droneMovement.dashingEnabled = false;
+        ToggleFreeze(true);
         ResetPoints();
         yield return new WaitForSeconds(2f);
-        droneMovement.flyingEnabled = true;
-        droneMovement.gravityEnabled = true;
-        droneMovement.dashingEnabled = true;
-        //SceneManager.LoadScene(0);
+        ToggleFreeze(false);
     }
+
+    void ToggleFreeze(bool freeze = true) 
+    {
+        droneMovement.flyingEnabled = !freeze;
+        droneMovement.gravityEnabled = !freeze;
+        droneMovement.dashingEnabled = !freeze;
+
+        nearmissHandler.on = !freeze;
+        collisionHandler.on = !freeze;
+
+    }
+
 
     void ResetPoints() 
     {

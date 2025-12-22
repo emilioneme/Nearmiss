@@ -6,6 +6,8 @@ public class NearmissHandler : MonoBehaviour
 {
     [Header("Rays")]
     [SerializeField]
+    public bool on = true;
+    [SerializeField]
     public float rayDistance = 10;
     [SerializeField]
     int numberOfRays = 10;
@@ -20,12 +22,19 @@ public class NearmissHandler : MonoBehaviour
 
     float minDistance;
     bool hitAtleastOnce;
+    RaycastHit hitPoint;
 
 
     [SerializeField]
-    UnityEvent<float> NearmissEvent;
+    UnityEvent<float, float, Vector3, RaycastHit> NearmissEvent; //distance normalized, distance, playerPosition, hit 
 
     private void Update()
+    {
+        if (on)
+            ShootAllRays();
+    }
+
+    void ShootAllRays() 
     {
         minDistance = rayDistance;
         hitAtleastOnce = false;
@@ -33,7 +42,7 @@ public class NearmissHandler : MonoBehaviour
         ShootRayCircle(transform.position, Vector3.right, Vector3.forward);
         ShootRayCircle(transform.position, Vector3.up, Vector3.right);
         if (hitAtleastOnce)
-            NearmissEvent.Invoke(minDistance / rayDistance); //1 = as close as it can get, 0, is not close at all
+            NearmissEvent.Invoke(minDistance / rayDistance, minDistance, transform.position, hitPoint); //1 = as close as it can get, 0, is not close at all
     }
 
     #region RayShooting
@@ -53,6 +62,7 @@ public class NearmissHandler : MonoBehaviour
                 {
                     Debug.DrawLine(rayOrigin, hit.point, Color.black);
                     minDistance = hit.distance;
+                    hitPoint = hit;
                 }
             }
         }

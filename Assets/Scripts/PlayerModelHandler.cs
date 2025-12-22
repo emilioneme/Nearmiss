@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class PlayerModelHandler : MonoBehaviour
 {
+    [SerializeField]
+    float nearmissEffectForwardMultiplier = 1;
     public PlayerModelVisuals PlayerModelVisuals;
 
     private void Awake()
@@ -10,6 +12,16 @@ public class PlayerModelHandler : MonoBehaviour
         PlayerModelVisuals = GetComponentInChildren<PlayerModelVisuals>();
         if (PlayerModelVisuals == null)
             Debug.LogWarning("No Player Model Visuals Found");
+    }
+
+    public void NeamissEffetSpawner(float normalDistance, float distance, Vector3 origin, RaycastHit hit) 
+    {
+        Destroy(Instantiate
+            (
+                PlayerModelVisuals.NearmissEffect,
+                hit.point  + (transform.forward * nearmissEffectForwardMultiplier),
+                Quaternion.identity)
+            ,1f);
     }
 
     #region Dash

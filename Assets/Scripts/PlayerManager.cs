@@ -4,30 +4,49 @@ using UnityEditor.Events;
 using UnityEngine.Events;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(PlayerInput))]
 [RequireComponent(typeof(DroneMovement))]
 [RequireComponent(typeof(PlayerUIManager))]
 public class PlayerManager : MonoBehaviour
 {
+    [Header("Points")]
     [SerializeField]
     public float totalPoints;
+    [SerializeField]
+    public float expectedPoints;
 
+    #region  Multipliers
+    [Header("Point Multipliers")]
     [SerializeField]
     public float maxDistancePoints = 10;
     [SerializeField]
     public float speedPointsMultiplier = .5f;
     [SerializeField]
     public float dashPointsMultiplier = 1.3f;
+    #endregion
+
+    #region Expected Points
+    float lastNearmiss = 0;
+    [SerializeField]
+    float timeToSecureCombo = 3;
+    Coroutine comboTimer;
+    #endregion
 
     [SerializeField]
     Transform spawnTransform;
 
+    #region Events
     [SerializeField]
     UnityEvent HighScoreChange;
-
     [SerializeField]
     UnityEvent PointsChange;
+    [SerializeField]
+    UnityEvent ExpectedPointsChange;
+    [SerializeField]
+    UnityEvent ExpectedPointsFailed;
+    #endregion
 
     #region Managers
     [HideInInspector]
@@ -56,7 +75,7 @@ public class PlayerManager : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(CouritineSpawn());
+        StartCoroutine(SpawnCorutine());
     }
 
     private void Update()
@@ -102,9 +121,49 @@ public class PlayerManager : MonoBehaviour
     #region NearmissHandler
     public void PlayerNearmissed(float normalizedDistance, float distance, Vector3 playerPos, RaycastHit hit) //This is a float from 0 to 1
     {
-        totalPoints += DistancePoints(normalizedDistance) * SpeedPointsMultiplier();
+        lastNearmiss = Time.time;
+        expectedPoints += TotalPointsCalculation(normalizedDistance);
+        ExpectedPointsChange.Invoke();
+        if(comboTimer != null) 
+        {
+            StopCoroutine(comboTimer);
+            comboTimer = null;
+        } 
+        comboTimer = StartCoroutine(ComboTimer());
+    }
+
+    #region Combo
+    IEnumerator ComboTimer() 
+    {
+        while(ComboCooldown() < 1) 
+            yield return null;
+        PointsSecured();
+        comboTimer = null;
+    }
+
+    public float ComboCooldown() 
+    {
+        float c = (Time.time - lastNearmiss) / timeToSecureCombo;
+        if (c < 1)
+            return c;
+        return 1;
+    }
+
+    void PointsSecured() 
+    {
+        totalPoints += expectedPoints;
+        expectedPoints = 0;
         PointsChange.Invoke();
     }
+
+    #endregion
+
+    #region Point Fomrulas
+    float TotalPointsCalculation(float normalizedDistance) 
+    {
+        return DistancePoints(normalizedDistance) * SpeedPointsMultiplier();
+    }
+
     float DistancePoints(float normalizedDistance) 
     {
         return (normalizedDistance * maxDistancePoints);
@@ -115,24 +174,31 @@ public class PlayerManager : MonoBehaviour
     }
     #endregion
 
+
+    #endregion
+
     #region CrashHandler
     public void PlayerCrashed(ControllerColliderHit hit)
     {
         playerUIManager.TriggerCrashUI(hit);
-        StartCoroutine(CouritineSpawn());
+        StartCoroutine(SpawnCorutine());
     }
 
-    IEnumerator CouritineSpawn() 
+    IEnumerator SpawnCorutine() 
     {
-        droneMovement.enabled = false;
-        transform.position = spawnTransform.position;
-        droneMovement.enabled = true;
+        SpawnPlayer();
         ToggleFreeze(true);
         ResetPoints();
         yield return new WaitForSeconds(2f);
         ToggleFreeze(false);
     }
 
+    void SpawnPlayer() 
+    {
+        droneMovement.enabled = false;
+        transform.position = spawnTransform.position;
+        droneMovement.enabled = true;
+    }
     void ToggleFreeze(bool freeze = true) 
     {
         droneMovement.flyingEnabled = !freeze;
@@ -143,8 +209,6 @@ public class PlayerManager : MonoBehaviour
         collisionHandler.on = !freeze;
 
     }
-
-
     void ResetPoints() 
     {
         if(GameManager.Instance.highScore < totalPoints) 
@@ -153,6 +217,7 @@ public class PlayerManager : MonoBehaviour
             HighScoreChange.Invoke();
         }
         totalPoints = 0;
+        expectedPoints = 0;
         PointsChange.Invoke();
     }
     #endregion

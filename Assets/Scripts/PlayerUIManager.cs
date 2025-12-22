@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(PlayerManager))]
 public class PlayerUIManager : MonoBehaviour
@@ -20,9 +21,12 @@ public class PlayerUIManager : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] TMP_Text SpeedText;
-    [SerializeField] TMP_Text AirResistanceText;
     [SerializeField] TMP_Text PointsText;
+    [SerializeField] TMP_Text ExpectedPoints;
     [SerializeField] TMP_Text HighScoreText;
+
+    [SerializeField]
+    Image expectedPointsCooldownCircle;
 
     private void Awake()
     {
@@ -32,12 +36,20 @@ public class PlayerUIManager : MonoBehaviour
     private void Update()
     {
         HandleSpeedometerText();
+
+        expectedPointsCooldownCircle.fillAmount = playerManager.ComboCooldown();
     }
 
     #region Points Text
+    public void UpdateExpectedPoints() 
+    {
+        ExpectedPoints.text = ProcessFloat(playerManager.expectedPoints);
+    }
+
     public void UpdatePointsText()
     {
         PointsText.text = ProcessFloat(playerManager.totalPoints);
+        ExpectedPoints.text = ProcessFloat(playerManager.expectedPoints);
     }
 
     public void UpdateHighScoreText()

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Threading.Tasks;
+using System.Collections;
 
 namespace eneme
 {
@@ -37,12 +38,17 @@ namespace eneme
 
             do 
             {
-                await Task.Delay(100);
+                await Task.Delay(1000);
                 LoadingBar.fillAmount = scene.progress;
             }while (scene.progress < 0.9f);
 
-            await Task.Delay(100);
             scene.allowSceneActivation = true;
+            StartCoroutine(deactivateCanvas(.1f));
+        }
+
+        IEnumerator deactivateCanvas(float time) 
+        {
+            yield return new WaitForSeconds(time);
             LoadingCanvas.SetActive(false);
         }
 

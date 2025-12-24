@@ -9,7 +9,7 @@ public class CollisionHandler : MonoBehaviour
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (!hit.gameObject.CompareTag("Player"))
+        if (!hit.gameObject.CompareTag("Player") && on)
             PlayerCrashed.Invoke(hit);
     }
 

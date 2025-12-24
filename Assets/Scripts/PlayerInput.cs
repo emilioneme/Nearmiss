@@ -6,7 +6,6 @@ public class PlayerInput : MonoBehaviour
 {
     [SerializeField]
     private InputAction lookAction;
-
     [HideInInspector]
     public Vector2 LookInput;
 

@@ -779,9 +779,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   totalPoints: 0
+  expectedPoints: 0
   maxDistancePoints: 10
   speedPointsMultiplier: 0.5
   dashPointsMultiplier: 1.3
+  timeToSecureCombo: 3
   spawnTransform: {fileID: 0}
   HighScoreChange:
     m_PersistentCalls:
@@ -789,9 +791,18 @@ MonoBehaviour:
   PointsChange:
     m_PersistentCalls:
       m_Calls: []
+  ExpectedPointsChange:
+    m_PersistentCalls:
+      m_Calls: []
+  ExpectedPointsFailed:
+    m_PersistentCalls:
+      m_Calls: []
   playerInput: {fileID: 0}
   droneMovement: {fileID: 0}
   playerUIManager: {fileID: 0}
+  nearmissHandler: {fileID: 0}
+  collisionHandler: {fileID: 0}
+  playerModelHandler: {fileID: 0}
 --- !u!114 &5316143185352266131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -821,6 +832,7 @@ MonoBehaviour:
       m_Action: Look
       m_Flags: 0
     m_Flags: 0
+  LookInput: {x: 0, y: 0}
   rotateLeftAction:
     m_Name: Rotate Left
     m_Type: 0
@@ -873,6 +885,24 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings: []
     m_Flags: 0
+  dashUpAction:
+    m_Name: Dash Up
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 7e2cec0f-a468-4efb-ba91-fbc066ab95c5
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  dashDownAction:
+    m_Name: Dash Down
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: d72f0bfd-cddf-474c-9018-78b742e5813f
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
   dashForwardAction:
     m_Name: Dash Forward
     m_Type: 0
@@ -916,6 +946,13 @@ MonoBehaviour:
   dashCooldwon: 3
   dashSpeed: 10
   dashDuration: 0.75
+  isDashing: 0
+  dashSpeedOverTime:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   DashStarted:
     m_PersistentCalls:
       m_Calls: []
@@ -941,6 +978,7 @@ MonoBehaviour:
   speedometerMode: 0
   speedometerMultiplier: 10
   SpeedText: {fileID: 0}
-  AirResistanceText: {fileID: 0}
   PointsText: {fileID: 0}
+  ExpectedPoints: {fileID: 0}
   HighScoreText: {fileID: 0}
+  expectedPointsCooldownCircle: {fileID: 0}

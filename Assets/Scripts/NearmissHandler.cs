@@ -28,7 +28,7 @@ public class NearmissHandler : MonoBehaviour
     [SerializeField]
     UnityEvent<float, float, Vector3, RaycastHit> NearmissEvent; //distance normalized, distance, playerPosition, hit 
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (on)
             ShootAllRays();

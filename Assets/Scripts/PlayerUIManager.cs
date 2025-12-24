@@ -74,13 +74,15 @@ public class PlayerUIManager : MonoBehaviour
     #region Text Filters
     string ProcessFloat(float f) 
     {
+        if (f == 0)
+            return "";
         float number = f;
         string unit = "";
 
-        if (f >= 1_000_000_000f) { number = f / 1_000_000_000f; unit = "b"; }
+        if      (f >= 1_000_000_000f) { number = f / 1_000_000_000f; unit = "b"; }
         else if (f >= 1_000_000f) { number = f / 1_000_000f; unit = "m"; }
         else if (f >= 1_000f) { number = f / 1_000f; unit = "k"; }
-        else { return Mathf.Round(f).ToString(); }
+        else    { return Mathf.Round(f).ToString(); }
 
         number = Mathf.Round(number * 10f) / 10f;   // 1 decimal place
         return number.ToString("0.#") + unit;

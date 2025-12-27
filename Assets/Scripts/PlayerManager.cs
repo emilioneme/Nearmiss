@@ -30,7 +30,9 @@ public class PlayerManager : MonoBehaviour
     #region Expected Points
     float lastNearmiss = 0;
     [SerializeField]
-    float timeToSecureCombo = 3;
+    float minTimeBeforeNextCombo = 0.75f;
+    [SerializeField]
+    float timeToSecureCombo = 1.5f;
     Coroutine comboTimer;
     #endregion
 

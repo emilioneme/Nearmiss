@@ -7,8 +7,6 @@ using static UnityEditor.FilePathAttribute;
 [RequireComponent(typeof(CharacterController))]
 public class DroneMovement : MonoBehaviour
 {
-    public Vector3 velocity = Vector3.zero;
-
     [HideInInspector]
     public CharacterController cc;
 
@@ -63,49 +61,36 @@ public class DroneMovement : MonoBehaviour
     [SerializeField]
     UnityEvent<Vector3, Vector3, float> DashStarted;
 
-
-    [Header("Settings Toggles")]
-    [SerializeField]
-    public bool movementEnabled = true;
-    public bool flyingEnabled, rotatingEnabled, lookingEnabled, lookRotationEnabled, gravityEnabled, dashingEnabled = true;
+    [Header("Physics")]
+    public bool applyGravity = true;
+    public bool enableFlying = true;
 
     private void Awake()
     {
         cc = GetComponent<CharacterController>();
     }
 
-    private void Update()
+    #region Movement
+    public void MoveDrone() 
     {
-        ForwardVelocity();
-        GravityVelocity();
-
-#if UNITY_EDITOR
-        if(!lookingEnabled)
-            lookRotationEnabled = false;
-#endif
+        cc.Move(GetTotalVelocity() * Time.deltaTime);
     }
+    #endregion
 
     #region FlyForward
-    public void ForwardVelocity() 
+    public Vector3 GetForwardVelocity()
     {
-        if (!flyingEnabled)
-            return;
-        cc.Move(CurrentForwardVelocity() * Time.deltaTime);
+        return enableFlying? transform.forward * CurrentForwardSpeed(): Vector3.zero;
     }
 
-    public Vector3 CurrentForwardVelocity() 
-    {
-        return transform.forward * CurrentForwardSpeed();
-    }
-
-    public float CurrentForwardSpeed() 
+    float CurrentForwardSpeed() 
     {
         float baseSpeed = flyingSpeed;
         float noseDiveSpeed = NoseDiveSpeed() * noseDiveSpeedMultiplier;
         return (baseSpeed + noseDiveSpeed) * totalFlyingSpeedMultiplier;
     }
 
-    public float NoseDiveSpeed() 
+    float NoseDiveSpeed() 
     {
         float dot = Vector3.Dot(transform.forward, Vector3.down);
         return Mathf.InverseLerp(-1f, 1f, dot);
@@ -113,25 +98,18 @@ public class DroneMovement : MonoBehaviour
     #endregion
 
     #region Gravity
-    public void GravityVelocity()
+    Vector3 CurrentDownVelocity()
     {
-        if(!gravityEnabled)
-            return;
-        cc.Move(CurrentDownVelocity() * Time.deltaTime);
+        return applyGravity? Vector3.down * CurrentDownSpeed() : Vector3.zero;
     }
 
-    public Vector3 CurrentDownVelocity()
-    {
-        return Vector3.down * CurrentDownSpeed();
-    }
-
-    public float CurrentDownSpeed()
+    float CurrentDownSpeed()
     {
         float downSpeed = GravityForceSpeed() * gravityForceMultiplier;
         return downSpeed;
     }
 
-    public float GravityForceSpeed() 
+    float GravityForceSpeed() 
     {
         float dot = Vector3.Dot(transform.up,Vector3.up);
         float flatAmount = Mathf.Abs(dot);
@@ -155,15 +133,11 @@ public class DroneMovement : MonoBehaviour
 
     public void RotateLeft()
     {
-        if (!rotatingEnabled)
-            return;
         Rotate(1);
     }
 
     public void RotateRight()
     {
-        if (!rotatingEnabled)
-            return;
         Rotate(-1);
     }
     #endregion
@@ -171,46 +145,29 @@ public class DroneMovement : MonoBehaviour
     #region Look
     public void LookUpDown(float y)
     {
-        if (!lookingEnabled)
-            return;
         float yClamped = Mathf.Clamp(y, -yRotationInputThershhold, yRotationInputThershhold);
         float loookAmount = -yClamped * lookSpeed * lookSpeedMultiplier * Time.deltaTime;
         transform.rotation = transform.rotation * Quaternion.Euler(loookAmount, 0, 0);
     }
     public void LookLeftRight(float x)
     {
-        if (!lookingEnabled)
-            return;
         float xClamped = Mathf.Clamp(x, -xRotationInputThershhold, xRotationInputThershhold);
         float loookAmount = xClamped * lookSpeed * lookSpeedMultiplier * Time.deltaTime;
         transform.rotation = transform.rotation * Quaternion.Euler(0, loookAmount, 0);
-        if (x > 0 && lookRotationEnabled)
+        if (x > 0)
             Manuver(x, -1);//Rotate(-1);
-        else if (x < 0 && lookRotationEnabled)
+        else if (x < 0)
             Manuver(x, -1);//Rotate(-1);
     }
     #endregion
 
     #region Dash
-    bool CanDash()
-    {
-        if (dashCooldownFloat() < 1)
-            return false;
-        return true;
-    }
 
-    float dashCooldownFloat()
+    public void Dash(Vector3 direction, Vector3 animateAxis)  
     {
-        float cooldown = (Time.time - lastTimeDashed) / dashCooldwon;
-        return cooldown < 1 ? cooldown : 1;
-    }
-
-    public void Dash(Vector3 direction, Vector3 animateAxis) 
-    {
-        if(!CanDash()) 
+        if(eneme.Tools.CooldownSince(lastTimeDashed, dashCooldwon) < 1) 
             return;
         lastTimeDashed = Time.time;
-
         dashDirection = transform.rotation * direction; //set it wihtin class scope
         StartCoroutine(DashCoroutine()); //takes direction from the classes scope
         DashStarted.Invoke(direction, animateAxis, dashDuration);
@@ -225,14 +182,14 @@ public class DroneMovement : MonoBehaviour
             //float t = Mathf.Abs((timer / dashDuration) - 1);
             float t = timer / dashDuration;
             dashCurrentSpeed = dashSpeed * dashSpeedOverTime.Evaluate(t);
-            cc.Move(CurrentDashVelocity() * Time.deltaTime);
+            cc.Move(GetDashVelocity() * Time.deltaTime);
             timer += Time.deltaTime;
             yield return null;
         }
         isDashing = false;
     }
 
-    Vector3 CurrentDashVelocity() // so we can add it to total velocity
+    public Vector3 GetDashVelocity() // so we can add it to total velocity
     {
         if (!isDashing)
             return Vector3.zero;
@@ -244,12 +201,7 @@ public class DroneMovement : MonoBehaviour
     #region Total Velocity
     public Vector3 GetTotalVelocity()
     {
-        return CurrentDownVelocity() + CurrentForwardVelocity() + CurrentDashVelocity();
-    }
-
-    public float GetVelocity() //does not work
-    {
-        return cc.velocity.magnitude;
+        return CurrentDownVelocity() + GetForwardVelocity() + GetDashVelocity();
     }
     #endregion
 

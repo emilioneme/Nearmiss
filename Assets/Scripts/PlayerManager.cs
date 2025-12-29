@@ -16,6 +16,10 @@ public class PlayerManager : MonoBehaviour
     public float totalPoints;
     [SerializeField]
     public float expectedPoints;
+    [SerializeField]
+    public float runningPoints;
+    [SerializeField]
+    public float comboMultiplier = 1;
 
     #region  Multipliers
     [Header("Point Multipliers")]
@@ -23,17 +27,16 @@ public class PlayerManager : MonoBehaviour
     public float maxDistancePoints = 10;
     [SerializeField]
     public float speedPointsMultiplier = .5f;
-    [SerializeField]
-    public float dashPointsMultiplier = 1.3f;
+    [SerializeField][Range(0f, 5f)]
+    public float comboMultiplierIncrease = 3f;
     #endregion
 
     #region Expected Points
     float lastNearmiss = 0;
     [SerializeField]
-    float minTimeBeforeNextCombo = 0.75f;
-    [SerializeField]
-    float timeToSecureCombo = 1.5f;
-    Coroutine comboTimer;
+    float timeToSecurePoints = 1.5f;
+    [SerializeField][Range(0, 0.9f)]
+    float minTimeForComboMult = .5f; //PErcenttage of 
     #endregion
 
     [SerializeField]
@@ -41,13 +44,7 @@ public class PlayerManager : MonoBehaviour
 
     #region Events
     [SerializeField]
-    UnityEvent HighScoreChange;
-    [SerializeField]
     UnityEvent PointsChange;
-    [SerializeField]
-    UnityEvent ExpectedPointsChange;
-    [SerializeField]
-    UnityEvent ExpectedPointsFailed;
     #endregion
 
     #region Managers
@@ -82,86 +79,109 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
-        //Moving
-        if(droneMovement.movementEnabled)
-        {
-            droneMovement.ForwardVelocity();
-            droneMovement.GravityVelocity();
-        }
+        HandleMovement();
+    }
+
+    #region Input
+    void HandleMovement() 
+    {
+        droneMovement.MoveDrone();
 
         //Look
-        if (playerInput.LookInput.y != 0) 
+        if (playerInput.LookInput.y != 0)
             droneMovement.LookUpDown(playerInput.LookInput.y);
         if (playerInput.LookInput.x != 0)
             droneMovement.LookLeftRight(playerInput.LookInput.x);
 
-        //Dashing
-        if (playerInput.dashRightAction.IsPressed())
-            droneMovement.Dash(Vector3.right, Vector3.back);
-        if (playerInput.dashLeftAction.IsPressed())
-            droneMovement.Dash(Vector3.left, Vector3.forward);
-        if (playerInput.dashUpAction.IsPressed())
-            droneMovement.Dash(Vector3.up, Vector3.down);
-        if (playerInput.dashDownAction.IsPressed())
-            droneMovement.Dash(Vector3.down, Vector3.up);
-
-       
-        if (playerInput.dashBackwardAction.IsPressed())
-            droneMovement.Dash(Vector3.back, Vector3.left);
-        if (playerInput.dashForwardAction.IsPressed())
-            droneMovement.Dash(Vector3.forward, Vector3.right);
-
-        //Rotation
-        if (playerInput.rotateLeftAction.IsPressed())
-            droneMovement.RotateLeft();
-        if (playerInput.rotateRightAction.IsPressed())
-            droneMovement.RotateRight();
+        if (droneMovement.enableFlying) 
+        {
+            //Dashing
+            if (playerInput.dashRightAction.IsPressed())
+                droneMovement.Dash(Vector3.right, Vector3.back);
+            if (playerInput.dashLeftAction.IsPressed())
+                droneMovement.Dash(Vector3.left, Vector3.forward);
+            if (playerInput.dashUpAction.IsPressed())
+                droneMovement.Dash(Vector3.up, Vector3.down);
+            if (playerInput.dashDownAction.IsPressed())
+                droneMovement.Dash(Vector3.down, Vector3.up);
 
 
+            if (playerInput.dashBackwardAction.IsPressed())
+                droneMovement.Dash(Vector3.back, Vector3.left);
+            if (playerInput.dashForwardAction.IsPressed())
+                droneMovement.Dash(Vector3.forward, Vector3.right);
+
+            //Rotation
+            if (playerInput.rotateLeftAction.IsPressed())
+                droneMovement.RotateLeft();
+            if (playerInput.rotateRightAction.IsPressed())
+                droneMovement.RotateRight();
+        }
     }
+    #endregion
 
     #region NearmissHandler
+    Coroutine secureTimer;
     public void PlayerNearmissed(float normalizedDistance, float distance, Vector3 playerPos, RaycastHit hit) //This is a float from 0 to 1
     {
+        if (ComboMultCooldwon() >= 1)
+            IncreaseComboMultiplier();
+
         lastNearmiss = Time.time;
-        expectedPoints += TotalPointsCalculation(normalizedDistance);
-        ExpectedPointsChange.Invoke();
-        if(comboTimer != null) 
+
+        runningPoints += RunnignPointsCalculation(normalizedDistance);
+        expectedPoints += runningPoints * comboMultiplier;
+
+        if (secureTimer != null) 
         {
-            StopCoroutine(comboTimer);
-            comboTimer = null;
-        } 
-        comboTimer = StartCoroutine(ComboTimer());
+            StopCoroutine(secureTimer);
+            secureTimer = null;
+        }
+        secureTimer = StartCoroutine(SecureTimer());
     }
 
-    #region Combo
-    IEnumerator ComboTimer() 
+    #region SecurePoints
+    public float SecurePointsCooldown() 
     {
-        while(ComboCooldown() < 1) 
+        return eneme.Tools.CooldownSince(lastNearmiss, timeToSecurePoints);
+    }
+    IEnumerator SecureTimer() 
+    {
+        while (SecurePointsCooldown() < 1) 
+        {
             yield return null;
+        }
         PointsSecured();
-        comboTimer = null;
-    }
-
-    public float ComboCooldown() 
-    {
-        float c = (Time.time - lastNearmiss) / timeToSecureCombo;
-        if (c < 1)
-            return c;
-        return 1;
+        secureTimer = null;
     }
 
     void PointsSecured() 
     {
-        totalPoints += expectedPoints;
-        expectedPoints = 0;
+        totalPoints = expectedPoints;
+        runningPoints = 0;
+        comboMultiplier = 1;
+        if (secureTimer != null)
+        {
+            StopCoroutine(secureTimer);
+            secureTimer = null;
+        }
         PointsChange.Invoke();
     }
+    #endregion
 
+    #region Combo Multiuplier
+    public float ComboMultCooldwon() 
+    {
+        return eneme.Tools.CooldownSince(lastNearmiss, minTimeForComboMult * timeToSecurePoints);
+    }
+    void IncreaseComboMultiplier()
+    {
+        comboMultiplier = comboMultiplier + comboMultiplierIncrease;
+    }
     #endregion
 
     #region Point Fomrulas
-    float TotalPointsCalculation(float normalizedDistance) 
+    float RunnignPointsCalculation(float normalizedDistance) 
     {
         return DistancePoints(normalizedDistance) * SpeedPointsMultiplier();
     }
@@ -203,10 +223,8 @@ public class PlayerManager : MonoBehaviour
     }
     void ToggleFreeze(bool freeze = true) 
     {
-        droneMovement.flyingEnabled = !freeze;
-        droneMovement.gravityEnabled = !freeze;
-        droneMovement.dashingEnabled = !freeze;
-
+        droneMovement.enableFlying = !freeze;
+        droneMovement.applyGravity = !freeze;
         nearmissHandler.on = !freeze;
         collisionHandler.on = !freeze;
 
@@ -216,10 +234,13 @@ public class PlayerManager : MonoBehaviour
         if(GameManager.Instance.highScore < totalPoints) 
         {
             GameManager.Instance.highScore = totalPoints;
-            HighScoreChange.Invoke();
+            //HighScoreChange.Invoke();
         }
         totalPoints = 0;
         expectedPoints = 0;
+        runningPoints = 0;
+        comboMultiplier = 1;
+
         PointsChange.Invoke();
     }
     #endregion

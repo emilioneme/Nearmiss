@@ -8,11 +8,14 @@ public class NearmissHandler : MonoBehaviour
 {
     [Header("Rays")]
     [SerializeField]
-    public bool on = true;
-    [SerializeField]
     public float rayDistance = 10;
     [SerializeField]
     int numberOfRays = 10;
+
+    [Header("Ray Timing")]
+    [SerializeField]
+    int shotsPerSecond = 10;
+    float nextShotTime;
 
     [Header("LayerMask")]
     [SerializeField]
@@ -30,10 +33,24 @@ public class NearmissHandler : MonoBehaviour
     [SerializeField]
     UnityEvent<float, float, Vector3, RaycastHit> NearmissEvent; //distance normalized, distance, playerPosition, hit 
 
-    private void FixedUpdate()
+    void OnEnable()
     {
-        if (on)
+        nextShotTime = Time.time;
+    }
+
+
+    private void Update()
+    {
+        float interval = 1f / shotsPerSecond;
+
+        while (Time.time >= nextShotTime)
+        {
             ShootAllRays();
+
+            nextShotTime += interval;
+            if (Time.time - nextShotTime > 1f) // 1f for 1 second 
+                nextShotTime = Time.time + interval;
+        }
     }
 
     void ShootAllRays() 
@@ -56,9 +73,12 @@ public class NearmissHandler : MonoBehaviour
             if (ray)
             {
                 hitAtleastOnce = true;
-                if (hit.distance < minDistance) 
+                if (hit.distance < minDistance)
+                {
+                    minDistance = hit.distance;
                     hitPoint = hit;
-                Debug.DrawLine(rayOrigin, rayOrigin + dir, Color.red);
+                    Debug.DrawLine(rayOrigin, rayOrigin + dir, Color.red);
+                }
             }
             else
             {

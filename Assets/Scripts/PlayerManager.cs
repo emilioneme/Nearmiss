@@ -19,16 +19,28 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     public float runningPoints;
     [SerializeField]
-    public float comboMultiplier = 1;
+    public int numberOfCombos; 
 
     #region  Multipliers
-    [Header("Point Multipliers")]
-    [SerializeField]
+    [Header("Point Calculation")]
+    [SerializeField][Range(0f, 1f)]
     public float maxDistancePoints = 10;
-    [SerializeField]
+    [SerializeField][Range(0f, .1f)]
     public float speedPointsMultiplier = .5f;
-    [SerializeField][Range(0f, 5f)]
-    public float comboMultiplierIncrease = 3f;
+    [SerializeField][Range(0f, 1f)]
+    public float basePointsPerRay = 1f;
+
+    [Header("Combo Calculation")]
+    [SerializeField]
+    AnimationCurve comboMultiplierCurve;
+    [SerializeField]
+    public float minComboMultiplier = 1;
+    [SerializeField]
+    public float maxComboMultiplier = 3;
+    [SerializeField]
+    public float minCombos = 1;
+    [SerializeField]
+    public float maxCombos = 10;
     #endregion
 
     #region Expected Points
@@ -127,12 +139,12 @@ public class PlayerManager : MonoBehaviour
     public void PlayerNearmissed(float normalizedDistance, float distance, Vector3 playerPos, RaycastHit hit) //This is a float from 0 to 1
     {
         if (ComboMultCooldwon() >= 1)
-            IncreaseComboMultiplier();
+            numberOfCombos++;
 
         lastNearmiss = Time.time;
 
         runningPoints += RunnignPointsCalculation(normalizedDistance);
-        expectedPoints += runningPoints * comboMultiplier;
+        expectedPoints += runningPoints * ComboMultiplier();
 
         if (secureTimer != null) 
         {
@@ -161,7 +173,7 @@ public class PlayerManager : MonoBehaviour
     {
         totalPoints = expectedPoints;
         runningPoints = 0;
-        comboMultiplier = 1;
+        numberOfCombos = 0;
         if (secureTimer != null)
         {
             StopCoroutine(secureTimer);
@@ -176,21 +188,26 @@ public class PlayerManager : MonoBehaviour
     {
         return eneme.Tools.CooldownSince(lastNearmiss, minTimeForComboMult * timeToSecurePoints);
     }
-    void IncreaseComboMultiplier()
+
+
+    public float ComboMultiplier()
     {
-        comboMultiplier = comboMultiplier + comboMultiplierIncrease;
+        if (numberOfCombos <= 1)
+            return numberOfCombos;
+        float lerped = Mathf.InverseLerp(minCombos, maxCombos, numberOfCombos);
+        return Mathf.Clamp(comboMultiplierCurve.Evaluate(lerped) * maxComboMultiplier, minComboMultiplier, maxComboMultiplier);
     }
     #endregion
 
     #region Point Fomrulas
     float RunnignPointsCalculation(float normalizedDistance) 
     {
-        return DistancePoints(normalizedDistance) * SpeedPointsMultiplier();
+        return basePointsPerRay + DistancePoints(normalizedDistance) + SpeedPointsMultiplier();
     }
 
     float DistancePoints(float normalizedDistance) 
     {
-        return (normalizedDistance * maxDistancePoints);
+        return normalizedDistance * maxDistancePoints;
     }
     float SpeedPointsMultiplier() 
     {
@@ -227,8 +244,8 @@ public class PlayerManager : MonoBehaviour
     {
         droneMovement.enableFlying = !freeze;
         droneMovement.applyGravity = !freeze;
-        nearmissHandler.on = !freeze;
-        collisionHandler.on = !freeze;
+        nearmissHandler.enabled = !freeze;
+        collisionHandler.enabled = !freeze;
 
     }
     void ResetPoints() 
@@ -241,7 +258,7 @@ public class PlayerManager : MonoBehaviour
         totalPoints = 0;
         expectedPoints = 0;
         runningPoints = 0;
-        comboMultiplier = 1;
+        numberOfCombos = 0;
 
         PointsChange.Invoke();
     }

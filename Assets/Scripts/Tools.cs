@@ -28,6 +28,14 @@ namespace eneme
             return number.ToString("0.#") + unit;
         }
 
+        public static string LimitNumberLength(float number, int length)
+        {
+            string s = number.ToString();
+            if (s.Length <= length)
+                return s;
+            return s.Substring(0, length);
+        }
+
     }
 }
 

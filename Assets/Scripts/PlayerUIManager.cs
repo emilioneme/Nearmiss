@@ -41,11 +41,12 @@ public class PlayerUIManager : MonoBehaviour
     {
         HandleSpeedometerText();
 
-        ComboMultText.text = (playerManager.comboMultiplier - 1).ToString();
+        ComboMultText.text = eneme.Tools.LimitNumberLength(playerManager.ComboMultiplier(), 3);
+        //ComboMultText.text = playerManager.numberOfCombos.ToString();
         PointsText.text = eneme.Tools.ProcessFloat(playerManager.expectedPoints);
 
-        SecurePointsImage.fillAmount = playerManager.SecurePointsCooldown();
-        CanAddMultImage.fillAmount = playerManager.ComboMultCooldwon();
+        SecurePointsImage.fillAmount = Mathf.Abs( playerManager.SecurePointsCooldown()-1);
+        CanAddMultImage.fillAmount = Mathf.Abs( playerManager.ComboMultCooldwon() );
     }
 
     #region Speedotemeter

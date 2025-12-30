@@ -1,3 +1,4 @@
+using eneme;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -5,7 +6,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(PlayerManager))]
 public class PlayerUIManager : MonoBehaviour
 {
-    PlayerManager playerManager;
+    PlayerManager pm;
 
     [Header("Speedometer")]
     [SerializeField] SpeedometerMode speedometerMode = 0;
@@ -22,44 +23,59 @@ public class PlayerUIManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] TMP_Text SpeedText;
 
-    [SerializeField] TMP_Text PointsText;
+    [Header("Texts")]
+    [SerializeField] TMP_Text TotalPointsText;
     [SerializeField] TMP_Text RunningPointsText;
     [SerializeField] TMP_Text ComboMultText;
-    //[SerializeField] TMP_Text HighScoreText;
+    [SerializeField] TMP_Text ComboNumText;
 
-    [SerializeField]
-    Image SecurePointsImage;
-    [SerializeField]
-    Image CanAddMultImage;
+    [Header("Circles")]
+    [SerializeField] Image TotalPointsImage;
+    [SerializeField] Image RunningPointsImage;
+    [SerializeField] Image ComboMultImage;
+    [SerializeField] Image ComboNumImage;
+
+
 
     private void Awake()
     {
-        playerManager = GetComponent<PlayerManager>();
+        pm = GetComponent<PlayerManager>();
     }
 
     private void Update()
     {
         HandleSpeedometerText();
 
-        ComboMultText.text = eneme.Tools.LimitNumberLength(playerManager.ComboMultiplier(), 3);
-        //ComboMultText.text = playerManager.numberOfCombos.ToString();
-        PointsText.text = eneme.Tools.ProcessFloat(playerManager.expectedPoints);
+        TotalPointsText.text = Tools.ProcessFloat(pm.totalPoints);
 
-        SecurePointsImage.fillAmount = Mathf.Abs( playerManager.SecurePointsCooldown()-1);
-        CanAddMultImage.fillAmount = Mathf.Abs( playerManager.ComboMultCooldwon() );
+        float runningPointsFill = Mathf.Abs(pm.SecurePointsCooldown());
+        runningPointsFill = runningPointsFill <= .1f? 1 : runningPointsFill;
+        RunningPointsText.text = Tools.ProcessFloat(pm.runningPoints);
+        RunningPointsImage.fillAmount = runningPointsFill;
+
+        float comboMultFill = Mathf.Abs(pm.ComboWindowCooldown() - 1);
+        comboMultFill = comboMultFill == 0 ? 1 : comboMultFill;
+        ComboMultText.text = Tools.LimitNumberLength(pm.ComboMultiplier(), 3);
+        ComboMultImage.fillAmount = comboMultFill;
+
+        float comboNumFill = Mathf.Abs(pm.ComboMultCooldwon());
+        comboNumFill = comboNumFill <= .1f? 1: comboNumFill;
+        ComboNumText.text = pm.numberOfCombos.ToString();
+        ComboNumImage.fillAmount = comboNumFill;
+
     }
 
     #region Speedotemeter
     void HandleSpeedometerText() 
     {
-        if(!playerManager.droneMovement.enabled)
+        if(!pm.droneMovement.enabled)
             return;
         float speed = 0;
         if (speedometerMode == SpeedometerMode.VELOCITY)
-            speed = playerManager.droneMovement.GetTotalVelocity().magnitude * speedometerMultiplier;
+            speed = pm.droneMovement.GetTotalVelocity().magnitude * speedometerMultiplier;
         if (speedometerMode == SpeedometerMode.FORWARDSPEED)
-            speed = playerManager.droneMovement.GetForwardVelocity().magnitude * speedometerMultiplier;
-        SpeedText.text = eneme.Tools.ProcessFloat(speed);
+            speed = pm.droneMovement.GetForwardVelocity().magnitude * speedometerMultiplier;
+        SpeedText.text = Tools.ProcessFloat(speed);
     }
     #endregion
 

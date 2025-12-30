@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     public float highScore = 0;
+    [SerializeField]
+    public string highScorer = "Player";
 
     [Range(0.1f, 2.0f)]
     public float mouseSensitivity = 1;

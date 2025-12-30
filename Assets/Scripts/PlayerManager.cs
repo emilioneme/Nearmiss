@@ -11,15 +11,18 @@ using Unity.VisualScripting;
 [RequireComponent(typeof(PlayerUIManager))]
 public class PlayerManager : MonoBehaviour
 {
+    [Header("User")]
+    public string UserName = "Anonymus";
+    int UserID;
+
+
     [Header("Points")]
     [SerializeField]
-    public float totalPoints;
+    public float totalPoints = 0;
     [SerializeField]
-    public float expectedPoints;
+    public float runningPoints = 0;
     [SerializeField]
-    public float runningPoints;
-    [SerializeField]
-    public int numberOfCombos; 
+    public int numberOfCombos = 0; 
 
     #region  Multipliers
     [Header("Point Calculation")]
@@ -49,7 +52,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField][Range(0, 10f)]
     float timeToSecurePoints = 1.5f;
     [SerializeField][Range(0, 0.9f)]
-    float minTimeForComboMult = .5f; //PErcenttage of 
+    float minTimeBeforeCombo = .5f; //has to be less than timeToSecurePointys
     #endregion
 
     [Header("Spawn")]
@@ -96,7 +99,7 @@ public class PlayerManager : MonoBehaviour
         HandleMovement();
     }
 
-    #region Input
+    #region Movmeent
     void HandleMovement() 
     {
         droneMovement.MoveDrone();
@@ -144,7 +147,6 @@ public class PlayerManager : MonoBehaviour
         lastNearmiss = Time.time;
 
         runningPoints += RunnignPointsCalculation(normalizedDistance);
-        expectedPoints += runningPoints * ComboMultiplier();
 
         if (secureTimer != null) 
         {
@@ -154,66 +156,80 @@ public class PlayerManager : MonoBehaviour
         secureTimer = StartCoroutine(SecureTimer());
     }
 
-    #region SecurePoints
-    public float SecurePointsCooldown() 
-    {
-        return eneme.Tools.CooldownSince(lastNearmiss, timeToSecurePoints);
-    }
-    IEnumerator SecureTimer() 
-    {
-        while (SecurePointsCooldown() < 1) 
+        #region SecurePoints
+        public float SecurePointsCooldown() 
         {
-            yield return null;
+            return eneme.Tools.CooldownSince(lastNearmiss, timeToSecurePoints);
         }
-        PointsSecured();
-        secureTimer = null;
-    }
-
-    void PointsSecured() 
-    {
-        totalPoints = expectedPoints;
-        runningPoints = 0;
-        numberOfCombos = 0;
-        if (secureTimer != null)
+        IEnumerator SecureTimer() 
         {
-            StopCoroutine(secureTimer);
+            while (SecurePointsCooldown() < 1) 
+            {
+                yield return null;
+            }
+            PointsSecured();
             secureTimer = null;
         }
-        PointsChange.Invoke();
-    }
-    #endregion
 
-    #region Combo Multiuplier
-    public float ComboMultCooldwon() 
-    {
-        return eneme.Tools.CooldownSince(lastNearmiss, minTimeForComboMult * timeToSecurePoints);
-    }
+        void PointsSecured() 
+        {
+            totalPoints += runningPoints;
+            HighSchoreCheck();
+            runningPoints = 0;
+            numberOfCombos = 0;
+            if (secureTimer != null)
+            {
+                StopCoroutine(secureTimer);
+                secureTimer = null;
+            }
+            PointsChange.Invoke();
+        }
 
+        void HighSchoreCheck() 
+        {
+            if (GameManager.Instance.highScore > totalPoints)
+                return;
 
-    public float ComboMultiplier()
-    {
-        if (numberOfCombos <= 1)
-            return numberOfCombos;
-        float lerped = Mathf.InverseLerp(minCombos, maxCombos, numberOfCombos);
-        return Mathf.Clamp(comboMultiplierCurve.Evaluate(lerped) * maxComboMultiplier, minComboMultiplier, maxComboMultiplier);
-    }
-    #endregion
+            GameManager.Instance.highScore = totalPoints;
+            GameManager.Instance.highScorer = UserName;
+        }
+        #endregion
 
-    #region Point Fomrulas
-    float RunnignPointsCalculation(float normalizedDistance) 
-    {
-        return basePointsPerRay + DistancePoints(normalizedDistance) + SpeedPointsMultiplier();
-    }
+        #region Combo Multiuplier
+        public float ComboMultCooldwon() 
+        {
+            return eneme.Tools.CooldownSince(lastNearmiss, minTimeBeforeCombo);
+        }
 
-    float DistancePoints(float normalizedDistance) 
-    {
-        return normalizedDistance * maxDistancePoints;
-    }
-    float SpeedPointsMultiplier() 
-    {
-        return droneMovement.GetTotalVelocity().magnitude * speedPointsMultiplier;
-    }
-    #endregion
+        public float ComboWindowCooldown() 
+        {
+            return eneme.Tools.CooldownSince(lastNearmiss + minTimeBeforeCombo, timeToSecurePoints);
+        }
+
+        public float ComboMultiplier()
+        {
+            if (numberOfCombos <= 1)
+                return numberOfCombos;
+            float lerped = Mathf.InverseLerp(minCombos, maxCombos, numberOfCombos);
+            return Mathf.Clamp(comboMultiplierCurve.Evaluate(lerped) * maxComboMultiplier, minComboMultiplier, maxComboMultiplier);
+        }
+        #endregion
+
+        #region Point Fomrulas
+        float RunnignPointsCalculation(float normalizedDistance) 
+        {
+            return basePointsPerRay + (DistancePoints(normalizedDistance) + SpeedPointsMultiplier() * ComboMultiplier());
+        }
+
+        float DistancePoints(float normalizedDistance) 
+        {
+            return normalizedDistance * maxDistancePoints;
+        }
+        float SpeedPointsMultiplier() 
+        {
+            return droneMovement.GetTotalVelocity().magnitude * speedPointsMultiplier;
+        }
+        #endregion
 
 
     #endregion
@@ -250,13 +266,7 @@ public class PlayerManager : MonoBehaviour
     }
     void ResetPoints() 
     {
-        if(GameManager.Instance.highScore < totalPoints) 
-        {
-            GameManager.Instance.highScore = totalPoints;
-            //HighScoreChange.Invoke();
-        }
         totalPoints = 0;
-        expectedPoints = 0;
         runningPoints = 0;
         numberOfCombos = 0;
 

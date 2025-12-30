@@ -33,12 +33,14 @@ public class PlayerManager : MonoBehaviour
 
     #region Expected Points
     float lastNearmiss = 0;
-    [SerializeField]
+    [Header("Time For")]
+    [SerializeField][Range(0, 10f)]
     float timeToSecurePoints = 1.5f;
     [SerializeField][Range(0, 0.9f)]
     float minTimeForComboMult = .5f; //PErcenttage of 
     #endregion
 
+    [Header("Spawn")]
     [SerializeField]
     Transform spawnTransform;
 

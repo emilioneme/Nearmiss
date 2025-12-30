@@ -5,13 +5,36 @@ public class PlayerModelHandler : MonoBehaviour
 {
     [SerializeField]
     float nearmissEffectForwardMultiplier = 1;
+    [SerializeField]
+    float trailFadeTimeMultiplier = 5;
+
+    [SerializeField]
+    float maxDroneSpeedForTrail = 300;
+
+
+    PlayerManager playerManager;
+    [HideInInspector]
     public PlayerModelVisuals PlayerModelVisuals;
 
     private void Awake()
     {
+        playerManager = GetComponentInParent<PlayerManager>();
+
         PlayerModelVisuals = GetComponentInChildren<PlayerModelVisuals>();
         if (PlayerModelVisuals == null)
             Debug.LogWarning("No Player Model Visuals Found");
+    }
+
+    private void FixedUpdate()
+    {
+        if (playerManager.droneMovement == null)
+            return;
+        
+        foreach(TrailRenderer trail in PlayerModelVisuals.TrailRenderers)
+        {
+            float velocityNomralized = playerManager.droneMovement.GetTotalVelocity().magnitude / maxDroneSpeedForTrail;
+            trail.time = velocityNomralized * trailFadeTimeMultiplier;
+        }
     }
 
     public void NeamissEffetSpawner(float normalDistance, float distance, Vector3 origin, RaycastHit hit) 

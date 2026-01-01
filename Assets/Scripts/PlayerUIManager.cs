@@ -23,6 +23,11 @@ public class PlayerUIManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] TMP_Text SpeedText;
 
+    [Header("Hame Objects")]
+    [SerializeField] GameObject RunningPointsGO;
+    [SerializeField] GameObject ComboMultGO;
+
+
     [Header("Texts")]
     [SerializeField] TMP_Text TotalPointsText;
     [SerializeField] TMP_Text RunningPointsText;
@@ -46,22 +51,39 @@ public class PlayerUIManager : MonoBehaviour
     {
         HandleSpeedometerText();
 
-        TotalPointsText.text = Tools.ProcessFloat(pm.totalPoints);
+        TotalPointsText.text = Tools.ProcessFloat(pm.pointManager.totalPoints);
+        //TotalPointsText.text = Tools.ProcessFloat(pm.expectedPoints);
 
-        float runningPointsFill = Mathf.Abs(pm.SecurePointsCooldown());
-        runningPointsFill = runningPointsFill <= .1f? 1 : runningPointsFill;
-        RunningPointsText.text = Tools.ProcessFloat(pm.runningPoints);
-        RunningPointsImage.fillAmount = runningPointsFill;
+        if(pm.pointManager.runningPoints != 0) 
+        {
+            RunningPointsGO.SetActive(true);
+            ComboMultGO.SetActive(true);
+        } 
+        else 
+        {
+            RunningPointsGO.SetActive(false);
+            ComboMultGO.SetActive(false);
+        }
 
-        float comboMultFill = Mathf.Abs(pm.ComboWindowCooldown() - 1);
-        comboMultFill = comboMultFill == 0 ? 1 : comboMultFill;
-        ComboMultText.text = Tools.LimitNumberLength(pm.ComboMultiplier(), 3);
-        ComboMultImage.fillAmount = comboMultFill;
+        if (RunningPointsGO.activeInHierarchy) 
+        {
+            float runningPointsFill = Mathf.Abs(pm.pointManager.SecurePointsCooldown());
+            runningPointsFill = runningPointsFill <= .1f ? 1 : runningPointsFill;
+            RunningPointsImage.fillAmount = runningPointsFill;
+            RunningPointsText.text = Tools.ProcessFloat(pm.pointManager.runningPoints);
 
-        float comboNumFill = Mathf.Abs(pm.ComboMultCooldwon());
-        comboNumFill = comboNumFill <= .1f? 1: comboNumFill;
-        ComboNumText.text = pm.numberOfCombos.ToString();
-        ComboNumImage.fillAmount = comboNumFill;
+
+            float comboNumFill = Mathf.Abs(pm.pointManager.BeforeComboWindowCooldown());
+            float comboMultFill = Mathf.Abs(pm.pointManager.ComboWindowCooldown() - 1);
+
+            float comboFill =
+                comboNumFill    > .1f   && comboNumFill     < 1 ? comboNumFill
+                : comboMultFill > 0     && comboMultFill    < 1 ? comboMultFill 
+                : 1;
+            ComboMultImage.fillAmount = comboFill;
+            //ComboMultText.text = "x" + Tools.LimitNumberLength(pm.ComboMultiplier(), 4);
+            ComboMultText.text = "x" + pm.pointManager.numberOfCombos.ToString();
+        }
 
     }
 

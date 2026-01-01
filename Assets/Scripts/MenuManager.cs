@@ -7,7 +7,6 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class MenuManager : MonoBehaviour
 {
-    
     [Header("Panels")]
     [SerializeField]
     GameObject settingsPanel;
@@ -29,10 +28,12 @@ public class MenuManager : MonoBehaviour
     TMP_Text HighScoreText;
 
     GameManager gm;
+    UserData ud;
 
     private void Start()
     {
         gm = GameManager.Instance;
+        ud = UserData.Instance;
 
         SetUpMenu();
     }
@@ -44,17 +45,17 @@ public class MenuManager : MonoBehaviour
 
     public void SliderSetUp() 
     {
-        masterVolumeSlider.value = gm.masterVolume;
-        musicVolumeSlider.value = gm.musicVolume;
-        mouseSenseSlider.value = gm.mouseSensitivity;
-        stickSenseSlider.value = gm.stickSensitivity;
+        masterVolumeSlider.value = ud.masterVolume;
+        musicVolumeSlider.value = ud.musicVolume;
+        mouseSenseSlider.value = ud.mouseSensitivity;
+        stickSenseSlider.value = ud.stickSensitivity;
     }
     public void SliderUpdate() 
     {
-        gm.masterVolume = masterVolumeSlider.value;
-        gm.musicVolume = musicVolumeSlider.value;
-        gm.mouseSensitivity = mouseSenseSlider.value;
-        gm.stickSensitivity = stickSenseSlider.value;
+        ud.masterVolume = masterVolumeSlider.value;
+        ud.musicVolume = musicVolumeSlider.value;
+        ud.mouseSensitivity = mouseSenseSlider.value;
+        ud.stickSensitivity = stickSenseSlider.value;
     }
     public void HighScoreUpdate() 
     {

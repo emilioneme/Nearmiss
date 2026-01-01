@@ -74,9 +74,9 @@ public class PlayerInput : MonoBehaviour
         Vector2 raw = lookAction.ReadValue<Vector2>();
         Vector3 look;
         if (lookAction.activeControl?.device is Mouse)
-            look = raw * GameManager.Instance.mouseSensitivity;
+            look = raw * UserData.Instance.mouseSensitivity;
         else
-            look = raw * GameManager.Instance.stickSensitivity;
+            look = raw * UserData.Instance.stickSensitivity;
 
         LookInput = look;
     }

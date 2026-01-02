@@ -14,7 +14,7 @@ namespace eneme
             return Mathf.Clamp(ElapsedTimeSince(lastTime) / overTime, 0, 1);
         }
 
-        public static string ProcessFloat(float f)
+        public static string ProcessFloat(float f, int decimalPlaces)
         {
             float number = f;
             string unit = "";
@@ -22,11 +22,23 @@ namespace eneme
             if (f >= 1_000_000_000f) { number = f / 1_000_000_000f; unit = "b"; }
             else if (f >= 1_000_000f) { number = f / 1_000_000f; unit = "m"; }
             else if (f >= 1_000f) { number = f / 1_000f; unit = "k"; }
-            else { return Mathf.Round(number).ToString(); }
+            else
+            {
+                return Mathf.Round(f).ToString();
+            }
 
-            number = Mathf.Round(number * 10f) / 10f;   // 1 decimal place
-            return number.ToString("0.#") + unit;
+            // Round numerically (not string-based)
+            float factor = Mathf.Pow(10f, decimalPlaces);
+            number = Mathf.Round(number * factor) / factor;
+
+            // Build format like "0.#", "0.##", "0.###", etc.
+            string format = decimalPlaces > 0
+                ? "0." + new string('#', decimalPlaces)
+                : "0";
+
+            return number.ToString(format) + unit;
         }
+
 
         public static string LimitNumberLength(float number, int length)
         {

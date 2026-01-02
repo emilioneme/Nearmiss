@@ -51,7 +51,7 @@ public class PlayerUIManager : MonoBehaviour
     {
         HandleSpeedometerText();
 
-        TotalPointsText.text = Tools.ProcessFloat(pm.pointManager.totalPoints);
+        TotalPointsText.text = Tools.ProcessFloat(pm.pointManager.totalPoints, 2);
         //TotalPointsText.text = Tools.ProcessFloat(pm.expectedPoints);
 
         if(pm.pointManager.runningPoints != 0) 
@@ -70,7 +70,7 @@ public class PlayerUIManager : MonoBehaviour
             float runningPointsFill = Mathf.Abs(pm.pointManager.SecurePointsCooldown());
             runningPointsFill = runningPointsFill <= .1f ? 1 : runningPointsFill;
             RunningPointsImage.fillAmount = runningPointsFill;
-            RunningPointsText.text = Tools.ProcessFloat(pm.pointManager.runningPoints);
+            RunningPointsText.text = Tools.ProcessFloat(pm.pointManager.runningPoints, 2);
 
 
             float comboNumFill = Mathf.Abs(pm.pointManager.BeforeComboWindowCooldown());
@@ -97,7 +97,7 @@ public class PlayerUIManager : MonoBehaviour
             speed = pm.droneMovement.GetTotalVelocity().magnitude * speedometerMultiplier;
         if (speedometerMode == SpeedometerMode.FORWARDSPEED)
             speed = pm.droneMovement.GetForwardVelocity().magnitude * speedometerMultiplier;
-        SpeedText.text = Tools.ProcessFloat(speed);
+        SpeedText.text = Tools.ProcessFloat(speed, 1);
     }
     #endregion
 

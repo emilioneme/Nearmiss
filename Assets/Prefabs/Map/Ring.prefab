@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 2306637453277819284}
   m_Layer: 6
   m_Name: Ring
-  m_TagString: Untagged
+  m_TagString: RigidObstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

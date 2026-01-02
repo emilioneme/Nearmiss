@@ -65,6 +65,12 @@ public class DroneMovement : MonoBehaviour
     public bool applyGravity = true;
     public bool enableFlying = true;
 
+    [Header("Other")]
+    public bool allowLook = true;
+    public bool allowRotate = true;
+    public bool allowLookRotate = true;
+    public bool allowDash = true;
+
     private void Awake()
     {
         cc = GetComponent<CharacterController>();
@@ -127,17 +133,23 @@ public class DroneMovement : MonoBehaviour
 
     public void Manuver(float magnitude, int direction)
     {
+        if(!allowLookRotate)
+            return;
         float rotationAmount = rotationSpeed * rotationSpeedMultiplier * magnitude * Time.deltaTime;
         transform.rotation = transform.rotation * Quaternion.Euler(0, 0, rotationAmount * direction);
     }
 
     public void RotateLeft()
     {
+        if (!allowRotate)
+            return;
         Rotate(1);
     }
 
     public void RotateRight()
     {
+        if (!allowRotate)
+            return;
         Rotate(-1);
     }
     #endregion
@@ -145,12 +157,16 @@ public class DroneMovement : MonoBehaviour
     #region Look
     public void LookUpDown(float y)
     {
+        if (!allowLook)
+            return;
         float yClamped = Mathf.Clamp(y, -yRotationInputThershhold, yRotationInputThershhold);
         float loookAmount = -yClamped * lookSpeed * lookSpeedMultiplier * Time.deltaTime;
         transform.rotation = transform.rotation * Quaternion.Euler(loookAmount, 0, 0);
     }
     public void LookLeftRight(float x)
     {
+        if (!allowLook)
+            return;
         float xClamped = Mathf.Clamp(x, -xRotationInputThershhold, xRotationInputThershhold);
         float loookAmount = xClamped * lookSpeed * lookSpeedMultiplier * Time.deltaTime;
         transform.rotation = transform.rotation * Quaternion.Euler(0, loookAmount, 0);
@@ -162,9 +178,10 @@ public class DroneMovement : MonoBehaviour
     #endregion
 
     #region Dash
-
     public void Dash(Vector3 direction, Vector3 animateAxis)  
     {
+        if(!allowDash)
+            return;
         if(eneme.Tools.CooldownSince(lastTimeDashed, dashCooldwon) < 1) 
             return;
         lastTimeDashed = Time.time;
@@ -176,6 +193,7 @@ public class DroneMovement : MonoBehaviour
     IEnumerator DashCoroutine()
     {
         isDashing = true;
+        allowLook = false;
         float timer = 0f;
         while (timer < dashDuration)
         {
@@ -187,6 +205,7 @@ public class DroneMovement : MonoBehaviour
             yield return null;
         }
         isDashing = false;
+        allowLook = true;
     }
 
     public Vector3 GetDashVelocity() // so we can add it to total velocity

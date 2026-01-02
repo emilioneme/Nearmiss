@@ -22,6 +22,9 @@ public class UserData : MonoBehaviour
     public string UserName = "Anonymus";
     int UserID;
 
+    [SerializeField]
+    public float personalHighScore = 0;
+
     [Range(0.1f, 2.0f)]
     public float mouseSensitivity = 1;
     [Range(0.1f, 2.0f)]

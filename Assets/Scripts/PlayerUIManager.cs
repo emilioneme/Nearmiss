@@ -1,5 +1,6 @@
 using eneme;
 using TMPro;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,8 @@ using UnityEngine.UI;
 public class PlayerUIManager : MonoBehaviour
 {
     PlayerManager pm;
+    [SerializeField]
+    CinemachineCamera cam;
 
     [Header("Speedometer")]
     [SerializeField] SpeedometerMode speedometerMode = 0;
@@ -40,6 +43,15 @@ public class PlayerUIManager : MonoBehaviour
     [SerializeField] Image ComboMultImage;
     [SerializeField] Image ComboNumImage;
 
+    [Header("FOV")]
+    [SerializeField]
+    float minFov = 60;
+    [SerializeField]
+    float maxFovAdditive = 30;
+    [SerializeField]
+    AnimationCurve fovCurve;
+
+
 
 
     private void Awake()
@@ -50,6 +62,10 @@ public class PlayerUIManager : MonoBehaviour
     private void Update()
     {
         HandleSpeedometerText();
+
+        float vel = pm.droneMovement.GetTotalVelocity().magnitude;
+        float speedFOV = minFov + Mathf.InverseLerp(30, 100, vel) * maxFovAdditive;
+        cam.Lens.FieldOfView = speedFOV;
 
         TotalPointsText.text = Tools.ProcessFloat(pm.pointManager.totalPoints, 2);
         //TotalPointsText.text = Tools.ProcessFloat(pm.expectedPoints);

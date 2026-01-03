@@ -1,8 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.InputSystem;
-using static UnityEditor.FilePathAttribute;
 
 [RequireComponent(typeof(CharacterController))]
 public class DroneMovement : MonoBehaviour
@@ -24,12 +22,22 @@ public class DroneMovement : MonoBehaviour
     [SerializeField][Range(1, 50)]
     public float gravityForceMultiplier = 1.9f;
 
+    [Header("PointsSpeed")]
+    [SerializeField]
+    float pointsSpeedMultiplier = 1;
+    public float maxPointsForSpeed = 60;
+    public AnimationCurve pointsSpeedCurve;
+
+    float totalPointsNormalized = 0;
+
+    [SerializeField]
+    float pointIncreaseSpeed = 1;
+
 
     [Header("Turning Rotation")]
     [SerializeField]
     public float rotationSpeedMultiplier = 1.0f;
     float rotationSpeed = 1;
-
     [SerializeField]
     float yRotationInputThershhold = 3;
     [SerializeField]
@@ -91,15 +99,18 @@ public class DroneMovement : MonoBehaviour
 
     float CurrentForwardSpeed() 
     {
-        float baseSpeed = flyingSpeed;
-        float noseDiveSpeed = NoseDiveSpeed() * noseDiveSpeedMultiplier;
-        return (baseSpeed + noseDiveSpeed) * totalFlyingSpeedMultiplier;
+        return ((flyingSpeed + NoseDiveSpeed()) * PointsSpeed()) * totalFlyingSpeedMultiplier;
     }
 
     float NoseDiveSpeed() 
     {
         float dot = Vector3.Dot(transform.forward, Vector3.down);
-        return Mathf.InverseLerp(-1f, 1f, dot);
+        return Mathf.InverseLerp(-1f, 1f, dot) * noseDiveSpeedMultiplier;
+    }
+
+    float PointsSpeed() 
+    {
+        return 1 + pointsSpeedCurve.Evaluate(totalPointsNormalized) * pointsSpeedMultiplier;
     }
     #endregion
 
@@ -221,6 +232,41 @@ public class DroneMovement : MonoBehaviour
     public Vector3 GetTotalVelocity()
     {
         return CurrentDownVelocity() + GetForwardVelocity() + GetDashVelocity();
+    }
+    #endregion
+
+    #region Points Speed
+
+    public void ResetedPoints(float totalPoints) 
+    {
+        totalPointsNormalized = totalPoints / maxPointsForSpeed;
+    }
+
+    Coroutine pointsCoroutine;
+    public void PointsChanged(float totalPoints)
+    {
+        float targetPoints = Mathf.Clamp01(totalPoints / maxPointsForSpeed);
+
+        if (pointsCoroutine != null)
+            StopCoroutine(pointsCoroutine);
+
+        pointsCoroutine = StartCoroutine(LerpSpeedChange(targetPoints));
+    }
+    IEnumerator LerpSpeedChange(float targetPoints)
+    {
+        while (!Mathf.Approximately(totalPointsNormalized, targetPoints))
+        {
+            totalPointsNormalized = Mathf.MoveTowards(
+                totalPointsNormalized,
+                targetPoints,
+                pointIncreaseSpeed * Time.deltaTime
+            );
+
+            yield return null;
+        }
+
+        totalPointsNormalized = targetPoints;
+        pointsCoroutine = null;
     }
     #endregion
 

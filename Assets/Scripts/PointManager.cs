@@ -43,8 +43,8 @@ public class PointManager : MonoBehaviour
     float minTimeBeforeCombo = .5f;
     [SerializeField]
     float comboWindowDuration = 1.5f;
-
     #endregion
+
 
     #region Events
     [SerializeField]
@@ -59,13 +59,13 @@ public class PointManager : MonoBehaviour
     UnityEvent<float, float> UpdatedNumberOfCombos; //number of combos and comboMuliplierCalciation
 
     [SerializeField]
-    UnityEvent ResetedRunningPoints;
+    UnityEvent<float> ResetedRunningPoints;
     [SerializeField]  
-    UnityEvent ResetedExpectedPoints;
+    UnityEvent<float> ResetedExpectedPoints;
     [SerializeField]  
-    UnityEvent ResetedTotalPoints;
+    UnityEvent<float> ResetedTotalPoints;
     [SerializeField]  
-    UnityEvent ResetedNumberOfCombos;
+    UnityEvent<float> ResetedNumberOfCombos;
     
 
     [SerializeField]
@@ -170,8 +170,8 @@ public class PointManager : MonoBehaviour
         runningPoints = 0;
         numberOfCombos = 0;
 
-        ResetedNumberOfCombos.Invoke();
-        ResetedNumberOfCombos.Invoke();
+        ResetedNumberOfCombos.Invoke(runningPoints);
+        ResetedNumberOfCombos.Invoke(numberOfCombos);
 
         ResetSecureTimer();
     }
@@ -234,10 +234,10 @@ public class PointManager : MonoBehaviour
         numberOfCombos = 0;
         expectedPoints = 0;
 
-        ResetedTotalPoints.Invoke();
-        ResetedRunningPoints.Invoke();
-        ResetedNumberOfCombos.Invoke();
-        ResetedExpectedPoints.Invoke();
+        ResetedTotalPoints.Invoke(totalPoints);
+        ResetedRunningPoints.Invoke(runningPoints);
+        ResetedNumberOfCombos.Invoke(numberOfCombos);
+        ResetedExpectedPoints.Invoke(expectedPoints);
     }
 
 }

@@ -4,16 +4,19 @@ using UnityEngine.Events;
 
 public class PlayerInput : MonoBehaviour
 {
+    [Header("Look")]
     [SerializeField]
     private InputAction lookAction;
     [HideInInspector]
     public Vector2 LookInput;
 
+    [Header("Rotate")]
     [SerializeField]
     public InputAction rotateLeftAction;
     [SerializeField]
     public InputAction rotateRightAction;
 
+    [Header("Dash to Side")]
     [SerializeField]
     public InputAction dashLeftAction;
     [SerializeField]
@@ -24,10 +27,14 @@ public class PlayerInput : MonoBehaviour
     [SerializeField]
     public InputAction dashDownAction;
 
+    [Header("Dash Forward and Back")]
     [SerializeField]
     public InputAction dashForwardAction;
     [SerializeField]
     public InputAction dashBackwardAction;
+
+    [Header("Pause")]
+    public InputAction pause;
 
 
     private void OnEnable()
@@ -44,6 +51,8 @@ public class PlayerInput : MonoBehaviour
 
         dashForwardAction.Enable();
         dashBackwardAction.Enable();
+
+        pause.Enable();
     }
 
     private void OnDisable()
@@ -60,14 +69,10 @@ public class PlayerInput : MonoBehaviour
 
         dashForwardAction.Disable();
         dashBackwardAction.Disable();
+
+        pause.Disable();
     }
 
-
-    private void Start()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
 
     private void Update()
     {

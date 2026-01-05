@@ -33,21 +33,6 @@ public class DroneMovement : MonoBehaviour
     [SerializeField]
     float pointIncreaseSpeed = 1;
 
-
-    [Header("Turning Rotation")]
-    [SerializeField]
-    public float rotationSpeedMultiplier = 1.0f;
-    float rotationSpeed = 1;
-    [SerializeField]
-    float yRotationInputThershhold = 3;
-    [SerializeField]
-    float xRotationInputThershhold = 3;
-
-    [Header("Look")]
-    [SerializeField]
-    public float lookSpeedMultiplier = 1.0f;
-    float lookSpeed = 1;
-
     [Header("Dash")]
     [SerializeField]
     float dashCooldwon = 3;
@@ -72,16 +57,16 @@ public class DroneMovement : MonoBehaviour
     [Header("Physics")]
     public bool applyGravity = true;
     public bool enableFlying = true;
-
-    [Header("Other")]
-    public bool allowLook = true;
-    public bool allowRotate = true;
-    public bool allowLookRotate = true;
     public bool allowDash = true;
 
     private void Awake()
     {
         cc = GetComponent<CharacterController>();
+    }
+
+    private void Update()
+    {
+        MoveDrone();
     }
 
     #region Movement
@@ -135,59 +120,6 @@ public class DroneMovement : MonoBehaviour
     }
     #endregion
 
-    #region Rotate
-    public void Rotate(int direction)
-    {
-        float rotationAmount = rotationSpeed * rotationSpeedMultiplier * Time.deltaTime;
-        transform.rotation = transform.rotation * Quaternion.Euler(0, 0, rotationAmount * direction);
-    }
-
-    public void Manuver(float magnitude, int direction)
-    {
-        if(!allowLookRotate)
-            return;
-        float rotationAmount = rotationSpeed * rotationSpeedMultiplier * magnitude * Time.deltaTime;
-        transform.rotation = transform.rotation * Quaternion.Euler(0, 0, rotationAmount * direction);
-    }
-
-    public void RotateLeft()
-    {
-        if (!allowRotate)
-            return;
-        Rotate(1);
-    }
-
-    public void RotateRight()
-    {
-        if (!allowRotate)
-            return;
-        Rotate(-1);
-    }
-    #endregion
-
-    #region Look
-    public void LookUpDown(float y)
-    {
-        if (!allowLook)
-            return;
-        float yClamped = Mathf.Clamp(y, -yRotationInputThershhold, yRotationInputThershhold);
-        float loookAmount = -yClamped * lookSpeed * lookSpeedMultiplier * Time.deltaTime;
-        transform.rotation = transform.rotation * Quaternion.Euler(loookAmount, 0, 0);
-    }
-    public void LookLeftRight(float x)
-    {
-        if (!allowLook)
-            return;
-        float xClamped = Mathf.Clamp(x, -xRotationInputThershhold, xRotationInputThershhold);
-        float loookAmount = xClamped * lookSpeed * lookSpeedMultiplier * Time.deltaTime;
-        transform.rotation = transform.rotation * Quaternion.Euler(0, loookAmount, 0);
-        if (x > 0)
-            Manuver(x, -1);//Rotate(-1);
-        else if (x < 0)
-            Manuver(x, -1);//Rotate(-1);
-    }
-    #endregion
-
     #region Dash
     public void Dash(Vector3 direction, Vector3 animateAxis)  
     {
@@ -204,7 +136,6 @@ public class DroneMovement : MonoBehaviour
     IEnumerator DashCoroutine()
     {
         isDashing = true;
-        allowLook = false;
         float timer = 0f;
         while (timer < dashDuration)
         {
@@ -216,7 +147,6 @@ public class DroneMovement : MonoBehaviour
             yield return null;
         }
         isDashing = false;
-        allowLook = true;
     }
 
     public Vector3 GetDashVelocity() // so we can add it to total velocity

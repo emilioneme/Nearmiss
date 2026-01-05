@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UserName: Anonymus
   personalHighScore: 0
-  mouseSensitivity: 0.25
+  mouseSensitivity: 0.3
   stickSensitivity: 2
   stickExponent: 2
   masterVolume: 0.5

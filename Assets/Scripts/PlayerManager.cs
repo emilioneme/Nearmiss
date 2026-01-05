@@ -25,6 +25,8 @@ public class PlayerManager : MonoBehaviour
     [HideInInspector]
     public DroneMovement droneMovement;
     [HideInInspector]
+    public PlaneLook planeLook;
+    [HideInInspector]
     public PlayerUIManager playerUIManager;
     [HideInInspector]
     public NearmissHandler nearmissHandler;
@@ -45,7 +47,8 @@ public class PlayerManager : MonoBehaviour
         nearmissHandler = GetComponent<NearmissHandler>();
         collisionHandler = GetComponent<CollisionHandler>();
         pointManager = GetComponent<PointManager>();
-        
+        planeLook = GetComponent<PlaneLook>();
+
 
         playerModelHandler = GetComponentInChildren<PlayerModelHandler>();
     }
@@ -53,48 +56,63 @@ public class PlayerManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(SpawnCorutine());
+        UnPauseGame();
     }
 
     private void Update()
     {
-        HandleMovement();
+        if(planeLook.enabled)
+            HandleLookInput();
+        if(droneMovement.enabled)
+            HandleMovementInput();
     }
 
-    #region Movmeent
-    void HandleMovement() 
+    #region pause
+    public void PauseGame() 
     {
-        droneMovement.MoveDrone();
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.None;
+    }
+    public void UnPauseGame()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+    #endregion
 
-        //Look
-        if (playerInput.LookInput.y != 0)
-            droneMovement.LookUpDown(playerInput.LookInput.y);
-        if (playerInput.LookInput.x != 0)
-            droneMovement.LookLeftRight(playerInput.LookInput.x);
+    #region Input
+    void HandleLookInput() 
+    {
+        bool isDashing = droneMovement.enabled? droneMovement.isDashing : false;
+        if (playerInput.LookInput.y != 0 && !isDashing)
+            planeLook.LookUpDown(playerInput.LookInput.y);
+        if (playerInput.LookInput.x != 0 && !isDashing)
+            planeLook.LookLeftRight(playerInput.LookInput.x);
 
-        if (droneMovement.enableFlying) 
-        {
-            //Dashing
-            if (playerInput.dashRightAction.IsPressed())
-                droneMovement.Dash(Vector3.right, Vector3.back);
-            if (playerInput.dashLeftAction.IsPressed())
-                droneMovement.Dash(Vector3.left, Vector3.forward);
-            if (playerInput.dashUpAction.IsPressed())
-                droneMovement.Dash(Vector3.up, Vector3.down);
-            if (playerInput.dashDownAction.IsPressed())
-                droneMovement.Dash(Vector3.down, Vector3.up);
+        //Rotation
+        if (playerInput.rotateLeftAction.IsPressed())
+            planeLook.RotateLeft();
+        if (playerInput.rotateRightAction.IsPressed())
+            planeLook.RotateRight();
+    }
+
+    void HandleMovementInput() 
+    {
+        //Dashing
+        if (playerInput.dashRightAction.IsPressed())
+            droneMovement.Dash(Vector3.right, Vector3.back);
+        if (playerInput.dashLeftAction.IsPressed())
+            droneMovement.Dash(Vector3.left, Vector3.forward);
+        if (playerInput.dashUpAction.IsPressed())
+            droneMovement.Dash(Vector3.up, Vector3.down);
+        if (playerInput.dashDownAction.IsPressed())
+            droneMovement.Dash(Vector3.down, Vector3.up);
 
 
-            if (playerInput.dashBackwardAction.IsPressed())
-                droneMovement.Dash(Vector3.back, Vector3.left);
-            if (playerInput.dashForwardAction.IsPressed())
-                droneMovement.Dash(Vector3.forward, Vector3.right);
-
-            //Rotation
-            if (playerInput.rotateLeftAction.IsPressed())
-                droneMovement.RotateLeft();
-            if (playerInput.rotateRightAction.IsPressed())
-                droneMovement.RotateRight();
-        }
+        if (playerInput.dashBackwardAction.IsPressed())
+            droneMovement.Dash(Vector3.back, Vector3.left);
+        if (playerInput.dashForwardAction.IsPressed())
+            droneMovement.Dash(Vector3.forward, Vector3.right);
     }
     #endregion
 
@@ -119,17 +137,17 @@ public class PlayerManager : MonoBehaviour
 
     void SpawnPlayer() 
     {
+        bool enabled = droneMovement.enabled;
         droneMovement.enabled = false;
         transform.position = spawnTransform.position;
-        droneMovement.enabled = true;
+        droneMovement.enabled = enabled;
     }
+
     void ToggleFreeze(bool freeze = true) 
     {
-        droneMovement.enableFlying = !freeze;
-        droneMovement.applyGravity = !freeze;
+        droneMovement.enabled = !freeze;
         nearmissHandler.enabled = !freeze;
         collisionHandler.enabled = !freeze;
-
     }
     #endregion
 

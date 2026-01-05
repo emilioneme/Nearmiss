@@ -7,85 +7,62 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class MenuManager : MonoBehaviour
 {
-    [Header("Panels")]
     [SerializeField]
-    GameObject settingsPanel;
-    [SerializeField]
-    GameObject mainButtonsPannel;
+    GameObject menuCanvas;
 
-    [Header("Settings")]
     [SerializeField]
-    Slider masterVolumeSlider;
-    [SerializeField]
-    Slider musicVolumeSlider;
-    [SerializeField]
-    Slider mouseSenseSlider;
-    [SerializeField]
-    Slider stickSenseSlider;
+    GameObject settingsCanvas;
 
-    [Header("Highscore")]
     [SerializeField]
-    TMP_Text HighScoreText;
+    GameObject custumizationCanvas;
 
-    GameManager gm;
-    UserData ud;
+    [SerializeField]
+    GameObject leaderboardCanvas;
+
+
+    public enum Canvas
+    {
+        menu,
+        settings,
+        custumization,
+        leaderboard
+    }
+
+    Canvas currentCanvas = Canvas.menu;
 
     private void Start()
     {
-        gm = GameManager.Instance;
-        ud = UserData.Instance;
-
-        SetUpMenu();
-    }
-    public void SetUpMenu() 
-    {
-        SliderSetUp();
-        HighScoreUpdate();
+        SettingsManager.Instance.SettingsClosed.AddListener(SettingsClosed);
     }
 
-    public void SliderSetUp() 
+    #region Settings
+    public void OpenSettings()
     {
-        masterVolumeSlider.value = ud.masterVolume;
-        musicVolumeSlider.value = ud.musicVolume;
-        mouseSenseSlider.value = ud.mouseSensitivity;
-        stickSenseSlider.value = ud.stickSensitivity;
-    }
-    public void SliderUpdate() 
-    {
-        ud.masterVolume = masterVolumeSlider.value;
-        ud.musicVolume = musicVolumeSlider.value;
-        ud.mouseSensitivity = mouseSenseSlider.value;
-        ud.stickSensitivity = stickSenseSlider.value;
-    }
-    public void HighScoreUpdate() 
-    {
-        HighScoreText.text = gm.highScore.ToString(); //Process float later
+        ChangeCanvasTo(Canvas.settings);
     }
 
-    #region Panels
-    public void ToggleSettings() 
+    public void SettingsClosed()
     {
-        Debug.Log("settings");
-        TogglePanel(settingsPanel);
-        TogglePanel(mainButtonsPannel);
+        ChangeCanvasTo(Canvas.menu);
     }
-    void TogglePanel(GameObject panel) 
-    {
-        panel.SetActive(!panel.activeInHierarchy);
-    }
-    void SwitchPanel(GameObject onPanel, GameObject offPanel = null) 
-    {
-        onPanel.SetActive(true);
 
-        if(offPanel != null)
-            onPanel.SetActive(false);
-    }
     #endregion
 
-    public void LoadScene(string scene)
+    #region CanvasManager
+    public void ChangeCanvasTo(Canvas canvas)
     {
-        Debug.Log("sceneLoad");
-        SceneLoader.Instance.LoadScene(scene);
+        if (canvas == currentCanvas)
+            return;
+        currentCanvas = canvas;
+        CanvasChange();
     }
 
+    void CanvasChange()
+    {
+        menuCanvas.SetActive(currentCanvas == Canvas.menu);
+        settingsCanvas.SetActive(currentCanvas == Canvas.settings);
+        //leaderboardCanvas.SetActive(currentCanvas == Canvas.leaderboard);
+        //custumizationCanvas.SetActive(currentCanvas == Canvas.custumization);
+    }
+    #endregion
 }

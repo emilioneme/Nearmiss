@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1834039415499590281}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.3900001, z: -6.5860004}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -45,8 +45,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UserName: Anonymus
-  mouseSensitivity: 1
+  personalHighScore: 0
+  mouseSensitivity: 0.25
   stickSensitivity: 2
   stickExponent: 2
   masterVolume: 0.5
   musicVolume: 0.5
+  automaticRespawn: 0

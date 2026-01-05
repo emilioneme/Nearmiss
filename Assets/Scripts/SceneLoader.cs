@@ -49,6 +49,7 @@ namespace eneme
         IEnumerator deactivateCanvas(float time) 
         {
             yield return new WaitForSeconds(time);
+            SettingsManager.Instance.CloseSettings();
             LoadingCanvas.SetActive(false);
         }
 

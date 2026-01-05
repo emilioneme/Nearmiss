@@ -22,6 +22,10 @@ public class SettingsManager : MonoBehaviour
     }
     #endregion
 
+    [Header("Canvas")]
+    [SerializeField]
+    public GameObject settingsCanvas;
+
     [Header("Volume")]
     [SerializeField]
     Slider volumeSlider;
@@ -38,18 +42,28 @@ public class SettingsManager : MonoBehaviour
     [SerializeField]
     Toggle automaticRespawn;
 
-    [HideInInspector]
+    [SerializeField]
     public UnityEvent SettingsClosed;
+
     
-    public void CloseSettings() 
+
+    public void OpenSettings()
     {
+        settingsCanvas.SetActive(true);
+    }
+
+    public void CloseSettings()
+    {
+        //settingsCanvas.SetActive(false);
+        Debug.Log("Close Settings");
         SettingsClosed.Invoke();
     }
 
-    private void Start() //since awake is for singleton
+    private void Start()
     {
         UpdateSettings();
     }
+
 
     void UpdateSettings() 
     {
@@ -85,5 +99,23 @@ public class SettingsManager : MonoBehaviour
     }
 
     #endregion
+
+    
+
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("Scene loaded: " + scene.name);
+        settingsCanvas.SetActive(false);
+    }
 
 }

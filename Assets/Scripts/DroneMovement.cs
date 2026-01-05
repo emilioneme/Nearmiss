@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -121,6 +122,7 @@ public class DroneMovement : MonoBehaviour
     #endregion
 
     #region Dash
+    Coroutine DashRutine;
     public void Dash(Vector3 direction, Vector3 animateAxis)  
     {
         if(!allowDash)
@@ -129,7 +131,8 @@ public class DroneMovement : MonoBehaviour
             return;
         lastTimeDashed = Time.time;
         dashDirection = transform.rotation * direction; //set it wihtin class scope
-        StartCoroutine(DashCoroutine()); //takes direction from the classes scope
+        if(DashRutine == null)
+            DashRutine = StartCoroutine(DashCoroutine()); //takes direction from the classes scope
         DashStarted.Invoke(direction, animateAxis, dashDuration);
     }
 
@@ -147,6 +150,7 @@ public class DroneMovement : MonoBehaviour
             yield return null;
         }
         isDashing = false;
+        DashRutine = null;
     }
 
     public Vector3 GetDashVelocity() // so we can add it to total velocity
@@ -204,12 +208,17 @@ public class DroneMovement : MonoBehaviour
     private void OnEnable()
     {
         cc.enabled = true;
+        DashRutine = null;
     }
 
     private void OnDisable()
     {
         cc.enabled = false;
+        StopCoroutine(DashCoroutine());
+        DashRutine = null;
     }
     #endregion
+
+
 
 }

@@ -8,10 +8,14 @@ using Unity.VisualScripting;
 
 [RequireComponent(typeof(PlayerInput))]
 [RequireComponent(typeof(DroneMovement))]
+[RequireComponent(typeof(PlaneLook))]
+[RequireComponent(typeof(NearmissHandler))]
+[RequireComponent(typeof(CollisionHandler))]
+[RequireComponent(typeof(PointManager))]
 [RequireComponent(typeof(PlayerUIManager))]
+
 public class PlayerManager : MonoBehaviour
 {
-
     [Header("Spawn")]
     [SerializeField]
     Transform spawnTransform;
@@ -33,9 +37,10 @@ public class PlayerManager : MonoBehaviour
     [HideInInspector]
     public CollisionHandler collisionHandler;
     [HideInInspector]
-    public PlayerModelHandler playerModelHandler;
-    [HideInInspector]
     public PointManager pointManager;
+
+    [HideInInspector] //playerHandler
+    public PlayerModelHandler playerModelHandler;
     #endregion
 
     private void Awake()
@@ -56,7 +61,6 @@ public class PlayerManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(SpawnCorutine());
-        UnPauseGame();
     }
 
     private void Update()
@@ -66,19 +70,6 @@ public class PlayerManager : MonoBehaviour
         if(droneMovement.enabled)
             HandleMovementInput();
     }
-
-    #region pause
-    public void PauseGame() 
-    {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.None;
-    }
-    public void UnPauseGame()
-    {
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.Locked;
-    }
-    #endregion
 
     #region Input
     void HandleLookInput() 

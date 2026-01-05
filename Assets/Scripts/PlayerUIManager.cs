@@ -7,7 +7,9 @@ using UnityEngine.UI;
 [RequireComponent(typeof(PlayerManager))]
 public class PlayerUIManager : MonoBehaviour
 {
+    [SerializeField]
     PlayerManager pm;
+
     [SerializeField]
     CinemachineCamera cam;
 
@@ -48,16 +50,7 @@ public class PlayerUIManager : MonoBehaviour
     float minFov = 60;
     [SerializeField]
     float maxFovAdditive = 30;
-    [SerializeField]
-    AnimationCurve fovCurve;
 
-
-
-
-    private void Awake()
-    {
-        pm = GetComponent<PlayerManager>();
-    }
 
     private void Update()
     {

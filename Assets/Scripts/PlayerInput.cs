@@ -34,7 +34,7 @@ public class PlayerInput : MonoBehaviour
     public InputAction dashBackwardAction;
 
     [Header("Pause")]
-    public InputAction pause;
+    public InputAction pauseAction;
 
 
     private void OnEnable()
@@ -52,7 +52,7 @@ public class PlayerInput : MonoBehaviour
         dashForwardAction.Enable();
         dashBackwardAction.Enable();
 
-        pause.Enable();
+        pauseAction.Enable();
     }
 
     private void OnDisable()
@@ -70,7 +70,7 @@ public class PlayerInput : MonoBehaviour
         dashForwardAction.Disable();
         dashBackwardAction.Disable();
 
-        pause.Disable();
+        pauseAction.Disable();
     }
 
 

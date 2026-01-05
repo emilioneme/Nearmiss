@@ -1,68 +1,43 @@
 using eneme;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI;
+using UnityEngine.Events;
 
 public class MenuManager : MonoBehaviour
 {
+    [Header("Canvases")]
     [SerializeField]
-    GameObject menuCanvas;
-
+    TMP_Text HighScoreText;
     [SerializeField]
-    GameObject settingsCanvas;
+    TMP_Text HighScorerText;
 
-    [SerializeField]
-    GameObject custumizationCanvas;
-
-    [SerializeField]
-    GameObject leaderboardCanvas;
-
-
-    public enum Canvas
+    private void Awake()
     {
-        menu,
-        settings,
-        custumization,
-        leaderboard
+        SettingsManager.Instance.SettingsClosed.AddListener(CloseSettings);
     }
-
-    Canvas currentCanvas = Canvas.menu;
 
     private void Start()
     {
-        SettingsManager.Instance.SettingsClosed.AddListener(SettingsClosed);
+        HighScoreText.text = GameManager.Instance.highScore.ToString();
+        HighScorerText.text = GameManager.Instance.highScorer;
+    }
+
+    public void GoToScene(string sceneName) 
+    {
+        SceneLoader.Instance.LoadScene(sceneName);
     }
 
     #region Settings
     public void OpenSettings()
     {
-        ChangeCanvasTo(Canvas.settings);
+        SettingsManager.Instance.settingsCanvas.SetActive(true);
     }
 
-    public void SettingsClosed()
+    public void CloseSettings()
     {
-        ChangeCanvasTo(Canvas.menu);
+        SettingsManager.Instance.settingsCanvas.SetActive(false);
     }
-
     #endregion
 
-    #region CanvasManager
-    public void ChangeCanvasTo(Canvas canvas)
-    {
-        if (canvas == currentCanvas)
-            return;
-        currentCanvas = canvas;
-        CanvasChange();
-    }
-
-    void CanvasChange()
-    {
-        menuCanvas.SetActive(currentCanvas == Canvas.menu);
-        settingsCanvas.SetActive(currentCanvas == Canvas.settings);
-        //leaderboardCanvas.SetActive(currentCanvas == Canvas.leaderboard);
-        //custumizationCanvas.SetActive(currentCanvas == Canvas.custumization);
-    }
-    #endregion
 }

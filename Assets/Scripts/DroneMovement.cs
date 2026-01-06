@@ -60,6 +60,10 @@ public class DroneMovement : MonoBehaviour
     public bool enableFlying = true;
     public bool allowDash = true;
 
+    [Header("Event")]
+    [SerializeField]
+    UnityEvent<float> DroneMoved;
+
     private void Awake()
     {
         cc = GetComponent<CharacterController>();
@@ -74,6 +78,7 @@ public class DroneMovement : MonoBehaviour
     public void MoveDrone() 
     {
         cc.Move(GetTotalVelocity() * Time.deltaTime);
+        DroneMoved.Invoke(GetTotalVelocity().magnitude);
     }
     #endregion
 

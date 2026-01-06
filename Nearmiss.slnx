@@ -1,0 +1,6 @@
+﻿<Solution>
+  <Project Path="BetterHierarchy.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="BetterHierarchyDemoScripts.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
+</Solution>

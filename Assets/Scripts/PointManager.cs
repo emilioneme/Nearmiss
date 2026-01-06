@@ -48,7 +48,7 @@ public class PointManager : MonoBehaviour
 
     #region Events
     [SerializeField]
-    UnityEvent RunStarted;
+    UnityEvent<float> RunStarted; //duration of run
     [SerializeField]
     UnityEvent<float> UpdatedRunningPoints;
     [SerializeField]
@@ -56,7 +56,9 @@ public class PointManager : MonoBehaviour
     [SerializeField]
     UnityEvent<float> UpdatedTotalPoints;
     [SerializeField]
-    UnityEvent<float, float> UpdatedNumberOfCombos; //number of combos and comboMuliplierCalciation
+    UnityEvent<float> UpdatedNumberOfCombos; //number of combos
+    [SerializeField]
+    UnityEvent<float> UpdatedComboMultiplier; //comboMuliplierCalciation
 
     [SerializeField]
     UnityEvent<float> ResetedRunningPoints;
@@ -66,10 +68,12 @@ public class PointManager : MonoBehaviour
     UnityEvent<float> ResetedTotalPoints;
     [SerializeField]  
     UnityEvent<float> ResetedNumberOfCombos;
+    [SerializeField]  
+    UnityEvent<float> ResetedComboMultiplier;
     
 
     [SerializeField]
-    UnityEvent<float, float> ComboIncreased; //minTimeBeforeCombo and comboWindowDuration
+    UnityEvent<float, float> ComboStarted; //minTimeBeforeCombo and comboWindowDuration
     [SerializeField]
     UnityEvent<float> NewHighScore;
     [SerializeField]
@@ -99,22 +103,16 @@ public class PointManager : MonoBehaviour
         if (BeforeComboWindowCooldown() >= 1)
         {
             numberOfCombos++;
-            ComboIncreased.Invoke(minTimeBeforeCombo, comboWindowDuration);
-            UpdatedNumberOfCombos.Invoke(numberOfCombos, ComboPointsMultiplier());
+            ComboStarted.Invoke(minTimeBeforeCombo, comboWindowDuration);
+            UpdatedNumberOfCombos.Invoke(numberOfCombos);
+            UpdatedComboMultiplier.Invoke(ComboPointsMultiplier());
         }
     }
 
     void UpdatePoints(float normalizedDistance)
     {
-        /* Running Points has Multiplier
-        runningPoints   += RunnignPointsCalculation(normalizedDistance, true);
-        expectedPoints = totalPoints + RunnignPointsCalculation(normalizedDistance, true);;
-        //*/
-
-        //* Running Points does not have multiplier
         runningPoints += RunnignPointsCalculation(normalizedDistance, false);
         expectedPoints = totalPoints + runningPoints;
-        //*/
 
         UpdatedRunningPoints.Invoke(runningPoints);
         UpdatedExpectedPoints.Invoke(expectedPoints);
@@ -123,7 +121,7 @@ public class PointManager : MonoBehaviour
     void SetSecureTimer() 
     {
         if (!ResetSecureTimer())
-            RunStarted.Invoke();
+            RunStarted.Invoke(minTimeBeforeCombo + comboWindowDuration);
 
         secureTimer = StartCoroutine(SecureTimer());
     }
@@ -170,8 +168,9 @@ public class PointManager : MonoBehaviour
         runningPoints = 0;
         numberOfCombos = 0;
 
-        ResetedNumberOfCombos.Invoke(runningPoints);
+        ResetedRunningPoints.Invoke(runningPoints);
         ResetedNumberOfCombos.Invoke(numberOfCombos);
+        ResetedComboMultiplier.Invoke(ComboPointsMultiplier());
 
         ResetSecureTimer();
     }

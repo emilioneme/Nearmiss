@@ -20,8 +20,11 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     Transform spawnTransform;
 
+    [Header("Events")]
     [SerializeField]
     UnityEvent PlayerCrash;
+    [SerializeField]
+    UnityEvent PlayerSpawned;
 
     #region Managers
     [HideInInspector]
@@ -118,9 +121,8 @@ public class PlayerManager : MonoBehaviour
     {
 
         ToggleFreeze(true);
-
-        SpawnPlayer();
         PlayerCrash.Invoke();
+        SpawnPlayer();
 
         yield return new WaitForSeconds(2f);
         ToggleFreeze(false);
@@ -128,6 +130,7 @@ public class PlayerManager : MonoBehaviour
 
     void SpawnPlayer() 
     {
+        PlayerSpawned.Invoke();
         bool enabled = droneMovement.enabled;
         droneMovement.enabled = false;
         transform.position = spawnTransform.position;

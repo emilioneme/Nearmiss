@@ -54,8 +54,6 @@ public class SettingsManager : MonoBehaviour
 
     public void CloseSettings()
     {
-        //settingsCanvas.SetActive(false);
-        Debug.Log("Close Settings");
         SettingsClosed.Invoke();
     }
 

@@ -74,9 +74,16 @@ public class DroneMovement : MonoBehaviour
         MoveDrone();
     }
 
+    public void OnCrash() 
+    {
+        DestroyCourutineSafely(ref DashRutine);
+    }
+
     #region Movement
     public void MoveDrone() 
     {
+        if (!cc)
+            return;
         cc.Move(GetTotalVelocity() * Time.deltaTime);
         DroneMoved.Invoke(GetTotalVelocity().magnitude);
     }
@@ -127,40 +134,43 @@ public class DroneMovement : MonoBehaviour
     #endregion
 
     #region Dash
-    Coroutine DashRutine;
+    public Coroutine DashRutine;
     public void Dash(Vector3 direction, Vector3 animateAxis)  
     {
         if(!allowDash)
             return;
         if(eneme.Tools.CooldownSince(lastTimeDashed, dashCooldwon) < 1) 
             return;
+
         lastTimeDashed = Time.time;
-        dashDirection = transform.rotation * direction; //set it wihtin class scope
+        dashDirection = transform.rotation * direction.normalized; //set it wihtin class scope
+
         if(DashRutine == null)
             DashRutine = StartCoroutine(DashCoroutine()); //takes direction from the classes scope
+
         DashStarted.Invoke(direction, animateAxis, dashDuration);
     }
 
     IEnumerator DashCoroutine()
     {
-        isDashing = true;
         float timer = 0f;
         while (timer < dashDuration)
         {
-            //float t = Mathf.Abs((timer / dashDuration) - 1);
             float t = timer / dashDuration;
-            dashCurrentSpeed = dashSpeed * dashSpeedOverTime.Evaluate(t);
-            cc.Move(GetDashVelocity() * Time.deltaTime);
             timer += Time.deltaTime;
+
+            dashCurrentSpeed = dashSpeed * dashSpeedOverTime.Evaluate(t);
+
+            if(cc)
+                cc.Move(GetDashVelocity() * Time.deltaTime);
             yield return null;
         }
-        isDashing = false;
         DashRutine = null;
     }
 
     public Vector3 GetDashVelocity() // so we can add it to total velocity
     {
-        if (!isDashing)
+        if (DashRutine == null)
             return Vector3.zero;
         return dashDirection * dashCurrentSpeed;
     }
@@ -213,16 +223,24 @@ public class DroneMovement : MonoBehaviour
     private void OnEnable()
     {
         cc.enabled = true;
-        DashRutine = null;
+
+        DestroyCourutineSafely(ref DashRutine);
     }
 
     private void OnDisable()
     {
         cc.enabled = false;
-        StopCoroutine(DashCoroutine());
-        DashRutine = null;
+
+        DestroyCourutineSafely(ref DashRutine);
     }
     #endregion
+
+    void DestroyCourutineSafely(ref Coroutine Routine)
+    {
+        if (Routine != null)
+            StopCoroutine(Routine);
+        Routine = null;
+    }
 
 
 

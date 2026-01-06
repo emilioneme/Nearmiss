@@ -12,8 +12,6 @@ using Unity.VisualScripting;
 [RequireComponent(typeof(NearmissHandler))]
 [RequireComponent(typeof(CollisionHandler))]
 [RequireComponent(typeof(PointManager))]
-[RequireComponent(typeof(PlayerUIManager))]
-
 public class PlayerManager : MonoBehaviour
 {
     [Header("Spawn")]
@@ -21,8 +19,6 @@ public class PlayerManager : MonoBehaviour
     Transform spawnTransform;
 
     [Header("Events")]
-    [SerializeField]
-    UnityEvent PlayerCrash;
     [SerializeField]
     UnityEvent PlayerSpawned;
 
@@ -48,15 +44,12 @@ public class PlayerManager : MonoBehaviour
 
     private void Awake()
     {
-        
         playerInput = GetComponent<PlayerInput>();
         droneMovement = GetComponent<DroneMovement>();
-        playerUIManager = GetComponent<PlayerUIManager>();
         nearmissHandler = GetComponent<NearmissHandler>();
         collisionHandler = GetComponent<CollisionHandler>();
         pointManager = GetComponent<PointManager>();
         planeLook = GetComponent<PlaneLook>();
-
 
         playerModelHandler = GetComponentInChildren<PlayerModelHandler>();
     }
@@ -113,7 +106,6 @@ public class PlayerManager : MonoBehaviour
     #region CrashHandler
     public void PlayerCrashed(ControllerColliderHit hit)
     {
-        playerUIManager.TriggerCrashUI(hit);
         StartCoroutine(SpawnCorutine());
     }
 
@@ -121,7 +113,6 @@ public class PlayerManager : MonoBehaviour
     {
 
         ToggleFreeze(true);
-        PlayerCrash.Invoke();
         SpawnPlayer();
 
         yield return new WaitForSeconds(2f);

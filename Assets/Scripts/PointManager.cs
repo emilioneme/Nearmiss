@@ -40,15 +40,16 @@ public class PointManager : MonoBehaviour
     float lastNearmiss = 0;
     [Header("Time For")] //time to secure point is minTimeBeforeCombo + comboWindowDuration
     [SerializeField]
-    float minTimeBeforeCombo = .5f;
-    [SerializeField]
-    float comboWindowDuration = 1.5f;
+    float timeToSecurePoints = 1;
     #endregion
 
 
     #region Events
     [SerializeField]
-    UnityEvent<float> RunStarted; //duration of run
+    UnityEvent<float> RunStarted; //minTimeBeforeCombo and comboWindowDuration
+    [SerializeField]
+    UnityEvent<float> RunContinued; //minTimeBeforeCombo and comboWindowDuration
+
     [SerializeField]
     UnityEvent<float> UpdatedRunningPoints;
     [SerializeField]
@@ -91,22 +92,20 @@ public class PointManager : MonoBehaviour
     Coroutine secureTimer;
     public void PlayerNearmissed(float normalizedDistance, float distance, Vector3 playerPos, RaycastHit hit) //This is a float from 0 to 1
     {
-        UpdateNumberOfCombos();
-        lastNearmiss = Time.time;
+        float diff = Time.time - lastNearmiss;
+        float normalized = diff / timeToSecurePoints;
+        if (normalized > .1f)
+            UpdateNumberOfCombos();
 
+        lastNearmiss = Time.time;
         UpdatePoints(normalizedDistance);
         SetSecureTimer();
     }
-
     void UpdateNumberOfCombos() 
     {
-        if (BeforeComboWindowCooldown() >= 1)
-        {
-            numberOfCombos++;
-            ComboStarted.Invoke(minTimeBeforeCombo, comboWindowDuration);
-            UpdatedNumberOfCombos.Invoke(numberOfCombos);
-            UpdatedComboMultiplier.Invoke(ComboPointsMultiplier());
-        }
+        numberOfCombos++;
+        UpdatedNumberOfCombos.Invoke(numberOfCombos);
+        UpdatedComboMultiplier.Invoke(ComboPointsMultiplier());
     }
 
     void UpdatePoints(float normalizedDistance)
@@ -117,20 +116,12 @@ public class PointManager : MonoBehaviour
         UpdatedRunningPoints.Invoke(runningPoints);
         UpdatedExpectedPoints.Invoke(expectedPoints);
     }
-
-    void SetSecureTimer() 
-    {
-        if (!ResetSecureTimer())
-            RunStarted.Invoke(minTimeBeforeCombo + comboWindowDuration);
-
-        secureTimer = StartCoroutine(SecureTimer());
-    }
     #endregion
 
     #region SecurePoints
     public float SecurePointsCooldown()
     {
-        return eneme.Tools.CooldownSince(lastNearmiss, minTimeBeforeCombo + comboWindowDuration);
+        return eneme.Tools.CooldownSince(lastNearmiss, timeToSecurePoints);
     }
     IEnumerator SecureTimer()
     {
@@ -140,6 +131,15 @@ public class PointManager : MonoBehaviour
         }
         PointsSecured();
         secureTimer = null;
+    }
+    void SetSecureTimer()
+    {
+        if (!ResetSecureTimer())
+            RunStarted.Invoke(timeToSecurePoints);
+        else
+            RunContinued.Invoke(timeToSecurePoints);
+
+        secureTimer = StartCoroutine(SecureTimer());
     }
 
     bool ResetSecureTimer()
@@ -174,7 +174,9 @@ public class PointManager : MonoBehaviour
 
         ResetSecureTimer();
     }
+    #endregion
 
+    #region HighScore
     void HighSchoreCheck()
     {
         if (GameManager.Instance.highScore > totalPoints)
@@ -184,22 +186,6 @@ public class PointManager : MonoBehaviour
         GameManager.Instance.highScore = totalPoints;
         GameManager.Instance.highScorer = UserData.Instance.UserName;
     }
-    #endregion
-
-    #region Combo Multiuplier
-    public float BeforeComboWindowCooldown()
-    {
-        return eneme.Tools.CooldownSince(lastNearmiss, minTimeBeforeCombo);
-    }
-
-    public float ComboWindowCooldown()
-    {
-        return eneme.Tools.CooldownSince(
-            lastNearmiss + minTimeBeforeCombo,
-            comboWindowDuration
-        );
-    }
-
     #endregion
 
     #region Point Fomrulas

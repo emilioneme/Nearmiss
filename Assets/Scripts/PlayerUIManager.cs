@@ -1,14 +1,13 @@
 using eneme;
+using System.Collections;
 using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.ProBuilder.AutoUnwrapSettings;
 
 public class PlayerUIManager : MonoBehaviour
 {
-    [SerializeField]
-    PlayerManager pm;
-
     [SerializeField]
     CinemachineCamera cam;
 
@@ -40,46 +39,49 @@ public class PlayerUIManager : MonoBehaviour
     [SerializeField]
     float maxFovAdditive = 30;
 
-    float runCircleFill = 0;
-    Corutine RunRutine;    
-    private void Update()
-    {
-        if(pm == null)
-            return;
-        
-        float runningPointsFill = Mathf.Abs(pm.pointManager.SecurePointsCooldown());
-        runningPointsFill = runningPointsFill <= .1f ? 1 : runningPointsFill;
-        RunningPointsImage.fillAmount = runningPointsFill;
+    Coroutine RunRoutine;
 
-        float comboNumFill = Mathf.Abs(pm.pointManager.BeforeComboWindowCooldown());
-        float comboMultFill = Mathf.Abs(pm.pointManager.ComboWindowCooldown() - 1);
-        float comboFill =
-            comboNumFill    > .1f   && comboNumFill     < 1 ? comboNumFill
-            : comboMultFill > 0     && comboMultFill    < 1 ? comboMultFill 
-            : 1;
-        ComboMultImage.fillAmount = comboFill;
+    #region  Run 
+    public void RunStarted(float timeToSecure)
+    {
+        DestroyCourutineSafely(ref RunRoutine);
+        RunRoutine = StartCoroutine(RunCooldownCoroutine(timeToSecure));
     }
 
-    #region  Run
-    public void RunStarted()
+    public void RunContinued(float timeToSecure)
     {
-        EnableRunObjects(true);
+        DestroyCourutineSafely(ref RunRoutine);
+        RunRoutine = StartCoroutine(RunCooldownCoroutine(timeToSecure));
     }
 
     public void PointsSecured(float points)
     {
-        EnableRunObjects(false);
         TotalPointsText.text = Tools.ProcessFloat(points, 2);
     }
 
-    public void EnableRunObjects(bool enable)
+    void DestroyCourutineSafely(ref Coroutine Routine) 
     {
-        RunningPointsGO.SetActive(enable);
-        ComboMultGO.SetActive(enable);
-        if(!enable)
-            return;
-        StopCorutine(RunRutine);
-        RunRutine = null;
+        if (Routine != null)
+            StopCoroutine(Routine);
+        Routine = null;
+    }
+    #endregion
+
+    #region RunCooldown
+    IEnumerator RunCooldownCoroutine(float timeToSecure) 
+    {
+        float timeLapsed = 0;
+        float secureNormalized = 0;
+        float fill = 0;
+        while (timeLapsed < timeToSecure) 
+        {
+            timeLapsed += Time.deltaTime;
+            secureNormalized = timeLapsed / timeToSecure;
+            fill = secureNormalized < .1f? 1 : secureNormalized;
+            RunningPointsImage.fillAmount = fill;
+            yield return null;
+        }
+        RunRoutine = null;
     }
     #endregion
 
@@ -87,11 +89,14 @@ public class PlayerUIManager : MonoBehaviour
     public void UpdateRunPoints(float points)
     {
         RunningPointsText.text = Tools.ProcessFloat(points, 2);
+        if(!RunningPointsGO.activeSelf)
+            RunningPointsGO.SetActive(true);
     }
 
     public void ResetedRunPoints(float points)
     {
         RunningPointsText.text = Tools.ProcessFloat(points, 2);
+        RunningPointsGO.SetActive(false);
     }
     #endregion
 
@@ -99,10 +104,13 @@ public class PlayerUIManager : MonoBehaviour
     public void UpdateNumberOfCombo(float numberOfCombos)
     {
         ComboMultText.text = "x" + numberOfCombos.ToString();
+        if(numberOfCombos >= 1 && !ComboMultGO.activeSelf) 
+            ComboMultGO.SetActive(true);
     }
     public void ResetedNumberOfCombo(float numberOfCombos)
     {
         ComboMultText.text = "x" + numberOfCombos.ToString();
+        ComboMultGO.SetActive(false);
     }
     #endregion
 
@@ -131,8 +139,12 @@ public class PlayerUIManager : MonoBehaviour
 
     public void TriggerCrashUI(ControllerColliderHit hit) 
     {
-        //Debug.Log("Plyer Crashed with: " + hit.gameObject.name + "\n In position: " + hit.point);
-        EnableRunObjects(false);
     }
     #endregion
+
+    public void PlayerSpawned() 
+    {
+        RunningPointsGO.SetActive(false);
+        ComboMultGO.SetActive(false);
+    }
 }

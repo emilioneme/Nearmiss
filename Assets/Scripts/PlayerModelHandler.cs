@@ -1,5 +1,8 @@
 using System.Collections;
+using Unity.Cinemachine;
+using UnityEditor;
 using UnityEngine;
+using static UnityEngine.UI.Image;
 
 public class PlayerModelHandler : MonoBehaviour
 {
@@ -11,10 +14,14 @@ public class PlayerModelHandler : MonoBehaviour
     [SerializeField]
     float maxDroneSpeedForTrail = 300;
 
+    [SerializeField]
+    Camera TextEffectCamera;
 
     PlayerManager playerManager;
     [HideInInspector]
     public PlayerModelVisuals PlayerModelVisuals;
+
+    GameObject TextParticle;
 
     private void Awake()
     {
@@ -39,12 +46,37 @@ public class PlayerModelHandler : MonoBehaviour
 
     public void NeamissEffetSpawner(float normalDistance, float distance, Vector3 origin, RaycastHit hit) 
     {
+        //WallEffects
         Destroy(Instantiate
             (
                 PlayerModelVisuals.NearmissEffect,
                 hit.point  + (transform.forward * nearmissEffectForwardMultiplier),
                 Quaternion.identity)
             ,1f);
+
+        StartCoroutine(SpawnTextParticle(normalDistance, distance, origin, hit));
+    }
+
+    IEnumerator SpawnTextParticle(float normalDistance, float distance, Vector3 origin, RaycastHit hit) 
+    {
+        if (TextParticle == null)
+        {
+            Vector3 direction = (hit.point - origin).normalized;
+            Vector3 projecteDirection = direction.ProjectOntoPlane(transform.forward);
+
+            Vector3 position = this.transform.position + projecteDirection;
+            TextParticle = Instantiate(PlayerModelVisuals.TextParticleEffect, position, Quaternion.identity, playerManager.transform);
+
+            TextParticleEffect ParticleEffect = TextParticle.GetComponent<TextParticleEffect>();
+            ParticleEffect.SetText("+" + eneme.Tools.ProcessFloat(Mathf.Abs(normalDistance - 1) * 100, 1));
+            ParticleEffect.cam = TextEffectCamera;
+
+            Destroy(TextParticle, .5f);
+            yield return new WaitForSeconds(.10f);
+            TextParticle = null;
+            ParticleEffect.rb.useGravity = true;
+            yield return new WaitForSeconds(.10f);
+        }
     }
 
     #region Dash

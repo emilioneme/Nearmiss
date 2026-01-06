@@ -98,7 +98,9 @@ public class PointManager : MonoBehaviour
             UpdateNumberOfCombos();
 
         lastNearmiss = Time.time;
-        UpdatePoints(normalizedDistance);
+        UpdatePoints(Mathf.Abs(normalizedDistance - 1));
+        Debug.Log("normal: " + normalizedDistance);
+        Debug.Log("inverse: " + Mathf.Abs(normalizedDistance - 1));
         SetSecureTimer();
     }
     void UpdateNumberOfCombos() 

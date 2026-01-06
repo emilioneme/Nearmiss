@@ -40,7 +40,8 @@ public class PlayerUIManager : MonoBehaviour
     [SerializeField]
     float maxFovAdditive = 30;
 
-
+    float runCircleFill = 0;
+    Corutine RunRutine;    
     private void Update()
     {
         if(pm == null)
@@ -75,6 +76,10 @@ public class PlayerUIManager : MonoBehaviour
     {
         RunningPointsGO.SetActive(enable);
         ComboMultGO.SetActive(enable);
+        if(!enable)
+            return;
+        StopCorutine(RunRutine);
+        RunRutine = null;
     }
     #endregion
 

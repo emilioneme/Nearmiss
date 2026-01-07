@@ -5,6 +5,7 @@ using UnityEngine.Events;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
+using Unity.Cinemachine;
 
 [RequireComponent(typeof(PlayerInput))]
 [RequireComponent(typeof(DroneMovement))]
@@ -16,11 +17,25 @@ public class PlayerManager : MonoBehaviour
 {
     [Header("Spawn")]
     [SerializeField]
-    Transform spawnTransform;
+    float freezeDuration;
+    [SerializeField]
+    Transform[] spawnPoints;
+
+    [Header("Cameras")]
+    [SerializeField]
+    Camera PlayerCamera;
+    [SerializeField]
+    CinemachineBrain Brain;
 
     [Header("Events")]
     [SerializeField]
     UnityEvent PlayerSpawned;
+    [SerializeField]
+    UnityEvent<float> FreezSpawning; //freeze duration
+
+    [Header("GameObjects")]
+    [SerializeField]
+    GameObject PlayerModel;
 
     #region Managers
     [HideInInspector]
@@ -56,7 +71,7 @@ public class PlayerManager : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(SpawnCorutine());
+        SpawnPlayer();
     }
 
     private void Update()
@@ -106,34 +121,67 @@ public class PlayerManager : MonoBehaviour
     #region CrashHandler
     public void PlayerCrashed(ControllerColliderHit hit)
     {
-        StartCoroutine(SpawnCorutine());
+        DisablePlayer();
+        if (UserData.Instance.automaticRespawn)
+            InitiatePlayerSpawning();
+        //else 
+            //InstanitateDeathScreen();
     }
 
-    IEnumerator SpawnCorutine() 
+    void InitiatePlayerSpawning() 
     {
+        int randomSpawnIndex = Random.Range(0, spawnPoints.Length);
+        transform.position = spawnPoints[randomSpawnIndex].position;
 
-        ToggleFreeze(true);
-        SpawnPlayer();
-
-        yield return new WaitForSeconds(2f);
-        ToggleFreeze(false);
+        if (UserData.Instance.freezeBeforeSpawn)
+            StartCoroutine(FreezeSpawn(freezeDuration));
+        else
+            SpawnPlayer();
     }
 
     void SpawnPlayer() 
     {
         PlayerSpawned.Invoke();
-        bool enabled = droneMovement.enabled;
-        droneMovement.enabled = false;
-        transform.position = spawnTransform.position;
-        droneMovement.enabled = enabled;
+        EnablePlayer();
     }
 
-    void ToggleFreeze(bool freeze = true) 
+    IEnumerator FreezeSpawn(float freezeTime) 
     {
-        droneMovement.enabled = !freeze;
-        nearmissHandler.enabled = !freeze;
-        collisionHandler.enabled = !freeze;
+        FreezSpawning.Invoke(freezeTime);
+
+        planeLook.enabled = true;
+        playerInput.enabled = true;
+        PlayerModel.SetActive(true);
+
+        yield return new WaitForSeconds(freezeTime);
+        SpawnPlayer();
     }
+
     #endregion
+    void DisablePlayer() 
+    {
+        droneMovement.enabled = false;
+        nearmissHandler.enabled = false;
+        collisionHandler.enabled = false;
+        pointManager.enabled = false;
+        planeLook.enabled = false;
+        playerInput.enabled = false;
+
+        playerModelHandler.enabled = false;
+        PlayerModel.SetActive(false);
+    }
+
+    void EnablePlayer()
+    {
+        droneMovement.enabled = true;
+        nearmissHandler.enabled = true;
+        collisionHandler.enabled = true;
+        pointManager.enabled = true;
+        planeLook.enabled = true;
+        playerInput.enabled = true;
+
+        playerModelHandler.enabled = true;
+        PlayerModel.SetActive(true);
+    }
 
 }

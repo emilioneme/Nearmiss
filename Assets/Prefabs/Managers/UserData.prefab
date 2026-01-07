@@ -51,4 +51,5 @@ MonoBehaviour:
   stickExponent: 2
   masterVolume: 0.5
   musicVolume: 0.5
-  automaticRespawn: 0
+  automaticRespawn: 1
+  freezeBeforeSpawn: 1

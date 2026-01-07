@@ -65,7 +65,7 @@ public class PlayerModelHandler : MonoBehaviour
             trail.time = velocityNomralized * trailFadeTimeMultiplier;
         }
 
-        if(TextIndicator != null) 
+        if(TextIndicator != null && pm.pointManager.enabled) 
         {
             TextParticleEffect TextIndicatorEffect = TextIndicator.GetComponent<TextParticleEffect>();
             float fill = pm.pointManager.SecurePointsCooldown();
@@ -119,13 +119,10 @@ public class PlayerModelHandler : MonoBehaviour
             string text = eneme.Tools.ProcessFloat(plusPoints * velocity * plusPointsMultiplier, 1);
             ParticleEffect.SetText("+" + text);
             ParticleEffect.cam = TextEffectCamera;
-
-
             yield return new WaitForSeconds(.1f);
             ParticleEffect.rb.useGravity = true;
             yield return new WaitForSeconds(.2f);
             TextParticle = null;
-
             Destroy(TextParticle, 1f);
         }
     }
@@ -194,6 +191,7 @@ public class PlayerModelHandler : MonoBehaviour
     public void OnCrash() 
     {
         DestroyCourutineSafely(ref runningPointRoutine);
+
         if (TextIndicator != null)
             Destroy(TextIndicator);
         if (TextParticle != null)

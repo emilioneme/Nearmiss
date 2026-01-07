@@ -73,6 +73,8 @@ public class PauseManager : MonoBehaviour
 
         SettingsManager.Instance.CloseSettings();
 
+        Time.timeScale = 1;
+
     }
     public void Pause()
     {
@@ -84,6 +86,8 @@ public class PauseManager : MonoBehaviour
 
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+
+        Time.timeScale = .1f;
     }
     #endregion
 

@@ -42,4 +42,5 @@ public class UserData : MonoBehaviour
 
     [Header("Respawn")]
     public bool automaticRespawn = false;
+    public bool freezeBeforeSpawn;
 }

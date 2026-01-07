@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TextParticleEffect : MonoBehaviour
 {
@@ -10,14 +11,28 @@ public class TextParticleEffect : MonoBehaviour
     TMP_Text Text;
 
     [SerializeField]
+    Image Image;
+
+    [SerializeField]
     public Camera cam;
 
     [SerializeField]
     public Rigidbody rb;
 
+    private void Start()
+    {
+        if (Image != null)
+            SetImageFill(1);
+    }
+
     public void SetText(string text) 
     {
         Text.text = text;
+    }
+
+    public void SetImageFill(float fill) 
+    {
+        Image.fillAmount = fill;
     }
 
     void LateUpdate()

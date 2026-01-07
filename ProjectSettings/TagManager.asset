@@ -31,7 +31,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - OverlayWorld
   - 
   - 
   - 
@@ -42,9 +42,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: OverlayWorld
+    uniqueID: 1446660609
+    locked: 0
   m_RenderingLayers:
   - Default
-  - Light Layer 1
+  - OverlayWorld
   - Light Layer 2
   - Light Layer 3
   - Light Layer 4

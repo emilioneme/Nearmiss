@@ -40,7 +40,7 @@ public class PointManager : MonoBehaviour
     float lastNearmiss = 0;
     [Header("Time For")] //time to secure point is minTimeBeforeCombo + comboWindowDuration
     [SerializeField]
-    float timeToSecurePoints = 1;
+    public float timeToSecurePoints = 1;
     #endregion
 
 
@@ -99,8 +99,6 @@ public class PointManager : MonoBehaviour
 
         lastNearmiss = Time.time;
         UpdatePoints(Mathf.Abs(normalizedDistance - 1));
-        Debug.Log("normal: " + normalizedDistance);
-        Debug.Log("inverse: " + Mathf.Abs(normalizedDistance - 1));
         SetSecureTimer();
     }
     void UpdateNumberOfCombos() 

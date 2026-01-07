@@ -77,8 +77,8 @@ public class PlayerUIManager : MonoBehaviour
         {
             timeLapsed += Time.deltaTime;
             secureNormalized = timeLapsed / timeToSecure;
-            fill = secureNormalized < .1f? 1 : secureNormalized;
-            RunningPointsImage.fillAmount = fill;
+            fill = secureNormalized < .1f? 0 : secureNormalized;
+            RunningPointsImage.fillAmount = Mathf.Abs(fill - 1);
             yield return null;
         }
         RunRoutine = null;

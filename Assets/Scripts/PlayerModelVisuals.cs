@@ -8,4 +8,5 @@ public class PlayerModelVisuals : MonoBehaviour
     public GameObject NearmissEffect;
     public GameObject NearmissSound;
     public GameObject TextParticleEffect;
+    public GameObject TextIndicatorEffect;
 }

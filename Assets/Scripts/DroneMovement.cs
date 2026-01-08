@@ -197,7 +197,7 @@ public class DroneMovement : MonoBehaviour
         float targetPoints = Mathf.Clamp01(totalPoints / maxPointsForSpeed);
 
         if (pointsCoroutine != null)
-            StopCoroutine(pointsCoroutine);
+            DestroyCourutineSafely(ref pointsCoroutine);
 
         pointsCoroutine = StartCoroutine(LerpSpeedChange(targetPoints));
     }
@@ -223,15 +223,13 @@ public class DroneMovement : MonoBehaviour
     private void OnEnable()
     {
         cc.enabled = true;
-
         DestroyCourutineSafely(ref DashRutine);
     }
 
     private void OnDisable()
     {
-        cc.enabled = false;
-
         DestroyCourutineSafely(ref DashRutine);
+        cc.enabled = false;
     }
     #endregion
 

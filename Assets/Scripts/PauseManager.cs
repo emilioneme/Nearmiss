@@ -58,7 +58,6 @@ public class PauseManager : MonoBehaviour
     public void UnPause()
     {
         UserData.Instance.isPaused = false;
-        //GlobalCamera.enabled = false;
         pauseCanvas.SetActive(false);
         UnPaused.Invoke();
 
@@ -70,12 +69,19 @@ public class PauseManager : MonoBehaviour
         
         SettingsManager.Instance.CloseSettings();
         Time.timeScale = 1;
-
     }
+
+    public void OpenedCrashScreen() 
+    {
+        UserData.Instance.isPaused = false;
+        SettingsManager.Instance.CloseSettings();
+        pauseCanvas.SetActive(false);
+        Time.timeScale = 1;
+    }
+
     public void Pause()
     {
         UserData.Instance.isPaused = true;
-        //GlobalCamera.enabled = true;
         pauseCanvas.SetActive(true);
         Paused.Invoke();
         Cursor.visible = true;

@@ -133,6 +133,10 @@ public class PlayerUIManager : MonoBehaviour
     public void UpdateSpeedometer(float speed)
     {
         SpeedText.text = Tools.ProcessFloat(speed * speedometerMultiplier, 3);
+    }
+
+    public void UpdateFOV(float speed) 
+    {
         float speedFOV = minFov + Mathf.InverseLerp(30, 100, speed) * maxFovAdditive;
         cam.Lens.FieldOfView = speedFOV;
     }
@@ -155,8 +159,10 @@ public class PlayerUIManager : MonoBehaviour
     {
         PlayerUICanvas.SetActive(false);
     }
+
     public void UnhidePlayerUI()
     {
         PlayerUICanvas.SetActive(true);
     }
+    
 }

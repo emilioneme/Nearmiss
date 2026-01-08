@@ -25,11 +25,16 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     CinemachineBrain Brain;
 
+    [SerializeField]
+    float crashScreenDurstion = 2f;
+
     [Header("Events")]
     [SerializeField]
     UnityEvent PlayerSpawned;
     [SerializeField]
     UnityEvent CrashScreen;
+    [SerializeField]
+    UnityEvent CrashCamera;
     [SerializeField]
     UnityEvent<float> FreezeSpawning; //freeze duration
 
@@ -125,7 +130,19 @@ public class PlayerManager : MonoBehaviour
         if (UserData.Instance.automaticRespawn)
             InitiatePlayerSpawning();
         else
-            CrashScreen.Invoke();
+            ActivateCrashCamera();
+    }
+
+    public void ActivateCrashCamera() 
+    {
+        CrashCamera.Invoke();
+        StartCoroutine(CrashScreenCoroutine());
+    }
+
+    IEnumerator CrashScreenCoroutine() 
+    {
+        yield return new WaitForSeconds(crashScreenDurstion);
+        CrashScreen.Invoke();
     }
 
     public void InitiatePlayerSpawning() 

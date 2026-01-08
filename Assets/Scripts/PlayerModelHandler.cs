@@ -2,6 +2,7 @@ using System.Collections;
 using Unity.Cinemachine;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using static UnityEngine.UI.Image;
@@ -50,6 +51,8 @@ public class PlayerModelHandler : MonoBehaviour
     GameObject TextIndicator;
     Coroutine runningPointRoutine;
 
+    public UnityEvent<GameObject> SpawnedCrashObject;
+
     private void Awake()
     {
         pm = GetComponentInParent<PlayerManager>();
@@ -79,18 +82,28 @@ public class PlayerModelHandler : MonoBehaviour
         if (pm.droneMovement == null)
             return;
         
-        foreach(TrailRenderer trail in PlayerModelVisuals.TrailRenderers)
+        if(pm.droneMovement != null) 
         {
-            float velocityNomralized = pm.droneMovement.GetTotalVelocity().magnitude / maxDroneSpeedForTrail;
-            trail.time = velocityNomralized * trailFadeTimeMultiplier;
-        }
+            foreach (TrailRenderer trail in PlayerModelVisuals.TrailRenderers)
+            {
+                float velocityNomralized = pm.droneMovement.GetTotalVelocity().magnitude / maxDroneSpeedForTrail;
+                trail.time = velocityNomralized * trailFadeTimeMultiplier;
+            }
 
-        if(TextIndicator != null && pm.pointManager.enabled) 
+            if (TextIndicator != null && pm.pointManager.enabled)
+            {
+                TextParticleEffect TextIndicatorEffect = TextIndicator.GetComponent<TextParticleEffect>();
+                float fill = pm.pointManager.SecurePointsCooldown();
+                fill = fill > .1f ? fill : 0;
+                TextIndicatorEffect.SetImageFill(Mathf.Abs(pm.pointManager.SecurePointsCooldown() - 1));
+            }
+        }
+        else 
         {
-            TextParticleEffect TextIndicatorEffect = TextIndicator.GetComponent<TextParticleEffect>();
-            float fill = pm.pointManager.SecurePointsCooldown();
-            fill = fill > .1f ? fill : 0;
-            TextIndicatorEffect.SetImageFill(Mathf.Abs(pm.pointManager.SecurePointsCooldown() - 1));
+            foreach (TrailRenderer trail in PlayerModelVisuals.TrailRenderers)
+            {
+                trail.time = 0;
+            }
         }
            
     }
@@ -211,15 +224,17 @@ public class PlayerModelHandler : MonoBehaviour
     public void OnCrash() 
     {
         PlayerModelVisuals pmv = PlayerModelVisuals;
-        Destroy(Instantiate
-                    (pmv.CrashModelPrefab, pmv.transform.position, pmv.transform.rotation),
-                    10f);
+        GameObject CrashObject = Instantiate(pmv.CrashModelPrefab, pmv.transform.position, pmv.transform.rotation);
+        SpawnedCrashObject.Invoke(CrashObject);
+        Destroy(CrashObject, 5f);
 
         DestroyCourutineSafely(ref runningPointRoutine);
         if (TextIndicator != null)
             Destroy(TextIndicator);
         if (TextParticle != null)
             Destroy(TextParticle);
+
+        transform.localRotation = Quaternion.Euler(Vector3.zero);
 
     }
 }

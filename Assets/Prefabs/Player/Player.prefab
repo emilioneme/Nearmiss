@@ -980,7 +980,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  MenuSceneName: MenuScene
 --- !u!1 &1793766929695181295
 GameObject:
   m_ObjectHideFlags: 0
@@ -1484,6 +1483,21 @@ MonoBehaviour:
   textParticleDistance: 1.25
   plusPointsMultiplier: 1
   TextEffectCamera: {fileID: 413372053444866132}
+  SpawnedCrashObject:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 930857853425195697}
+        m_TargetAssemblyTypeName: CrashCamera, Assembly-CSharp
+        m_MethodName: SetLookAt
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3092305973525957627
 GameObject:
   m_ObjectHideFlags: 0
@@ -1517,7 +1531,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 337245745654256030}
+  m_Father: {fileID: 2410972109914740752}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!20 &4799007990575890796
 Camera:
@@ -2177,6 +2191,61 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1 &4067423330881051650
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2410972109914740752}
+  - component: {fileID: 8058848371156803455}
+  m_Layer: 3
+  m_Name: Cameras
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2410972109914740752
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4067423330881051650}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 210037848881162436}
+  - {fileID: 2825878020683570309}
+  - {fileID: 4474402397683634576}
+  - {fileID: 6757396468005834408}
+  m_Father: {fileID: 337245745654256030}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8058848371156803455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4067423330881051650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 516f81be1051efd41a4fc603f66cb0f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  brain: {fileID: 5447292232356129678}
+  mainCam: {fileID: 4626820148296802279}
+  crashCam: {fileID: 7209237279878559824}
+  mainPriority: 10
+  crashPriority: 20
+  crashBlendTime: 0.25
+  respawnBlendTime: 0.1
 --- !u!1 &4116377785430962399
 GameObject:
   m_ObjectHideFlags: 0
@@ -3972,7 +4041,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3632274432742203077}
-  m_Father: {fileID: 337245745654256030}
+  m_Father: {fileID: 2410972109914740752}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4626820148296802279
 MonoBehaviour:
@@ -4187,6 +4256,18 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: GameScene
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3378469617271188346}
+        m_TargetAssemblyTypeName: CrashScreenManager, Assembly-CSharp
+        m_MethodName: CloseCrashCanvas
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &6357165820540379126
@@ -5803,6 +5884,7 @@ GameObject:
   - component: {fileID: 7656071518626593655}
   - component: {fileID: 416101309412079257}
   - component: {fileID: 2746193758524380571}
+  - component: {fileID: 2070999249770834481}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -5823,9 +5905,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 210037848881162436}
-  - {fileID: 4474402397683634576}
-  - {fileID: 6757396468005834408}
+  - {fileID: 2410972109914740752}
   - {fileID: 1707325475761266659}
   - {fileID: 7555546643151443013}
   - {fileID: 21474568119022800}
@@ -5875,6 +5955,30 @@ MonoBehaviour:
   PlayerSpawned:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 3378469617271188346}
+        m_TargetAssemblyTypeName: CrashScreenManager, Assembly-CSharp
+        m_MethodName: CloseCrashCanvas
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8058848371156803455}
+        m_TargetAssemblyTypeName: PlayerCameraManager, Assembly-CSharp
+        m_MethodName: ActivateMainCamera
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 6013544378837716508}
         m_TargetAssemblyTypeName: PlayerUIManager, Assembly-CSharp
         m_MethodName: PlayerSpawned
@@ -5890,18 +5994,6 @@ MonoBehaviour:
       - m_Target: {fileID: 6013544378837716508}
         m_TargetAssemblyTypeName: PlayerUIManager, Assembly-CSharp
         m_MethodName: UnhidePlayerUI
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 3378469617271188346}
-        m_TargetAssemblyTypeName: CrashScreenManager, Assembly-CSharp
-        m_MethodName: CloseCrashCanvas
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5928,7 +6020,34 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 3119115427601954034}
         m_TargetAssemblyTypeName: PauseManager, Assembly-CSharp
-        m_MethodName: UnPause
+        m_MethodName: OpenedCrashScreen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  CrashCamera:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8058848371156803455}
+        m_TargetAssemblyTypeName: PlayerCameraManager, Assembly-CSharp
+        m_MethodName: ActivateCrashCamera
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 6013544378837716508}
+        m_TargetAssemblyTypeName: PlayerUIManager, Assembly-CSharp
+        m_MethodName: HidePlayerUI
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5941,21 +6060,9 @@ MonoBehaviour:
   FreezeSpawning:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3378469617271188346}
-        m_TargetAssemblyTypeName: CrashScreenManager, Assembly-CSharp
-        m_MethodName: CloseCrashCanvas
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 6013544378837716508}
-        m_TargetAssemblyTypeName: PlayerUIManager, Assembly-CSharp
-        m_MethodName: UnhidePlayerUI
+      - m_Target: {fileID: 8058848371156803455}
+        m_TargetAssemblyTypeName: PlayerCameraManager, Assembly-CSharp
+        m_MethodName: ActivateMainCamera
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6376,6 +6483,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 6013544378837716508}
+        m_TargetAssemblyTypeName: PlayerUIManager, Assembly-CSharp
+        m_MethodName: UpdateFOV
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &8714170458392586884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6422,6 +6541,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 2746193758524380571}
+        m_TargetAssemblyTypeName: PointManager, Assembly-CSharp
+        m_MethodName: ResetPoints
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 258765007938475946}
         m_TargetAssemblyTypeName: PlayerManager, Assembly-CSharp
         m_MethodName: PlayerCrashed
@@ -6449,18 +6580,6 @@ MonoBehaviour:
       - m_Target: {fileID: 6243719523112130423}
         m_TargetAssemblyTypeName: PlayerModelHandler, Assembly-CSharp
         m_MethodName: OnCrash
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2746193758524380571}
-        m_TargetAssemblyTypeName: PointManager, Assembly-CSharp
-        m_MethodName: ResetPoints
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6803,6 +6922,114 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &2070999249770834481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8266162087823780538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 516f81be1051efd41a4fc603f66cb0f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  brain: {fileID: 5447292232356129678}
+  mainCam: {fileID: 4626820148296802279}
+  crashCam: {fileID: 7209237279878559824}
+  mainPriority: 10
+  crashPriority: 20
+  crashBlendTime: 0.15
+  respawnBlendTime: 0.5
+--- !u!1 &8276759634212588864
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2825878020683570309}
+  - component: {fileID: 7209237279878559824}
+  - component: {fileID: 930857853425195697}
+  m_Layer: 3
+  m_Name: CrashCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2825878020683570309
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8276759634212588864}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.30878416, y: -0.077486254, z: 0.025271356, w: -0.9476337}
+  m_LocalPosition: {x: -0.9140034, y: 4.6526794, z: -7.5522285}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2410972109914740752}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7209237279878559824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8276759634212588864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Priority:
+    Enabled: 0
+    m_Value: 0
+  OutputChannel: 1
+  StandbyUpdate: 2
+  m_StreamingVersion: 20241001
+  m_LegacyPriority: 0
+  Target:
+    TrackingTarget: {fileID: 0}
+    LookAtTarget: {fileID: 0}
+    CustomLookAtTarget: 0
+  Lens:
+    FieldOfView: 60.000004
+    OrthographicSize: 5
+    NearClipPlane: 0.1
+    FarClipPlane: 1000
+    Dutch: 0
+    ModeOverride: 0
+    PhysicalProperties:
+      GateFit: 2
+      SensorSize: {x: 21.946, y: 16.002}
+      LensShift: {x: 0, y: 0}
+      FocusDistance: 10
+      Iso: 200
+      ShutterSpeed: 0.005
+      Aperture: 16
+      BladeCount: 5
+      Curvature: {x: 2, y: 11}
+      BarrelClipping: 0.25
+      Anamorphism: 0
+  BlendHint: 0
+--- !u!114 &930857853425195697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8276759634212588864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a6a16557b7d99a429672ba2747e299c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LookAt: {fileID: 0}
 --- !u!1 &8282424030411924373
 GameObject:
   m_ObjectHideFlags: 0
@@ -7851,7 +8078,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 337245745654256030}
+    m_TransformParent: {fileID: 2410972109914740752}
     m_Modifications:
     - target: {fileID: 945375221258296911, guid: ab4de2df79c78a3459681a22567ece38, type: 3}
       propertyPath: m_LocalRotation.w
@@ -7899,7 +8126,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9093789261417600976, guid: ab4de2df79c78a3459681a22567ece38, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -31.2
+      value: -31.199997
       objectReference: {fileID: 0}
     - target: {fileID: 9093789261417600976, guid: ab4de2df79c78a3459681a22567ece38, type: 3}
       propertyPath: m_LocalPosition.z

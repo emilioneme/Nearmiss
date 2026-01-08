@@ -63,15 +63,15 @@ public class PointManager : MonoBehaviour
 
     [SerializeField]
     UnityEvent<float> ResetedRunningPoints;
-    [SerializeField]  
+    [SerializeField]
     UnityEvent<float> ResetedExpectedPoints;
-    [SerializeField]  
+    [SerializeField]
     UnityEvent<float> ResetedTotalPoints;
-    [SerializeField]  
+    [SerializeField]
     UnityEvent<float> ResetedNumberOfCombos;
-    [SerializeField]  
+    [SerializeField]
     UnityEvent<float> ResetedComboMultiplier;
-    
+
 
     [SerializeField]
     UnityEvent<float, float> ComboStarted; //minTimeBeforeCombo and comboWindowDuration
@@ -103,7 +103,7 @@ public class PointManager : MonoBehaviour
         UpdatePoints(Mathf.Abs(normalizedDistance - 1));
         SetSecureTimer();
     }
-    void UpdateNumberOfCombos() 
+    void UpdateNumberOfCombos()
     {
         numberOfCombos++;
         UpdatedNumberOfCombos.Invoke(numberOfCombos);
@@ -148,7 +148,7 @@ public class PointManager : MonoBehaviour
     {
         if (secureTimer != null)
         {
-            StopCoroutine(secureTimer);
+            DestroyCourutineSafely(ref secureTimer);
             secureTimer = null;
             return true;
         }
@@ -167,7 +167,7 @@ public class PointManager : MonoBehaviour
         ResetRunPoints();
     }
 
-    void ResetRunPoints() 
+    void ResetRunPoints()
     {
         runningPoints = 0;
         numberOfCombos = 0;
@@ -236,16 +236,16 @@ public class PointManager : MonoBehaviour
         ResetedNumberOfCombos.Invoke(numberOfCombos);
         ResetedExpectedPoints.Invoke(expectedPoints);
 
-        StopCoroutine(secureTimer);
+        DestroyCourutineSafely(ref secureTimer);
     }
 
-    public void OnCrash() 
+    public void OnCrash()
     {
-        StopCoroutine(secureTimer);
+        DestroyCourutineSafely(ref secureTimer);
     }
 
     #region settings
-    public void OpenSettings() 
+    public void OpenSettings()
     {
         SettingsManager.Instance.OpenSettings();
     }
@@ -256,4 +256,10 @@ public class PointManager : MonoBehaviour
     }
     #endregion
 
+    void DestroyCourutineSafely(ref Coroutine Routine)
+    {
+        if (Routine != null)
+            StopCoroutine(Routine);
+        Routine = null;
+    }
 }

@@ -18,8 +18,6 @@ public class PlayerManager : MonoBehaviour
     [Header("Spawn")]
     [SerializeField]
     float freezeDuration;
-    [SerializeField]
-    Transform[] spawnPoints;
 
     [Header("Cameras")]
     [SerializeField]
@@ -31,7 +29,9 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     UnityEvent PlayerSpawned;
     [SerializeField]
-    UnityEvent<float> FreezSpawning; //freeze duration
+    UnityEvent CrashScreen;
+    [SerializeField]
+    UnityEvent<float> FreezeSpawning; //freeze duration
 
     [Header("GameObjects")]
     [SerializeField]
@@ -124,12 +124,13 @@ public class PlayerManager : MonoBehaviour
         DisablePlayer();
         if (UserData.Instance.automaticRespawn)
             InitiatePlayerSpawning();
-        //else 
-            //InstanitateDeathScreen();
+        else
+            CrashScreen.Invoke();
     }
 
-    void InitiatePlayerSpawning() 
+    public void InitiatePlayerSpawning() 
     {
+        Transform[] spawnPoints = SpawnPointsManager.Instance.spawnPoints;
         int randomSpawnIndex = Random.Range(0, spawnPoints.Length);
         transform.position = spawnPoints[randomSpawnIndex].position;
 
@@ -147,7 +148,7 @@ public class PlayerManager : MonoBehaviour
 
     IEnumerator FreezeSpawn(float freezeTime) 
     {
-        FreezSpawning.Invoke(freezeTime);
+        FreezeSpawning.Invoke(freezeTime);
 
         planeLook.enabled = true;
         playerInput.enabled = true;
@@ -169,6 +170,8 @@ public class PlayerManager : MonoBehaviour
 
         playerModelHandler.enabled = false;
         PlayerModel.SetActive(false);
+
+        UserData.Instance.isDead = true;
     }
 
     void EnablePlayer()
@@ -182,6 +185,8 @@ public class PlayerManager : MonoBehaviour
 
         playerModelHandler.enabled = true;
         PlayerModel.SetActive(true);
+
+        UserData.Instance.isDead = false;
     }
 
 }

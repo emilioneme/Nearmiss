@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 857d90e1261420144a6cc85adb92f3ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highScore: 21213
+  highScore: 0
   highScorer: eneme

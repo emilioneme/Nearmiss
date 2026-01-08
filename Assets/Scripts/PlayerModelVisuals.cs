@@ -9,4 +9,6 @@ public class PlayerModelVisuals : MonoBehaviour
     public GameObject NearmissSound;
     public GameObject TextParticleEffect;
     public GameObject TextIndicatorEffect;
+
+    public GameObject CrashModelPrefab;
 }

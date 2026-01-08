@@ -9,6 +9,9 @@ using static UnityEngine.ProBuilder.AutoUnwrapSettings;
 public class PlayerUIManager : MonoBehaviour
 {
     [SerializeField]
+    GameObject PlayerUICanvas;
+
+    [SerializeField]
     CinemachineCamera cam;
 
     [Header("Speedometer")]
@@ -146,5 +149,14 @@ public class PlayerUIManager : MonoBehaviour
     {
         RunningPointsGO.SetActive(false);
         ComboMultGO.SetActive(false);
+    }
+
+    public void HidePlayerUI() 
+    {
+        PlayerUICanvas.SetActive(false);
+    }
+    public void UnhidePlayerUI()
+    {
+        PlayerUICanvas.SetActive(true);
     }
 }

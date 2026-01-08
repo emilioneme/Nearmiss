@@ -12,14 +12,9 @@ public class MenuManager : MonoBehaviour
     [SerializeField]
     TMP_Text HighScorerText;
 
-    private void Awake()
-    {
-        SettingsManager.Instance.SettingsClosed.AddListener(CloseSettings);
-    }
-
     private void Start()
     {
-        HighScoreText.text = GameManager.Instance.highScore.ToString();
+        HighScoreText.text = Tools.ProcessFloat(GameManager.Instance.highScore, 2);
         HighScorerText.text = GameManager.Instance.highScorer;
     }
 
@@ -31,12 +26,12 @@ public class MenuManager : MonoBehaviour
     #region Settings
     public void OpenSettings()
     {
-        SettingsManager.Instance.settingsCanvas.SetActive(true);
+        SettingsManager.Instance.OpenSettings();
     }
 
     public void CloseSettings()
     {
-        SettingsManager.Instance.settingsCanvas.SetActive(false);
+        SettingsManager.Instance.OpenSettings();
     }
     #endregion
 

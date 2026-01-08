@@ -1,5 +1,7 @@
 using eneme;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PauseManager : MonoBehaviour
 {
@@ -14,8 +16,6 @@ public class PauseManager : MonoBehaviour
     }
     #endregion
 
-    public bool isPaused = false;
-
     [Header("Input")]
     [SerializeField]
     PlayerInput playerInput;
@@ -23,88 +23,79 @@ public class PauseManager : MonoBehaviour
     [Header("Canvas")]
     [SerializeField]
     GameObject pauseCanvas;
-    [SerializeField]
-    GameObject playerUICanvas;
 
     [Header("GlobalCamera")]
     [SerializeField]
     Camera GlobalCamera;
 
-    [Header("Menu")]
-    [SerializeField]
-    string MenuSceneName = "Menu Scene";
+    [Header("Event")]
+    public UnityEvent Paused;
+    public UnityEvent UnPaused;
+
 
     private void Start()
     {
-        if(isPaused)
+        if(UserData.Instance.isPaused)
             Pause();
         else
             UnPause();
-
-        SettingsManager.Instance.SettingsClosed.AddListener(CloseSettings);
     }
 
     private void Update()
     {
-        if (playerInput.pauseAction.WasReleasedThisFrame()) 
-        {
+        if (playerInput.pauseAction.WasReleasedThisFrame() && UserData.Instance.canPause) 
             TogglePause();
-        }
     }   
 
     #region Pausing
     public void TogglePause() 
     {
-        if (isPaused)
+        if (UserData.Instance.isPaused)
             UnPause();
         else
             Pause();
     }
     public void UnPause()
     {
-        isPaused = false;
-        GlobalCamera.enabled = false;
+        UserData.Instance.isPaused = false;
+        //GlobalCamera.enabled = false;
         pauseCanvas.SetActive(false);
+        UnPaused.Invoke();
 
-        playerUICanvas.SetActive(true);
-
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-
+        if(!UserData.Instance.isDead) 
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        
         SettingsManager.Instance.CloseSettings();
-
         Time.timeScale = 1;
 
     }
     public void Pause()
     {
-        isPaused = true;
-        GlobalCamera.enabled = true;
+        UserData.Instance.isPaused = true;
+        //GlobalCamera.enabled = true;
         pauseCanvas.SetActive(true);
-
-        playerUICanvas.SetActive(false);
-
+        Paused.Invoke();
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-
         Time.timeScale = .1f;
     }
     #endregion
+    public void GoToScene(string sceneName)
+    {
+        SceneLoader.Instance.LoadScene(sceneName);
+    }
 
-    #region Settings
     public void OpenSettings()
     {
-        SettingsManager.Instance.settingsCanvas.SetActive(true);
+        SettingsManager.Instance.OpenSettings();
     }
 
     public void CloseSettings()
     {
-        SettingsManager.Instance.settingsCanvas.SetActive(false);
+        SettingsManager.Instance.CloseSettings();
     }
-    #endregion
 
-    public void GoToMenu() 
-    {
-        SceneLoader.Instance.LoadScene(MenuSceneName);
-    }
 }

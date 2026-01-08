@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UserData : MonoBehaviour
 {
@@ -21,7 +22,6 @@ public class UserData : MonoBehaviour
     [Header("User")]
     public string UserName = "Anonymus";
     int UserID;
-
     [SerializeField]
     public float personalHighScore = 0;
 
@@ -43,4 +43,23 @@ public class UserData : MonoBehaviour
     [Header("Respawn")]
     public bool automaticRespawn = false;
     public bool freezeBeforeSpawn;
+
+    public bool canPause = false;
+    public bool isPaused = false;
+    public bool isDead = false;
+
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        canPause = true;
+        isPaused = false;
+        isDead = false;
+    }
 }

@@ -41,11 +41,9 @@ public class SettingsManager : MonoBehaviour
     [Header("Respawn")]
     [SerializeField]
     Toggle automaticRespawn;
-
     [SerializeField]
-    public UnityEvent SettingsClosed;
+    Toggle freezeRespawn;
 
-    
 
     public void OpenSettings()
     {
@@ -54,8 +52,9 @@ public class SettingsManager : MonoBehaviour
 
     public void CloseSettings()
     {
-        SettingsClosed.Invoke();
+        settingsCanvas.SetActive(false);
     }
+
 
     private void Start()
     {
@@ -70,6 +69,7 @@ public class SettingsManager : MonoBehaviour
         mouseSensSlider.value = UserData.Instance.mouseSensitivity;
         stickSensSlider.value = UserData.Instance.stickSensitivity;
         automaticRespawn.isOn = UserData.Instance.automaticRespawn;
+        freezeRespawn.isOn = UserData.Instance.freezeBeforeSpawn;
     }
 
     #region Set Setting
@@ -96,9 +96,12 @@ public class SettingsManager : MonoBehaviour
         UserData.Instance.automaticRespawn = automaticRespawn.isOn;
     }
 
+    public void SetFreezeRespawn()
+    {
+        UserData.Instance.freezeBeforeSpawn = freezeRespawn.isOn;
+    }
     #endregion
 
-    
 
     void OnEnable()
     {

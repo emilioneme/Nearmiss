@@ -8,6 +8,13 @@ using static UnityEngine.UI.Image;
 
 public class PlayerModelHandler : MonoBehaviour
 {
+    [SerializeField]
+    public GameObject PlayerModelPrefab;
+    [HideInInspector]
+    public GameObject PlayerModelGO;
+    [HideInInspector]
+    public PlayerModelVisuals PlayerModelVisuals;
+
     [Header("Nearmis Particles")]
     [SerializeField]
     float nearmissEffectForwardMultiplier = 1;
@@ -38,8 +45,6 @@ public class PlayerModelHandler : MonoBehaviour
 
     [Header("Other")]
     PlayerManager pm;
-    [HideInInspector]
-    public PlayerModelVisuals PlayerModelVisuals;
 
     GameObject TextParticle;
     GameObject TextIndicator;
@@ -48,7 +53,22 @@ public class PlayerModelHandler : MonoBehaviour
     private void Awake()
     {
         pm = GetComponentInParent<PlayerManager>();
+        InitiatePlayerModel();
+    }
 
+    public void SetPlayerModelVisual(GameObject newPlayerModelPrefab)
+    {
+        if(PlayerModelGO != null)
+            Destroy(PlayerModelGO);
+
+        PlayerModelPrefab = newPlayerModelPrefab;
+        InitiatePlayerModel();
+    }
+
+    void InitiatePlayerModel() 
+    {
+        if (PlayerModelGO == null)
+            PlayerModelGO = Instantiate(PlayerModelPrefab, transform);
         PlayerModelVisuals = GetComponentInChildren<PlayerModelVisuals>();
         if (PlayerModelVisuals == null)
             Debug.LogWarning("No Player Model Visuals Found");
@@ -190,8 +210,12 @@ public class PlayerModelHandler : MonoBehaviour
 
     public void OnCrash() 
     {
-        DestroyCourutineSafely(ref runningPointRoutine);
+        PlayerModelVisuals pmv = PlayerModelVisuals;
+        Destroy(Instantiate
+                    (pmv.CrashModelPrefab, pmv.transform.position, pmv.transform.rotation),
+                    10f);
 
+        DestroyCourutineSafely(ref runningPointRoutine);
         if (TextIndicator != null)
             Destroy(TextIndicator);
         if (TextParticle != null)

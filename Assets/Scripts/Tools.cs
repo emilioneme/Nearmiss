@@ -19,21 +19,18 @@ namespace eneme
             float number = f;
             string unit = "";
 
-            if (f >= 1_000_000_000f) { number = f / 1_000_000_000f; unit = "b"; }
-            else if (f >= 1_000_000f) { number = f / 1_000_000f; unit = "m"; }
-            else if (f >= 1_000f) { number = f / 1_000f; unit = "k"; }
-            else
-            {
-                return Mathf.Round(f).ToString();
-            }
+            if      (f >= 1_000_000_000f){ number = f / 1_000_000_000f  ; unit = "b"; }
+            else if (f >= 1_000_000f)    { number = f / 1_000_000f      ; unit = "m"; }
+            else if (f >= 1_000f)        { number = f / 1_000f          ; unit = "k"; }
+            else                         { return Mathf.Round(f).ToString();            }
 
-            // Round numerically (not string-based)
             float factor = Mathf.Pow(10f, decimalPlaces);
             number = Mathf.Round(number * factor) / factor;
 
             // Build format like "0.#", "0.##", "0.###", etc.
-            string format = decimalPlaces > 0
-                ? "0." + new string('#', decimalPlaces)
+            string format = 
+                decimalPlaces > 0?
+                "0." + new string('#', decimalPlaces)
                 : "0";
 
             return number.ToString(format) + unit;

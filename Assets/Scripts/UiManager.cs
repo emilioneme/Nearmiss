@@ -1,10 +1,22 @@
+using eneme;
 using UnityEngine;
 
 public class UiManager : MonoBehaviour
 {
-    [SerializeField]
-    GameObject ScoreObject;
-
-
+    #region Singleton
+    public static UiManager Instance;
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+    #endregion
 
 }

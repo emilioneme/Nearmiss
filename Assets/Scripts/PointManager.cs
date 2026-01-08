@@ -78,6 +78,8 @@ public class PointManager : MonoBehaviour
     [SerializeField]
     UnityEvent<float> NewHighScore;
     [SerializeField]
+    UnityEvent<float> NewPersonalHighScore;
+    [SerializeField]
     UnityEvent<float> ScuredPoints;
     #endregion
 
@@ -159,7 +161,9 @@ public class PointManager : MonoBehaviour
         ScuredPoints.Invoke(totalPoints);
         UpdatedTotalPoints.Invoke(totalPoints);
 
+        PersonalHighSchoreCheck();
         HighSchoreCheck();
+
         ResetRunPoints();
     }
 
@@ -179,12 +183,20 @@ public class PointManager : MonoBehaviour
     #region HighScore
     void HighSchoreCheck()
     {
-        if (GameManager.Instance.highScore > totalPoints)
+        if (GameManager.Instance.highScore >= totalPoints)
             return;
 
         NewHighScore.Invoke(totalPoints);
         GameManager.Instance.highScore = totalPoints;
         GameManager.Instance.highScorer = UserData.Instance.UserName;
+    }
+    void PersonalHighSchoreCheck()
+    {
+        if (UserData.Instance.personalHighScore >= totalPoints)
+            return;
+
+        NewPersonalHighScore.Invoke(totalPoints);
+        UserData.Instance.personalHighScore = totalPoints;
     }
     #endregion
 
@@ -223,6 +235,25 @@ public class PointManager : MonoBehaviour
         ResetedRunningPoints.Invoke(runningPoints);
         ResetedNumberOfCombos.Invoke(numberOfCombos);
         ResetedExpectedPoints.Invoke(expectedPoints);
+
+        StopCoroutine(secureTimer);
     }
+
+    public void OnCrash() 
+    {
+        StopCoroutine(secureTimer);
+    }
+
+    #region settings
+    public void OpenSettings() 
+    {
+        SettingsManager.Instance.OpenSettings();
+    }
+
+    public void CloseSettings()
+    {
+        SettingsManager.Instance.CloseSettings();
+    }
+    #endregion
 
 }

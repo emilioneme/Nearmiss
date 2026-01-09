@@ -394,7 +394,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifeTime: 10
-  innitialForceStrenght: 5
+  innitialForceStrenght: 15
   crashParticlesLifetime: 3
   crashParticles: {fileID: 2195842101445726814, guid: 02b1025541dadd3438ec70ab62fee7a5, type: 3}
   destroyParticlesLifetime: 3

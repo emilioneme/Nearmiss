@@ -9,6 +9,10 @@ public class PlayerModelHandler : MonoBehaviour
 {
     [SerializeField]
     public GameObject PlayerModelPrefab;
+    [SerializeField]
+    public GameObject TextIndicatorPrefab;
+    [SerializeField]
+    public GameObject TextParticlePrefab;
     [HideInInspector]
     public GameObject PlayerModelGO;
     [HideInInspector]
@@ -144,11 +148,10 @@ public class PlayerModelHandler : MonoBehaviour
     {
         if (TextIndicatorEffectGO == null)
             return;
-        TextIndicatorEffectGO.SetComboText("x" + numberOfCombos.ToString());
         if (numberOfCombos > 1)
-            TextIndicatorEffectGO.ShowComboIndicator();
+            TextIndicatorEffectGO.SetComboText("x" + numberOfCombos.ToString());
         else
-            TextIndicatorEffectGO.HideComboIndicator();
+            TextIndicatorEffectGO.SetComboText("");
     }
     #endregion
 
@@ -175,7 +178,7 @@ public class PlayerModelHandler : MonoBehaviour
         else
         {
             TextParticleGO = Instantiate(
-            PlayerModelContainer.TextParticleEffect,
+            TextParticlePrefab,
             transform
             );
         }
@@ -250,10 +253,10 @@ public class PlayerModelHandler : MonoBehaviour
     #region TextIndicator
     void SpawnTextIndicator(Vector3 position)
     {
-        TextIndicatorGO = Instantiate(PlayerModelContainer.TextIndicatorEffect, position, Quaternion.identity, transform.parent);
+        TextIndicatorGO = Instantiate(TextIndicatorPrefab, position, Quaternion.identity, transform.parent);
         TextIndicatorEffectGO = TextIndicatorGO.GetComponent<TextIndicatorEffect>();
         TextIndicatorEffectGO.cam = TextEffectCamera;
-        TextIndicatorEffectGO.HideComboIndicator();
+        TextIndicatorEffectGO.SetComboText(" ");
         TextIndicatorEffectGO.SetText("0");
         TextIndicatorEffectGO.SetImageFill(1);
     }

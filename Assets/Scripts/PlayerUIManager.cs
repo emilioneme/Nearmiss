@@ -22,18 +22,16 @@ public class PlayerUIManager : MonoBehaviour
 
     [Header("Hame Objects")]
     [SerializeField] GameObject RunningPointsGO;
-    [SerializeField] GameObject ComboMultGO;
+    [SerializeField] GameObject ComboNumGO;
 
     [Header("Texts")]
     [SerializeField] TMP_Text TotalPointsText;
     [SerializeField] TMP_Text RunningPointsText;
-    [SerializeField] TMP_Text ComboMultText;
     [SerializeField] TMP_Text ComboNumText;
 
     [Header("Circles")]
     [SerializeField] Image TotalPointsImage;
     [SerializeField] Image RunningPointsImage;
-    [SerializeField] Image ComboMultImage;
     [SerializeField] Image ComboNumImage;
 
     [Header("FOV")]
@@ -82,6 +80,7 @@ public class PlayerUIManager : MonoBehaviour
             secureNormalized = timeLapsed / timeToSecure;
             fill = secureNormalized < .1f? 0 : secureNormalized;
             RunningPointsImage.fillAmount = Mathf.Abs(fill - 1);
+            ComboNumImage.fillAmount = Mathf.Abs(fill - 1);
             yield return null;
         }
         RunRoutine = null;
@@ -92,28 +91,32 @@ public class PlayerUIManager : MonoBehaviour
     public void UpdateRunPoints(float points)
     {
         RunningPointsText.text = Tools.ProcessFloat(points, 2);
-        if(!RunningPointsGO.activeSelf)
+        if (!RunningPointsGO.activeSelf)
             RunningPointsGO.SetActive(true);
+        if (!ComboNumGO.activeSelf)
+            ComboNumGO.SetActive(true);
     }
 
     public void ResetedRunPoints(float points)
     {
         RunningPointsText.text = Tools.ProcessFloat(points, 2);
         RunningPointsGO.SetActive(false);
+        ComboNumGO.SetActive(false);
     }
     #endregion
 
     #region Combos
     public void UpdateNumberOfCombo(float numberOfCombos)
     {
-        ComboMultText.text = "x" + numberOfCombos.ToString();
-        if(numberOfCombos >= 1 && !ComboMultGO.activeSelf) 
-            ComboMultGO.SetActive(true);
+        if(numberOfCombos > 1)
+            ComboNumText.text = "x" + numberOfCombos.ToString();
+        else
+            ComboNumText.text = " ";
+
     }
     public void ResetedNumberOfCombo(float numberOfCombos)
     {
-        ComboMultText.text = "x" + numberOfCombos.ToString();
-        ComboMultGO.SetActive(false);
+        ComboNumText.text = " ";
     }
     #endregion
 
@@ -152,7 +155,7 @@ public class PlayerUIManager : MonoBehaviour
     public void PlayerSpawned() 
     {
         RunningPointsGO.SetActive(false);
-        ComboMultGO.SetActive(false);
+        ComboNumGO.SetActive(false);
     }
 
     public void HidePlayerUI() 

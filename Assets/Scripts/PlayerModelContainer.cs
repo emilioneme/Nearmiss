@@ -9,8 +9,5 @@ public class PlayerModelContainer : MonoBehaviour
     public TrailRenderer[] TrailRenderers;
     [Header("Nearmis")]
     public GameObject NearmissEffect;
-    [Header("PointsTextParticle")]
-    public GameObject TextParticleEffect;
-    [Header("PointsTextIndicastor")]
-    public GameObject TextIndicatorEffect;
+    
 }

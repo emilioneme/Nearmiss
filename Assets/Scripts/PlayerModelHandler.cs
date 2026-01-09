@@ -1,11 +1,9 @@
-using System.Collections;
-using Unity.Cinemachine;
-using UnityEditor;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
-using static UnityEngine.UI.Image;
+using static UnityEditor.PlayerSettings;
+
 
 public class PlayerModelHandler : MonoBehaviour
 {
@@ -14,21 +12,25 @@ public class PlayerModelHandler : MonoBehaviour
     [HideInInspector]
     public GameObject PlayerModelGO;
     [HideInInspector]
-    public PlayerModelVisuals PlayerModelVisuals;
+    public PlayerModelContainer PlayerModelContainer;
 
     [Header("Nearmis Particles")]
     [SerializeField]
     float nearmissEffectForwardMultiplier = 1;
+    [SerializeField]
+    int maxNeasmissParticles = 5;
 
     [Header("Trails")]
     [SerializeField]
     float trailFadeTimeMultiplier = 5;
     [SerializeField]
     float maxDroneSpeedForTrail = 300;
+    [SerializeField]
+    float droneVelocity = 0;
 
     [Header("TextIndicatorEffct")]
     [SerializeField]
-    float indicatorForwardOffsett = 1;
+    float textIndicatorForwardOffsett = 1;
     [SerializeField]
     float textIndicatorDistance = 1;
 
@@ -39,26 +41,36 @@ public class PlayerModelHandler : MonoBehaviour
     float textParticleDistance = 1.2f;
     [SerializeField]
     float plusPointsMultiplier = 10;
+    [SerializeField]
+    [Range(0f, 1f)]
+    float textParticleCooldown = .2f;
+    [SerializeField]
+    [Range(0f, 1f)]
+    float timeBeforeGavityOff = 1f;
+    [SerializeField]
+    int maxTextParticles = 5;
 
     [Header("Camp")]
     [SerializeField]
     Camera TextEffectCamera;
 
-    [Header("Other")]
-    PlayerManager pm;
-
-    GameObject TextParticle;
-    GameObject TextIndicator;
-    Coroutine runningPointRoutine;
-
+    [Header("Event")]
     public UnityEvent<GameObject> SpawnedCrashObject;
 
+    [Header("Other")]
+    Queue<GameObject> WallParticleGOs = new Queue<GameObject>();
+    Queue<GameObject> TextParticleGOs = new Queue<GameObject>();
+    GameObject TextIndicatorGO = null; 
+    TextIndicatorEffect TextIndicatorEffectGO;
+    Coroutine RunRoutine;
+
+    float lastTextParticle = 0;
+
+    #region Instantiate
     private void Awake()
     {
-        pm = GetComponentInParent<PlayerManager>();
         InitiatePlayerModel();
     }
-
     public void SetPlayerModelVisual(GameObject newPlayerModelPrefab)
     {
         if(PlayerModelGO != null)
@@ -67,107 +79,183 @@ public class PlayerModelHandler : MonoBehaviour
         PlayerModelPrefab = newPlayerModelPrefab;
         InitiatePlayerModel();
     }
-
     void InitiatePlayerModel() 
     {
         if (PlayerModelGO == null)
             PlayerModelGO = Instantiate(PlayerModelPrefab, transform);
-        PlayerModelVisuals = GetComponentInChildren<PlayerModelVisuals>();
-        if (PlayerModelVisuals == null)
+        PlayerModelContainer = GetComponentInChildren<PlayerModelContainer>();
+        if (PlayerModelContainer == null)
             Debug.LogWarning("No Player Model Visuals Found");
+        TextParticleGOs = new Queue<GameObject>();
+        WallParticleGOs = new Queue<GameObject>();
     }
 
     private void FixedUpdate()
     {
-        if (pm.droneMovement == null)
-            return;
+        foreach (TrailRenderer trail in PlayerModelContainer.TrailRenderers)
+        {
+            float velocityNomralized = droneVelocity / maxDroneSpeedForTrail;
+            trail.time = velocityNomralized * trailFadeTimeMultiplier;
+        }
         
-        if(pm.droneMovement != null) 
-        {
-            foreach (TrailRenderer trail in PlayerModelVisuals.TrailRenderers)
-            {
-                float velocityNomralized = pm.droneMovement.GetTotalVelocity().magnitude / maxDroneSpeedForTrail;
-                trail.time = velocityNomralized * trailFadeTimeMultiplier;
-            }
-
-            if (TextIndicator != null && pm.pointManager.enabled)
-            {
-                TextParticleEffect TextIndicatorEffect = TextIndicator.GetComponent<TextParticleEffect>();
-                float fill = pm.pointManager.SecurePointsCooldown();
-                fill = fill > .1f ? fill : 0;
-                TextIndicatorEffect.SetImageFill(Mathf.Abs(pm.pointManager.SecurePointsCooldown() - 1));
-            }
-        }
-        else 
-        {
-            foreach (TrailRenderer trail in PlayerModelVisuals.TrailRenderers)
-            {
-                trail.time = 0;
-            }
-        }
-           
     }
+    #endregion
 
-    public void NeamissEffetSpawner(float normalDistance, float distance, Vector3 origin, RaycastHit hit) 
+    #region  Run Start
+    public void RunStarted(float timeToSecure)
     {
-        SpawnWallParticle(hit);
-
-        SpawnTextIndicator(normalDistance, origin, hit);
-
-        StartCoroutine(SpawnTextParticle(normalDistance, SpawnPosition(textParticleDistance, origin, hit)));
+        if (!TextIndicatorGO)
+            return;
+        DestroyCourutineSafely(ref RunRoutine);
+        RunRoutine = StartCoroutine(RunCooldownCoroutine(timeToSecure));
     }
 
-    #region Point Indicators
-    void SpawnTextIndicator(float normalDistance, Vector3 origin, RaycastHit hit)
+    public void RunContinued(float timeToSecure)
     {
-        Vector3 forwardOffset = (transform.forward * indicatorForwardOffsett);
-        Vector3 position = SpawnPosition(textIndicatorDistance, origin, hit);
-
-        if (TextIndicator == null)
-            TextIndicator = Instantiate(PlayerModelVisuals.TextIndicatorEffect, position + forwardOffset, Quaternion.identity, pm.transform);
-
-        //TextIndicator.transform.position = position;
-        TextParticleEffect TextIndicatorEffect = TextIndicator.GetComponent<TextParticleEffect>();
-        float runningPoints = pm.pointManager.runningPoints;
-        TextIndicatorEffect.cam = TextEffectCamera;
-        TextIndicatorEffect.SetText(eneme.Tools.ProcessFloat(runningPoints, 1));
-
-
-        if(runningPointRoutine != null)
-            DestroyCourutineSafely(ref runningPointRoutine);
-        runningPointRoutine = StartCoroutine(DestroyEffct(TextIndicator, pm.pointManager.timeToSecurePoints));
-
+        DestroyCourutineSafely(ref RunRoutine);
+        RunRoutine = StartCoroutine(RunCooldownCoroutine(timeToSecure));
     }
 
-    IEnumerator SpawnTextParticle(float normalDistance, Vector3 position) 
+    IEnumerator RunCooldownCoroutine(float timeToSecure)
     {
-        if(TextParticle == null) 
+        float timeLapsed = 0;
+        float secureNormalized = 0;
+        float fill = 0;
+        while (timeLapsed < timeToSecure)
         {
-            Vector3 forwardOffset = (transform.forward * particleForwardOffsett);
-            TextParticle = Instantiate(PlayerModelVisuals.TextParticleEffect, position + forwardOffset, Quaternion.identity, pm.transform);
-            TextParticleEffect ParticleEffect = TextParticle.GetComponent<TextParticleEffect>();
-
-            float plusPoints = Mathf.Abs(normalDistance - 1);
-            float velocity = pm.droneMovement.GetTotalVelocity().magnitude;
-            string text = eneme.Tools.ProcessFloat(plusPoints * velocity * plusPointsMultiplier, 1);
-            ParticleEffect.SetText("+" + text);
-            ParticleEffect.cam = TextEffectCamera;
-            yield return new WaitForSeconds(.1f);
-            ParticleEffect.rb.useGravity = true;
-            yield return new WaitForSeconds(.2f);
-            TextParticle = null;
-            Destroy(TextParticle, 1f);
+            timeLapsed += Time.deltaTime;
+            secureNormalized = timeLapsed / timeToSecure;
+            fill = secureNormalized < .1f ? 0 : secureNormalized;
+            TextIndicatorEffectGO.SetImageFill(Mathf.Abs(fill - 1));
+            yield return null;
         }
+        DestroyTextIndicatorGO();
     }
+    
+    public void UpdateRunPoints(float points)
+    {
+        if(TextIndicatorEffectGO != null)
+            TextIndicatorEffectGO.SetText(eneme.Tools.ProcessFloat(points, 2));
+    }
+    #endregion
+
+    #region Combo
+    public void UpdateNumberOfCombo(float numberOfCombos)
+    {
+        if (TextIndicatorEffectGO == null)
+            return;
+        TextIndicatorEffectGO.SetComboText("x" + numberOfCombos.ToString());
+        if (numberOfCombos > 1)
+            TextIndicatorEffectGO.ShowComboIndicator();
+        else
+            TextIndicatorEffectGO.HideComboIndicator();
+    }
+    #endregion
+
+    #region TexctParticles
+    public void SpawnTextParticle(float normalDistance, Vector3 position)
+    {
+        lastTextParticle = Time.time;
+
+        Vector3 forwardOffset = transform.forward * particleForwardOffsett;
+        Vector3 pos = position + forwardOffset;
+
+        float plusPoints = Mathf.Abs(normalDistance - 1);
+        string text = "+" + eneme.Tools.ProcessFloat(
+            plusPoints * droneVelocity * plusPointsMultiplier,
+            1);
+
+        GameObject TextParticleGO;
+        
+        if (TextParticleGOs.Count >= maxTextParticles)
+        {
+            TextParticleGO = TextParticleGOs.Dequeue();
+            TextParticleGO.SetActive(false);
+        }
+        else
+        {
+            TextParticleGO = Instantiate(
+            PlayerModelContainer.TextParticleEffect,
+            transform
+            );
+        }
+
+        // Reset + reuse
+        TextParticleEffect ParticleEffect =
+            TextParticleGO.GetComponent<TextParticleEffect>();
+        ParticleEffect.cam = TextEffectCamera;
+        ParticleEffect.rb.useGravity = false;
+        ParticleEffect.SetText(text); // whatever you already use
+        ParticleEffect.rb.linearVelocity = Vector3.zero;
+        ParticleEffect.rb.angularVelocity = Vector3.zero;
+
+        TextParticleGO.transform.position = pos;
+        TextParticleGO.transform.rotation = Quaternion.identity;
+        TextParticleGO.SetActive(true);
+
+
+        // stop old life coroutine for this particle
+        if (ParticleEffect.lifeRoutine != null)
+        {
+            StopCoroutine(ParticleEffect.lifeRoutine);
+            ParticleEffect.lifeRoutine = null;
+        }
+
+        // start new life coroutine
+        ParticleEffect.lifeRoutine = StartCoroutine(
+            SpawnTextParticleCoroutine(TextParticleGO, ParticleEffect)
+        );
+
+        TextParticleGOs.Enqueue(TextParticleGO);
+    }
+
+    IEnumerator SpawnTextParticleCoroutine(GameObject TextParticleGO, TextParticleEffect ParticleEffect)
+    {
+        yield return new WaitForSeconds(timeBeforeGavityOff);
+        ParticleEffect.rb.useGravity = true;
+        yield return new WaitForSeconds(.5f);
+        ParticleEffect.rb.useGravity = false;
+        TextParticleGO.SetActive(false);
+    }
+    #endregion
+
+    #region WallParticles
     void SpawnWallParticle(RaycastHit hit)
     {
-        //WallEffects
-        Destroy(Instantiate
+        Vector3 pos = hit.point + (transform.forward * nearmissEffectForwardMultiplier);
+
+        GameObject WallParticleGO;
+        if (WallParticleGOs.Count >= maxNeasmissParticles)
+        {
+            WallParticleGO = WallParticleGOs.Dequeue();
+            WallParticleGO.SetActive(false);
+        }
+        else
+        {
+            WallParticleGO = Instantiate
             (
-                PlayerModelVisuals.NearmissEffect,
-                hit.point + (transform.forward * nearmissEffectForwardMultiplier),
-                Quaternion.identity)
-            , .5f);
+                PlayerModelContainer.NearmissEffect,
+                pos,
+                Quaternion.identity
+            );
+        }
+
+        WallParticleGO.transform.position = pos;
+        WallParticleGO.transform.rotation = Quaternion.identity;
+
+        WallParticleGOs.Enqueue(WallParticleGO);
+    }
+    #endregion
+
+    #region TextIndicator
+    void SpawnTextIndicator(Vector3 position)
+    {
+        TextIndicatorGO = Instantiate(PlayerModelContainer.TextIndicatorEffect, position, Quaternion.identity, transform.parent);
+        TextIndicatorEffectGO = TextIndicatorGO.GetComponent<TextIndicatorEffect>();
+        TextIndicatorEffectGO.cam = TextEffectCamera;
+        TextIndicatorEffectGO.HideComboIndicator();
+        TextIndicatorEffectGO.SetText("0");
+        TextIndicatorEffectGO.SetImageFill(1);
     }
     #endregion
 
@@ -196,22 +284,18 @@ public class PlayerModelHandler : MonoBehaviour
     }
     #endregion
 
-    #region tools
-    Vector3 SpawnPosition(float pointEffectDistance, Vector3 origin, RaycastHit hit)
+    #region Tools
+    Vector3 projectedDirection(float pointEffectDistance, Vector3 origin, RaycastHit hit)
     {
         Vector3 direction = (hit.point - origin).normalized;
         Vector3 projectedDirection =
             Vector3.ProjectOnPlane(direction, transform.forward);
         if (projectedDirection.sqrMagnitude < 0.0001f)
             projectedDirection = transform.right;
+
         projectedDirection.Normalize();
-        float distance = Mathf.Max(pointEffectDistance, .5f);
-        return transform.position + projectedDirection * distance;
-    }
-    IEnumerator DestroyEffct(GameObject effect, float time)
-    {
-        yield return new WaitForSeconds(time);
-        Destroy(effect);
+
+        return (projectedDirection * pointEffectDistance);
     }
     void DestroyCourutineSafely(ref Coroutine Routine)
     {
@@ -221,20 +305,60 @@ public class PlayerModelHandler : MonoBehaviour
     }
     #endregion
 
+    public void NeamissEffetcSpawner(float normalDistance, float distance, Vector3 origin, RaycastHit hit)
+    {
+        if (Time.time - lastTextParticle > textParticleCooldown)
+            SpawnWallParticle(hit);
+        if(Time.time - lastTextParticle > textParticleCooldown)
+            SpawnTextParticle(normalDistance, transform.position + projectedDirection(textParticleDistance, origin, hit));
+
+        if(TextIndicatorGO == null) 
+        {
+            SpawnTextIndicator(transform.position + projectedDirection(textIndicatorDistance, origin, hit));
+        }
+    }
+
+    public void UpdateDroneVelocity(float vel)
+    {
+        droneVelocity = vel;
+    }
+    public void DestroyTextIndicatorGO()
+    {
+        if (TextIndicatorGO != null)
+            Destroy(TextIndicatorGO);
+        if (TextIndicatorEffectGO != null)
+            Destroy(TextIndicatorEffectGO);
+        TextIndicatorEffectGO = null;
+        TextIndicatorGO = null;
+        DestroyCourutineSafely(ref RunRoutine);
+    }
     public void OnCrash() 
     {
-        PlayerModelVisuals pmv = PlayerModelVisuals;
-        GameObject CrashObject = Instantiate(pmv.CrashModelPrefab, pmv.transform.position, pmv.transform.rotation);
+        GameObject CrashObject = Instantiate
+            (PlayerModelContainer.CrashModelPrefab, PlayerModelContainer.transform.position, PlayerModelContainer.transform.rotation);
+
+        foreach (GameObject go in TextParticleGOs)
+        {
+            if (go != null)
+                Destroy(go);
+        }
+        TextParticleGOs.Clear();
+        foreach (GameObject go in WallParticleGOs)
+        {
+            if (go != null)
+                Destroy(go);
+        }
+        WallParticleGOs.Clear();
+        TextParticleGOs = new Queue<GameObject>();
+        WallParticleGOs = new Queue<GameObject>();
+
+        DestroyTextIndicatorGO();
+
         SpawnedCrashObject.Invoke(CrashObject);
         Destroy(CrashObject, 5f);
-
-        DestroyCourutineSafely(ref runningPointRoutine);
-        if (TextIndicator != null)
-            Destroy(TextIndicator);
-        if (TextParticle != null)
-            Destroy(TextParticle);
-
-        transform.localRotation = Quaternion.Euler(Vector3.zero);
+        transform.localRotation = Quaternion.Euler(Vector3.zero); //fixing its rotation just in case
 
     }
+
+
 }

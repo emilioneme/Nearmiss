@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2584701314582481946}
   - component: {fileID: 5388045827198787858}
   - component: {fileID: 3250549751846686755}
-  m_Layer: 5
+  m_Layer: 25
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 2920713682022369470}
   - component: {fileID: 5408577731183204132}
   - component: {fileID: 868344629631899408}
-  m_Layer: 5
+  m_Layer: 25
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -250,7 +250,7 @@ GameObject:
   - component: {fileID: 8889692724594914123}
   - component: {fileID: 4156394981140883229}
   - component: {fileID: 3642450198018013401}
-  m_Layer: 0
+  m_Layer: 25
   m_Name: TextParticleEffct
   m_TagString: Untagged
   m_Icon: {fileID: 0}

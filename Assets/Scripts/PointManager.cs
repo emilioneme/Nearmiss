@@ -25,6 +25,8 @@ public class PointManager : MonoBehaviour
     [SerializeField]
     public float maxComboMultiplier = 10;
 
+    float droneVelocity = 0;
+
     [Header("Combo Calculation")]
     [SerializeField]
     AnimationCurve comboMultiplierCurve;
@@ -49,6 +51,8 @@ public class PointManager : MonoBehaviour
     UnityEvent<float> RunStarted; //minTimeBeforeCombo and comboWindowDuration
     [SerializeField]
     UnityEvent<float> RunContinued; //minTimeBeforeCombo and comboWindowDuration
+    [SerializeField]
+    UnityEvent<float> RunningPointsCalculated;
 
     [SerializeField]
     UnityEvent<float> UpdatedRunningPoints;
@@ -83,20 +87,15 @@ public class PointManager : MonoBehaviour
     UnityEvent<float> ScuredPoints;
     #endregion
 
-    PlayerManager pm;
+    Coroutine secureTimer;
 
-    private void Awake()
-    {
-        pm = GetComponent<PlayerManager>();
-    }
 
     #region NearmissHandler
-    Coroutine secureTimer;
     public void PlayerNearmissed(float normalizedDistance, float distance, Vector3 playerPos, RaycastHit hit) //This is a float from 0 to 1
     {
         float diff = Time.time - lastNearmiss;
         float normalized = diff / timeToSecurePoints;
-        if (normalized > .1f)
+        if (normalized > .3f)
             UpdateNumberOfCombos();
 
         lastNearmiss = Time.time;
@@ -201,10 +200,10 @@ public class PointManager : MonoBehaviour
     #endregion
 
     #region Point Fomrulas
-    float RunnignPointsCalculation(float normalizedDistance, bool comomboMultiplier)
+    float RunnignPointsCalculation(float normalizedDistance, bool comboMult)
     {
         float points = DistancePoints(normalizedDistance) + SpeedPoints();
-        return comomboMultiplier ? points * ComboPointsMultiplier() : points;
+        return comboMult? points * ComboPointsMultiplier() : points;
     }
 
     float DistancePoints(float normalizedDistance)
@@ -213,7 +212,7 @@ public class PointManager : MonoBehaviour
     }
     float SpeedPoints()
     {
-        return pm.droneMovement.GetTotalVelocity().magnitude * speedPointsMultiplier;
+        return droneVelocity * speedPointsMultiplier;
     }
     public float ComboPointsMultiplier()
     {
@@ -239,27 +238,20 @@ public class PointManager : MonoBehaviour
         DestroyCourutineSafely(ref secureTimer);
     }
 
-    public void OnCrash()
+    public void DroneMoved(float vel) 
     {
-        DestroyCourutineSafely(ref secureTimer);
+        droneVelocity = vel;
     }
-
-    #region settings
-    public void OpenSettings()
-    {
-        SettingsManager.Instance.OpenSettings();
-    }
-
-    public void CloseSettings()
-    {
-        SettingsManager.Instance.CloseSettings();
-    }
-    #endregion
 
     void DestroyCourutineSafely(ref Coroutine Routine)
     {
         if (Routine != null)
             StopCoroutine(Routine);
         Routine = null;
+    }
+
+    public void OnCrash()
+    {
+        DestroyCourutineSafely(ref secureTimer);
     }
 }

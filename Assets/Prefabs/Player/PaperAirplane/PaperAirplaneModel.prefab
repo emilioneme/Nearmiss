@@ -305,7 +305,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7430715403184252540}
-  - component: {fileID: 8892291885882644417}
+  - component: {fileID: 514239950907503484}
   m_Layer: 3
   m_Name: PaperAirplaneModel
   m_TagString: Untagged
@@ -331,7 +331,7 @@ Transform:
   - {fileID: 6420123254469785703}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8892291885882644417
+--- !u!114 &514239950907503484
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -340,19 +340,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 4506088508073926183}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b17cb4c696943b34ebec44fa8ff4faa5, type: 3}
+  m_Script: {fileID: 11500000, guid: c5b71b6f91e3cb743ba0d1f428ec9517, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Model: {fileID: 7333470297127026644}
-  TrailRenderers:
-  - {fileID: 3775175880098832305}
-  - {fileID: 8952869510432006971}
-  Sound: {fileID: 0}
+  CrashModelPrefab: {fileID: 4506088508073926183, guid: d144c7db4e56d1949a92289c38badf40, type: 3}
+  TrailRenderers: []
   NearmissEffect: {fileID: 5180424412602173278, guid: 9473ace48b5321a4e92d991a27233668, type: 3}
-  NearmissSound: {fileID: 0}
   TextParticleEffect: {fileID: 8626851510750251126, guid: e8ab91d8accfd02438145abde16ca5a8, type: 3}
   TextIndicatorEffect: {fileID: 8626851510750251126, guid: 0adeef749bd06634a91c9f229216a095, type: 3}
-  CrashModelPrefab: {fileID: 4506088508073926183, guid: d144c7db4e56d1949a92289c38badf40, type: 3}
 --- !u!1 &7333470297127026644
 GameObject:
   m_ObjectHideFlags: 0

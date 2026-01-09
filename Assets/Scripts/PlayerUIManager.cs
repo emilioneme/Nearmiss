@@ -79,7 +79,7 @@ public class PlayerUIManager : MonoBehaviour
             timeLapsed += Time.deltaTime;
             secureNormalized = timeLapsed / timeToSecure;
             fill = secureNormalized < .1f? 0 : secureNormalized;
-            RunningPointsImage.fillAmount = Mathf.Abs(fill - 1);
+            //RunningPointsImage.fillAmount = Mathf.Abs(fill - 1);
             ComboNumImage.fillAmount = Mathf.Abs(fill - 1);
             yield return null;
         }
@@ -133,14 +133,14 @@ public class PlayerUIManager : MonoBehaviour
     #endregion
 
     #region Speedotemeter
-    public void UpdateSpeedometer(float speed)
+    public void UpdateSpeedometer()
     {
-        SpeedText.text = Tools.ProcessFloat(speed * speedometerMultiplier, 3);
+        SpeedText.text = Tools.ProcessFloat(UserData.Instance.droneVelocity.magnitude * speedometerMultiplier, 3);
     }
 
-    public void UpdateFOV(float speed) 
+    public void UpdateFOV() 
     {
-        float speedFOV = minFov + Mathf.InverseLerp(30, 100, speed) * maxFovAdditive;
+        float speedFOV = minFov + Mathf.InverseLerp(30, 100, UserData.Instance.droneVelocity.magnitude) * maxFovAdditive;
         cam.Lens.FieldOfView = speedFOV;
     }
     #endregion

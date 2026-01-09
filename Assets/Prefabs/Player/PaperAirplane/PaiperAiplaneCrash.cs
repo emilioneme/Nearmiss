@@ -37,6 +37,7 @@ public class PaiperAiplaneCrash : MonoBehaviour
         Quaternion randomRotation = Random.rotation;
         Vector3 force = randomRotation.eulerAngles.normalized;
         rb.AddForce(force * innitialForceStrenght, ForceMode.Impulse);
+        rb.AddTorque(force * innitialForceStrenght, ForceMode.Impulse);
     }
 
     private void OnDestroy()

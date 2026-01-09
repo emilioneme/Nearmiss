@@ -25,8 +25,6 @@ public class PointManager : MonoBehaviour
     [SerializeField]
     public float maxComboMultiplier = 10;
 
-    float droneVelocity = 0;
-
     [Header("Combo Calculation")]
     [SerializeField]
     AnimationCurve comboMultiplierCurve;
@@ -111,7 +109,8 @@ public class PointManager : MonoBehaviour
 
     void UpdatePoints(float normalizedDistance)
     {
-        runningPoints += RunnignPointsCalculation(normalizedDistance, false);
+        float points = RunnignPointsCalculation(normalizedDistance, maxDistancePoints, UserData.Instance.droneVelocity.magnitude, speedPointsMultiplier);
+        runningPoints += points * ComboPointsMultiplier();
         expectedPoints = totalPoints + runningPoints;
 
         UpdatedRunningPoints.Invoke(runningPoints);
@@ -200,17 +199,16 @@ public class PointManager : MonoBehaviour
     #endregion
 
     #region Point Fomrulas
-    float RunnignPointsCalculation(float normalizedDistance, bool comboMult)
+    float RunnignPointsCalculation(float normalizedDistance, float maxDistancePoints, float velocity, float speedPointsMultiplier)
     {
-        float points = DistancePoints(normalizedDistance) + SpeedPoints();
-        return comboMult? points * ComboPointsMultiplier() : points;
+        return DistancePoints(normalizedDistance, maxDistancePoints) + SpeedPoints(velocity, speedPointsMultiplier);
     }
 
-    float DistancePoints(float normalizedDistance)
+    float DistancePoints(float normalizedDistance, float maxDistancePoints)
     {
         return normalizedDistance * maxDistancePoints;
     }
-    float SpeedPoints()
+    float SpeedPoints(float droneVelocity, float speedPointsMultiplier)
     {
         return droneVelocity * speedPointsMultiplier;
     }
@@ -238,10 +236,6 @@ public class PointManager : MonoBehaviour
         DestroyCourutineSafely(ref secureTimer);
     }
 
-    public void DroneMoved(float vel) 
-    {
-        droneVelocity = vel;
-    }
 
     void DestroyCourutineSafely(ref Coroutine Routine)
     {

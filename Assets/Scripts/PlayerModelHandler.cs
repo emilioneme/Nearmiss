@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using static UnityEditor.PlayerSettings;
 
 
 public class PlayerModelHandler : MonoBehaviour
@@ -18,19 +17,17 @@ public class PlayerModelHandler : MonoBehaviour
     [HideInInspector]
     public PlayerModelContainer PlayerModelContainer;
 
-    [Header("Nearmis Particles")]
+    [Header("Wall Particles")]
     [SerializeField]
-    float nearmissEffectForwardMultiplier = 1;
+    float wallEffectForwardMultiplier = 1;
     [SerializeField]
-    int maxNeasmissParticles = 5;
+    int maxWallParticles = 5;
 
     [Header("Trails")]
     [SerializeField]
     float trailFadeTimeMultiplier = 5;
     [SerializeField]
     float maxDroneSpeedForTrail = 300;
-    [SerializeField]
-    float droneVelocity = 0;
 
     [Header("TextIndicatorEffct")]
     [SerializeField]
@@ -98,7 +95,7 @@ public class PlayerModelHandler : MonoBehaviour
     {
         foreach (TrailRenderer trail in PlayerModelContainer.TrailRenderers)
         {
-            float velocityNomralized = droneVelocity / maxDroneSpeedForTrail;
+            float velocityNomralized = UserData.Instance.droneVelocity.magnitude / maxDroneSpeedForTrail;
             trail.time = velocityNomralized * trailFadeTimeMultiplier;
         }
         
@@ -123,14 +120,16 @@ public class PlayerModelHandler : MonoBehaviour
     IEnumerator RunCooldownCoroutine(float timeToSecure)
     {
         float timeLapsed = 0;
-        float secureNormalized = 0;
-        float fill = 0;
+        //float secureNormalized = 0;
+        //float fill = 0;
         while (timeLapsed < timeToSecure)
         {
             timeLapsed += Time.deltaTime;
+            /*
             secureNormalized = timeLapsed / timeToSecure;
             fill = secureNormalized < .1f ? 0 : secureNormalized;
             TextIndicatorEffectGO.SetImageFill(Mathf.Abs(fill - 1));
+            */
             yield return null;
         }
         DestroyTextIndicatorGO();
@@ -143,17 +142,6 @@ public class PlayerModelHandler : MonoBehaviour
     }
     #endregion
 
-    #region Combo
-    public void UpdateNumberOfCombo(float numberOfCombos)
-    {
-        if (TextIndicatorEffectGO == null)
-            return;
-        if (numberOfCombos > 1)
-            TextIndicatorEffectGO.SetComboText("x" + numberOfCombos.ToString());
-        else
-            TextIndicatorEffectGO.SetComboText("");
-    }
-    #endregion
 
     #region TexctParticles
     public void SpawnTextParticle(float normalDistance, Vector3 position)
@@ -163,10 +151,8 @@ public class PlayerModelHandler : MonoBehaviour
         Vector3 forwardOffset = transform.forward * particleForwardOffsett;
         Vector3 pos = position + forwardOffset;
 
-        float plusPoints = Mathf.Abs(normalDistance - 1);
-        string text = "+" + eneme.Tools.ProcessFloat(
-            plusPoints * droneVelocity * plusPointsMultiplier,
-            1);
+        float points = ((Mathf.Abs(normalDistance - 1) * 1) + (UserData.Instance.droneVelocity.magnitude * 1)) * plusPointsMultiplier;
+        string text = "+" + eneme.Tools.ProcessFloat(points, 1);
 
         GameObject TextParticleGO;
         
@@ -225,10 +211,10 @@ public class PlayerModelHandler : MonoBehaviour
     #region WallParticles
     void SpawnWallParticle(RaycastHit hit)
     {
-        Vector3 pos = hit.point + (transform.forward * nearmissEffectForwardMultiplier);
+        Vector3 pos = hit.point + (transform.forward * wallEffectForwardMultiplier);
 
         GameObject WallParticleGO;
-        if (WallParticleGOs.Count >= maxNeasmissParticles)
+        if (WallParticleGOs.Count >= maxWallParticles)
         {
             WallParticleGO = WallParticleGOs.Dequeue();
             WallParticleGO.SetActive(false);
@@ -256,9 +242,7 @@ public class PlayerModelHandler : MonoBehaviour
         TextIndicatorGO = Instantiate(TextIndicatorPrefab, position, Quaternion.identity, transform.parent);
         TextIndicatorEffectGO = TextIndicatorGO.GetComponent<TextIndicatorEffect>();
         TextIndicatorEffectGO.cam = TextEffectCamera;
-        TextIndicatorEffectGO.SetComboText(" ");
-        TextIndicatorEffectGO.SetText("0");
-        TextIndicatorEffectGO.SetImageFill(1);
+        TextIndicatorEffectGO.SetText(" ");
     }
     #endregion
 
@@ -320,11 +304,7 @@ public class PlayerModelHandler : MonoBehaviour
             SpawnTextIndicator(transform.position + projectedDirection(textIndicatorDistance, origin, hit));
         }
     }
-
-    public void UpdateDroneVelocity(float vel)
-    {
-        droneVelocity = vel;
-    }
+    
     public void DestroyTextIndicatorGO()
     {
         if (TextIndicatorGO != null)

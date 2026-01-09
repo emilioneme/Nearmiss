@@ -48,6 +48,22 @@ public class UserData : MonoBehaviour
     public bool isPaused = false;
     public bool isDead = false;
 
+    [Header("In Game Stats")]
+    [SerializeReference]
+    public Vector3 droneVelocity = Vector3.zero;
+
+    #region  Multipliers
+    [Header("Point Calculation")]
+    [SerializeField]
+    [Range(0f, 1f)]
+    static public float maxDistancePoints = 10;
+    [SerializeField]
+    [Range(0f, .1f)]
+    static public float speedPointsMultiplier = .5f;
+    [SerializeField]
+    static public float maxComboMultiplier = 10;
+    #endregion
+
     void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;

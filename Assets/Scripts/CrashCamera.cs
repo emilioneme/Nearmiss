@@ -1,17 +1,14 @@
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class CrashCamera : MonoBehaviour
 {
-    public GameObject LookAt;
+    [SerializeField]
+    CinemachineCamera cam;
 
-    public void Update()
+    public void SetTarget(GameObject target)
     {
-        if(LookAt != null)
-            this.transform.LookAt(LookAt.transform);
-    }
-
-    public void SetLookAt(GameObject LookAtObject) 
-    {
-        LookAt = LookAtObject;
+        cam.Follow = target.transform;
+        cam.LookAt = target.transform;
     }
 }

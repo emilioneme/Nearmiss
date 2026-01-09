@@ -330,12 +330,6 @@ public class PlayerModelHandler : MonoBehaviour
             Destroy(TextIndicatorEffectGO);
         TextIndicatorEffectGO = null;
         TextIndicatorGO = null;
-        DestroyCourutineSafely(ref RunRoutine);
-    }
-    public void OnCrash() 
-    {
-        GameObject CrashObject = Instantiate
-            (PlayerModelContainer.CrashModelPrefab, PlayerModelContainer.transform.position, PlayerModelContainer.transform.rotation);
 
         foreach (GameObject go in TextParticleGOs)
         {
@@ -352,13 +346,26 @@ public class PlayerModelHandler : MonoBehaviour
         TextParticleGOs = new Queue<GameObject>();
         WallParticleGOs = new Queue<GameObject>();
 
-        DestroyTextIndicatorGO();
 
-        SpawnedCrashObject.Invoke(CrashObject);
-        Destroy(CrashObject, 5f);
-        transform.localRotation = Quaternion.Euler(Vector3.zero); //fixing its rotation just in case
-
+        DestroyCourutineSafely(ref RunRoutine);
     }
 
+    void SpawnCrashModel()
+    {
+        GameObject CrashObject = Instantiate
+                    (PlayerModelContainer.CrashModelPrefab, this.transform.position, Quaternion.identity);
+        SpawnedCrashObject.Invoke(CrashObject);
+        Destroy(CrashObject, 10f);
+    }
+
+
+    public void OnCrash() 
+    {
+        SpawnCrashModel();
+
+        transform.localRotation = Quaternion.Euler(Vector3.zero); //fixing its rotation before spawnign in cse player dashes and dies
+        DestroyTextIndicatorGO();
+
+    }
 
 }

@@ -30,6 +30,10 @@ public class PointManager : MonoBehaviour
     public float minCombos = 1;
     [SerializeField]
     public float maxCombos = 10;
+
+    [Header("TypesOfCOmbo")]
+    [SerializeField] int numberOfDashCombos = 0;
+    [SerializeField] int numberOfSkimCombos = 0;
     #endregion
 
     #region Expected Points
@@ -37,6 +41,8 @@ public class PointManager : MonoBehaviour
     [Header("Time For")] //time to secure point is minTimeBeforeCombo + comboWindowDuration
     [SerializeField]
     public float timeToSecurePoints = 1;
+    [SerializeField]
+    public float timeToSkim = .3f;
     #endregion
 
 
@@ -55,10 +61,10 @@ public class PointManager : MonoBehaviour
     [SerializeField]
     UnityEvent<float> UpdatedTotalPoints;
     [SerializeField]
-    UnityEvent<float> UpdatedNumberOfCombos; //number of combos
+    UnityEvent<float> UpdatedNumberOfCombos; //number of combos = number of skims + number of swerves
     [SerializeField]
     UnityEvent<float> UpdatedComboMultiplier; //comboMuliplierCalciation
-
+    
     [SerializeField]
     UnityEvent<float> ResetedRunningPoints;
     [SerializeField]
@@ -82,6 +88,7 @@ public class PointManager : MonoBehaviour
     #endregion
 
     Coroutine secureTimer;
+    Coroutine dashCoroutine;
 
 
     #region NearmissHandler
@@ -89,8 +96,15 @@ public class PointManager : MonoBehaviour
     {
         float diff = Time.time - lastNearmiss;
         float normalized = diff / timeToSecurePoints;
-        if (normalized > .3f)
+        if (normalized > timeToSkim)
+            UpdateNumberOfCombos(); // skim combo
+
+        if(dashCoroutine != null) 
+        {
+            DestroyCourutineSafely(ref dashCoroutine);
             UpdateNumberOfCombos();
+        }
+
 
         lastNearmiss = Time.time;
         UpdatePoints(normalizedDistance, numberOfHits);
@@ -102,6 +116,25 @@ public class PointManager : MonoBehaviour
         numberOfCombos++;
         UpdatedNumberOfCombos.Invoke(numberOfCombos);
         UpdatedComboMultiplier.Invoke(ComboPointsMultiplier());
+    }
+
+    public void Dashed(Vector3 dir, Vector3 axis, float duration) 
+    {
+        if (dashCoroutine == null)
+            DestroyCourutineSafely(ref dashCoroutine);
+        dashCoroutine = StartCoroutine(DashCoroutine(duration));
+    }
+
+    IEnumerator DashCoroutine(float duration) 
+    {
+        float cooldown = 0;
+        while(cooldown < duration)
+        {
+            cooldown += Time.deltaTime;
+            yield return null;
+        }
+        DestroyCourutineSafely(ref dashCoroutine);
+        dashCoroutine = null;
     }
 
     void UpdatePoints(float normalizedDistance, int numberOfHits)
@@ -153,8 +186,6 @@ public class PointManager : MonoBehaviour
     void PointsSecured()
     {
         totalPoints = expectedPoints;
-
-        
 
         ScuredPoints.Invoke(totalPoints);
         UpdatedTotalPoints.Invoke(totalPoints);
@@ -242,5 +273,6 @@ public class PointManager : MonoBehaviour
     public void OnCrash()
     {
         DestroyCourutineSafely(ref secureTimer);
+        DestroyCourutineSafely(ref dashCoroutine);
     }
 }

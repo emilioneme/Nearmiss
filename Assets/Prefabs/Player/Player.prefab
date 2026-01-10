@@ -1573,7 +1573,7 @@ MonoBehaviour:
   TextParticlePrefab: {fileID: 8626851510750251126, guid: e8ab91d8accfd02438145abde16ca5a8, type: 3}
   PlayerModelGO: {fileID: 0}
   PlayerModelContainer: {fileID: 0}
-  wallEffectForwardMultiplier: 20
+  wallEffectForwardMultiplier: 3
   maxWallParticles: 5
   trailFadeTimeMultiplier: 0.1
   maxDroneSpeedForTrail: 30
@@ -4230,7 +4230,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -139, y: -163}
+  m_AnchoredPosition: {x: -161, y: -163}
   m_SizeDelta: {x: 263.58545, y: 263.58545}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6357165820540379126
@@ -6145,7 +6145,7 @@ MonoBehaviour:
   noseDiveSpeedMultiplier: 10
   gravityForceMultiplier: 1
   pointsSpeedMultiplier: 3
-  maxPointsForSpeed: 10000
+  maxPointsForSpeed: 100000
   pointsSpeedCurve:
     serializedVersion: 2
     m_Curve:
@@ -6223,6 +6223,18 @@ MonoBehaviour:
       - m_Target: {fileID: 6243719523112130423}
         m_TargetAssemblyTypeName: PlayerModelHandler, Assembly-CSharp
         m_MethodName: AnimateDash
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2746193758524380571}
+        m_TargetAssemblyTypeName: PointManager, Assembly-CSharp
+        m_MethodName: Dashed
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6483,7 +6495,10 @@ MonoBehaviour:
   minComboMultiplier: 1
   minCombos: 1
   maxCombos: 10
+  numberOfDashCombos: 0
+  numberOfSkimCombos: 0
   timeToSecurePoints: 1
+  timeToSkim: 0.3
   RunStarted:
     m_PersistentCalls:
       m_Calls:

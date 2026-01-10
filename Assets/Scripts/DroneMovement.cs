@@ -53,7 +53,7 @@ public class DroneMovement : MonoBehaviour
     AnimationCurve dashSpeedOverTime;
 
     [SerializeField]
-    UnityEvent<Vector3, Vector3, float> DashStarted;
+    UnityEvent<Vector3, Vector3, float> DashStarted; //direction, animate accis, duration
 
     [Header("Physics")]
     public bool applyGravity = true;

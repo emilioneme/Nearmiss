@@ -1,3 +1,4 @@
+using DG.Tweening;
 using eneme;
 using System.Collections;
 using TMPro;
@@ -23,6 +24,7 @@ public class PlayerUIManager : MonoBehaviour
     [Header("Hame Objects")]
     [SerializeField] GameObject RunningPointsGO;
     [SerializeField] GameObject ComboNumGO;
+    [SerializeField] GameObject TotalPointsGO;
 
     [Header("Texts")]
     [SerializeField] TMP_Text TotalPointsText;
@@ -33,6 +35,8 @@ public class PlayerUIManager : MonoBehaviour
     [SerializeField] Image TotalPointsImage;
     [SerializeField] Image RunningPointsImage;
     [SerializeField] Image ComboNumImage;
+
+    [SerializeField] AnimationCurve CircleFillCurve;
 
     [Header("FOV")]
     [SerializeField]
@@ -58,6 +62,13 @@ public class PlayerUIManager : MonoBehaviour
     public void PointsSecured(float points)
     {
         TotalPointsText.text = Tools.ProcessFloat(points, 2);
+
+        TotalPointsGO.transform.DOKill();
+
+        TotalPointsGO.transform
+            .DOScale(0.5f, 0.25f)   // go smaller
+            .SetEase(Ease.InOutSine)
+            .SetLoops(2, LoopType.Yoyo);
     }
 
     void DestroyCourutineSafely(ref Coroutine Routine) 
@@ -80,7 +91,7 @@ public class PlayerUIManager : MonoBehaviour
             secureNormalized = timeLapsed / timeToSecure;
             fill = secureNormalized < .1f? 0 : secureNormalized;
             //RunningPointsImage.fillAmount = Mathf.Abs(fill - 1);
-            ComboNumImage.fillAmount = Mathf.Abs(fill - 1);
+            ComboNumImage.fillAmount = CircleFillCurve.Evaluate(Mathf.Abs(fill - 1));
             yield return null;
         }
         RunRoutine = null;
@@ -90,16 +101,16 @@ public class PlayerUIManager : MonoBehaviour
     #region Run Points
     public void UpdateRunPoints(float points)
     {
-        RunningPointsText.text = Tools.ProcessFloat(points, 2);
+        //RunningPointsText.text = Tools.ProcessFloat(points, 2);
         if (!RunningPointsGO.activeSelf)
-            RunningPointsGO.SetActive(true);
+            //RunningPointsGO.SetActive(true);
         if (!ComboNumGO.activeSelf)
             ComboNumGO.SetActive(true);
     }
 
     public void ResetedRunPoints(float points)
     {
-        RunningPointsText.text = Tools.ProcessFloat(points, 2);
+        //RunningPointsText.text = Tools.ProcessFloat(points, 2);
         RunningPointsGO.SetActive(false);
         ComboNumGO.SetActive(false);
     }

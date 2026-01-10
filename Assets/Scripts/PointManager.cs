@@ -17,10 +17,6 @@ public class PointManager : MonoBehaviour
     #region  Multipliers
     [Header("Point Calculation")]
     [SerializeField]
-    [Range(0f, 1f)]
-    public float maxDistancePoints = 10;
-    [SerializeField]
-    [Range(0f, .1f)]
     public float speedPointsMultiplier = .5f;
     [SerializeField]
     public float maxComboMultiplier = 10;
@@ -89,7 +85,7 @@ public class PointManager : MonoBehaviour
 
 
     #region NearmissHandler
-    public void PlayerNearmissed(float normalizedDistance, float distance, Vector3 playerPos, RaycastHit hit) //This is a float from 0 to 1
+    public void OnNearmiss(float normalizedDistance, int numberOfHits, Vector3 playerPos, RaycastHit hit) //This is a float from 0 to 1
     {
         float diff = Time.time - lastNearmiss;
         float normalized = diff / timeToSecurePoints;
@@ -97,9 +93,10 @@ public class PointManager : MonoBehaviour
             UpdateNumberOfCombos();
 
         lastNearmiss = Time.time;
-        UpdatePoints(Mathf.Abs(normalizedDistance - 1));
+        UpdatePoints(normalizedDistance, numberOfHits);
         SetSecureTimer();
     }
+
     void UpdateNumberOfCombos()
     {
         numberOfCombos++;
@@ -107,9 +104,9 @@ public class PointManager : MonoBehaviour
         UpdatedComboMultiplier.Invoke(ComboPointsMultiplier());
     }
 
-    void UpdatePoints(float normalizedDistance)
+    void UpdatePoints(float normalizedDistance, int numberOfHits)
     {
-        float points = RunnignPointsCalculation(normalizedDistance, maxDistancePoints, UserData.Instance.droneVelocity.magnitude, speedPointsMultiplier);
+        float points = RunnignPointsCalculation(normalizedDistance, numberOfHits, UserData.Instance.droneVelocity.magnitude, speedPointsMultiplier);
         runningPoints += points * ComboPointsMultiplier();
         expectedPoints = totalPoints + runningPoints;
 
@@ -156,6 +153,9 @@ public class PointManager : MonoBehaviour
     void PointsSecured()
     {
         totalPoints = expectedPoints;
+
+        
+
         ScuredPoints.Invoke(totalPoints);
         UpdatedTotalPoints.Invoke(totalPoints);
 
@@ -199,18 +199,13 @@ public class PointManager : MonoBehaviour
     #endregion
 
     #region Point Fomrulas
-    float RunnignPointsCalculation(float normalizedDistance, float maxDistancePoints, float velocity, float speedPointsMultiplier)
+    float RunnignPointsCalculation(float normalizedDistance, int numberOfHits, float velocity, float speedPointsMultiplier)
     {
-        return DistancePoints(normalizedDistance, maxDistancePoints) + SpeedPoints(velocity, speedPointsMultiplier);
+        return (1 + normalizedDistance) * SpeedPoints(velocity, speedPointsMultiplier, numberOfHits);
     }
-
-    float DistancePoints(float normalizedDistance, float maxDistancePoints)
+    float SpeedPoints(float droneVelocity, float speedPointsMultiplier, int numberOfHits)
     {
-        return normalizedDistance * maxDistancePoints;
-    }
-    float SpeedPoints(float droneVelocity, float speedPointsMultiplier)
-    {
-        return droneVelocity * speedPointsMultiplier;
+        return droneVelocity * speedPointsMultiplier * numberOfHits;
     }
     public float ComboPointsMultiplier()
     {

@@ -832,9 +832,24 @@ PlayerSettings:
   webGLCloseOnQuit: 0
   webWasm2023: 0
   scriptingDefineSymbols:
-    Standalone: PROBUILDER_EXPERIMENTAL_FEATURES;MODULAR_3D_TEXT
-    WebGL: PROBUILDER_EXPERIMENTAL_FEATURES
-    Windows Store Apps: PROBUILDER_EXPERIMENTAL_FEATURES
+    Android: DOTWEEN
+    EmbeddedLinux: DOTWEEN
+    GameCoreScarlett: DOTWEEN
+    GameCoreXboxOne: DOTWEEN
+    Kepler: DOTWEEN
+    LinuxHeadlessSimulation: DOTWEEN
+    Nintendo Switch: DOTWEEN
+    Nintendo Switch 2: DOTWEEN
+    PS4: DOTWEEN
+    PS5: DOTWEEN
+    QNX: DOTWEEN
+    Standalone: PROBUILDER_EXPERIMENTAL_FEATURES;MODULAR_3D_TEXT;DOTWEEN
+    VisionOS: DOTWEEN
+    WebGL: PROBUILDER_EXPERIMENTAL_FEATURES;DOTWEEN
+    Windows Store Apps: PROBUILDER_EXPERIMENTAL_FEATURES;DOTWEEN
+    XboxOne: DOTWEEN
+    iPhone: DOTWEEN
+    tvOS: DOTWEEN
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

@@ -24,14 +24,11 @@ public class NearmissHandler : MonoBehaviour
     [Header("Gizmo")]
     [SerializeField]
     bool drawGizmos = false;
-
-    float minDistance;
-    bool hitAtleastOnce;
+    
     RaycastHit hitPoint;
 
-
     [SerializeField]
-    UnityEvent<float, float, Vector3, RaycastHit> NearmissEvent; //distance normalized, distance, playerPosition, hit 
+    UnityEvent<float, int, Vector3, RaycastHit> NearmissEvent; //distance normalized, total distance, number of hits  playerPosition, hit 
 
     void OnEnable()
     {
@@ -55,34 +52,31 @@ public class NearmissHandler : MonoBehaviour
 
     void ShootAllRays() 
     {
-        minDistance = rayDistance;
-        hitAtleastOnce = false;
+        float minDistance = rayDistance;
+        int numberOfHits = 0;
         Vector3 origin = transform.position;
-        ShootRaySpehere(origin);
-        if (hitAtleastOnce)
-            NearmissEvent.Invoke(minDistance / rayDistance, minDistance, origin, hitPoint); //1 = as close as it can get, 0, is not close at all
+        ShootRaySpehere(origin, ref minDistance, ref numberOfHits);
+        float normalizedDistance = Mathf.Abs(minDistance / rayDistance) - 1;
+        if (numberOfHits > 0)
+            NearmissEvent.Invoke(normalizedDistance, numberOfHits, origin, hitPoint); //1 = as close as it can get, 0, is not close at all
     }
 
     #region RayShooting
-    void ShootRaySpehere(Vector3 rayOrigin) 
+    void ShootRaySpehere(Vector3 rayOrigin, ref float minDistance, ref int numberOfHits) 
     {
         for (int i = 0; i < numberOfRays; i++)
         {
             Vector3 dir = FibonacciSphereDirection(i, numberOfRays);
             var ray = Physics.Raycast(rayOrigin, dir, out RaycastHit hit, rayDistance, layerMask, QueryTriggerInteraction.Ignore);
-            if (ray)
+            if (ray) 
             {
-                hitAtleastOnce = true;
+                numberOfHits++;
                 if (hit.distance < minDistance)
                 {
                     minDistance = hit.distance;
                     hitPoint = hit;
                     Debug.DrawLine(rayOrigin, rayOrigin + dir, Color.red);
                 }
-            }
-            else
-            {
-                //idk
             }
         }
     }

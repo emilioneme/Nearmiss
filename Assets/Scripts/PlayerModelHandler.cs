@@ -151,7 +151,7 @@ public class PlayerModelHandler : MonoBehaviour
         Vector3 forwardOffset = transform.forward * particleForwardOffsett;
         Vector3 pos = position + forwardOffset;
 
-        float points = ((Mathf.Abs(normalDistance - 1) * 1) + (UserData.Instance.droneVelocity.magnitude * 1)) * plusPointsMultiplier;
+        float points = (1 + Mathf.Abs(normalDistance - 1)) * UserData.Instance.droneVelocity.magnitude * plusPointsMultiplier;
         string text = "+" + eneme.Tools.ProcessFloat(points, 1);
 
         GameObject TextParticleGO;
@@ -292,7 +292,7 @@ public class PlayerModelHandler : MonoBehaviour
     }
     #endregion
 
-    public void NeamissEffetcSpawner(float normalDistance, float distance, Vector3 origin, RaycastHit hit)
+    public void NeamissEffetcSpawner(float normalDistance, int numberOfHits, Vector3 origin, RaycastHit hit)
     {
         if (Time.time - lastTextParticle > textParticleCooldown)
             SpawnWallParticle(hit);

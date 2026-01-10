@@ -9,7 +9,8 @@ public class PaiperAiplaneCrash : MonoBehaviour
 
     [Header("rigidody")]
     [SerializeField]
-    float innitialForceStrenght = 1.0f;
+    float innitialForceStrength = 1.0f;
+    float innitialRotationStrength = 1.0f;
 
     [Header("onCRash")]
     [SerializeField]
@@ -36,12 +37,12 @@ public class PaiperAiplaneCrash : MonoBehaviour
         Destroy(Instantiate(crashParticles, transform), crashParticlesLifetime);
         Quaternion randomRotation = Random.rotation;
         Vector3 force = randomRotation.eulerAngles.normalized;
-        rb.AddForce(force * innitialForceStrenght, ForceMode.Impulse);
-        rb.AddTorque(force * innitialForceStrenght, ForceMode.Impulse);
+        rb.AddForce(force * innitialForceStrength, ForceMode.Impulse);
+        rb.AddTorque(force * innitialRotationStrength, ForceMode.Impulse);
     }
 
     private void OnDestroy()
     {
-        Destroy(Instantiate(destroyParticles, transform), destroyParticlesLifetime);
+        Destroy(Instantiate(destroyParticles, transform.position, Quaternion.identity), destroyParticlesLifetime);
     }
 }

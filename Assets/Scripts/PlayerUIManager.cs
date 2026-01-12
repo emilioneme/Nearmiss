@@ -19,6 +19,8 @@ public class PlayerUIManager : MonoBehaviour
     [SerializeField] float speedometerMultiplier = 10;
 
     [Header("UI")]
+    [SerializeField] GameObject Panel;
+
     [SerializeField] TMP_Text SpeedText;
 
     [Header("Hame Objects")]
@@ -38,13 +40,85 @@ public class PlayerUIManager : MonoBehaviour
 
     [SerializeField] AnimationCurve CircleFillCurve;
 
+    [Header("Screen Effcts")]
+
+    [Header("Shake")]
+    [SerializeField] 
+    float maxStrenghShake = 30f;
+    [SerializeField]
+    float durationShake = 0.5f;
+    [SerializeField]
+    int vibratoShake = 10;
+    [SerializeField]
+    float randomnessShake = 90;
+    [SerializeField]
+    bool fadeOutShake = false;
+    [SerializeField]
+    float minVelocityShake = 0;
+    [SerializeField]
+    float maxVelocityShake = 100;
+
+
     [Header("FOV")]
     [SerializeField]
     float minFov = 60;
     [SerializeField]
     float maxFovAdditive = 30;
+    [SerializeField]
+    float minVelocityFOV = 30f;
+    [SerializeField]
+    float maxVelocityFOV = 100;
 
     Coroutine RunRoutine;
+
+    Tween shakeTween;
+
+
+    void Update()
+    {
+        UpdateFOV();
+        UpdatePanelShake();
+    }
+
+    #region SHake
+    void UpdatePanelShake() 
+    {
+        float strengthShake = GetShakeStrength();
+        if (strengthShake > 0.1f)
+        {
+            Panel.transform.localPosition = Vector3.zero;
+            shakeTween?.Kill();
+            shakeTween = Panel.transform.DOShakePosition(
+                duration: durationShake,
+                strength: strengthShake, // start with no shake
+                vibrato: vibratoShake,
+                randomness: randomnessShake,
+                fadeOut: fadeOutShake
+            )
+            .SetLoops(-1)
+            .SetUpdate(true);
+        }
+        else
+        {
+            StopShake();
+        }
+    }
+
+    void StopShake()
+    {
+        shakeTween?.Kill();
+        shakeTween = null;
+        Panel.transform.localPosition = Vector3.zero;
+    }
+
+    float GetShakeStrength()
+    {
+        float v = UserData.Instance.droneVelocity.magnitude;
+        float normlized = Mathf.InverseLerp(minVelocityShake, maxVelocityShake, v);
+        return normlized * maxStrenghShake;
+    }
+    #endregion
+
 
     #region  Run 
     public void RunStarted(float timeToSecure)
@@ -151,7 +225,7 @@ public class PlayerUIManager : MonoBehaviour
 
     public void UpdateFOV() 
     {
-        float speedFOV = minFov + Mathf.InverseLerp(30, 100, UserData.Instance.droneVelocity.magnitude) * maxFovAdditive;
+        float speedFOV = minFov + Mathf.InverseLerp(minVelocityFOV, maxVelocityFOV, UserData.Instance.droneVelocity.magnitude) * maxFovAdditive;
         cam.Lens.FieldOfView = speedFOV;
     }
     #endregion

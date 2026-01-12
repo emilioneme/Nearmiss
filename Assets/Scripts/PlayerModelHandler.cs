@@ -35,6 +35,14 @@ public class PlayerModelHandler : MonoBehaviour
     [SerializeField]
     float textIndicatorDistance = 1;
 
+    [Header("SecureTextIndicatorEffct")]
+    [SerializeField]
+    float securePointsEffectDuration = 1;
+    [SerializeField]
+    Vector3 secureLerpToPosition;
+    [SerializeField]
+    AnimationCurve secureLerpCurve;
+
     [Header("TextParticleEffct")]
     [SerializeField]
     float particleForwardOffsett = 1;
@@ -51,7 +59,9 @@ public class PlayerModelHandler : MonoBehaviour
     [SerializeField]
     int maxTextParticles = 5;
 
-    [Header("Camp")]
+    [Header("Cam")]
+    [SerializeField]
+    Camera PlayerCamera;
     [SerializeField]
     Camera TextEffectCamera;
 
@@ -61,7 +71,8 @@ public class PlayerModelHandler : MonoBehaviour
     [Header("Other")]
     Queue<GameObject> WallParticleGOs = new Queue<GameObject>();
     Queue<GameObject> TextParticleGOs = new Queue<GameObject>();
-    GameObject TextIndicatorGO = null; 
+    GameObject TextIndicatorGO = null;
+    GameObject TextSecuredGO = null;
     TextIndicatorEffect TextIndicatorEffectGO;
     Coroutine RunRoutine;
 
@@ -119,29 +130,39 @@ public class PlayerModelHandler : MonoBehaviour
 
     IEnumerator RunCooldownCoroutine(float timeToSecure)
     {
-        float timeLapsed = 0;
-        //float secureNormalized = 0;
-        //float fill = 0;
-        while (timeLapsed < timeToSecure)
+        yield return new WaitForSeconds(timeToSecure);
+
+        DestroyGO(ref TextSecuredGO);
+        TextSecuredGO = TextIndicatorGO;
+        TextSecuredGO.transform.SetParent(PlayerCamera.transform, true);
+        TextIndicatorGO = null;
+        float timer = 0f;
+        Vector3 startLocal = TextSecuredGO.transform.localPosition;
+        Vector3 targetWorld = PlayerCamera.ViewportToWorldPoint(secureLerpToPosition);
+        Vector3 targetLocal = PlayerCamera.transform.InverseTransformPoint(targetWorld);
+
+        while (timer < securePointsEffectDuration)
         {
-            timeLapsed += Time.deltaTime;
-            /*
-            secureNormalized = timeLapsed / timeToSecure;
-            fill = secureNormalized < .1f ? 0 : secureNormalized;
-            TextIndicatorEffectGO.SetImageFill(Mathf.Abs(fill - 1));
-            */
+            timer += Time.deltaTime;
+            float normalized = timer / securePointsEffectDuration;
+            float t = secureLerpCurve.Evaluate(normalized);
+
+            targetWorld = PlayerCamera.ViewportToWorldPoint(secureLerpToPosition);
+            targetLocal = PlayerCamera.transform.InverseTransformPoint(targetWorld);
+
+            TextSecuredGO.transform.localPosition = Vector3.Lerp(startLocal, targetLocal, t);
             yield return null;
         }
-        DestroyTextIndicatorGO();
+
+        DestroyGO(ref TextSecuredGO);
     }
-    
+
     public void UpdateRunPoints(float points)
     {
         if(TextIndicatorEffectGO != null)
             TextIndicatorEffectGO.SetText(eneme.Tools.ProcessFloat(points, 2));
     }
     #endregion
-
 
     #region TexctParticles
     public void SpawnTextParticle(float normalDistance, Vector3 position)
@@ -305,32 +326,33 @@ public class PlayerModelHandler : MonoBehaviour
         }
     }
     
-    public void DestroyTextIndicatorGO()
+    public void DestroyAllEffectsGO()
     {
-        if (TextIndicatorGO != null)
-            Destroy(TextIndicatorGO);
-        if (TextIndicatorEffectGO != null)
-            Destroy(TextIndicatorEffectGO);
+        DestroyPool(ref TextParticleGOs);
+        DestroyPool(ref WallParticleGOs);
+
+        DestroyGO(ref TextSecuredGO);
         TextIndicatorEffectGO = null;
-        TextIndicatorGO = null;
-
-        foreach (GameObject go in TextParticleGOs)
-        {
-            if (go != null)
-                Destroy(go);
-        }
-        TextParticleGOs.Clear();
-        foreach (GameObject go in WallParticleGOs)
-        {
-            if (go != null)
-                Destroy(go);
-        }
-        WallParticleGOs.Clear();
-        TextParticleGOs = new Queue<GameObject>();
-        WallParticleGOs = new Queue<GameObject>();
-
+        DestroyGO(ref TextIndicatorGO);
 
         DestroyCourutineSafely(ref RunRoutine);
+    }
+
+    public void DestroyPool(ref Queue<GameObject> GOs) 
+    {
+        foreach (GameObject go in GOs)
+        {
+            if (go != null)
+                Destroy(go);
+        }
+        GOs.Clear();
+        GOs = new Queue<GameObject>();
+    }
+    public void DestroyGO(ref GameObject GO) 
+    {
+        if (GO != null)
+            Destroy(GO);
+        GO = null;
     }
 
     void SpawnCrashModel()
@@ -341,14 +363,11 @@ public class PlayerModelHandler : MonoBehaviour
         Destroy(CrashObject, 10f);
     }
 
-
     public void OnCrash() 
     {
         SpawnCrashModel();
-
         transform.localRotation = Quaternion.Euler(Vector3.zero); //fixing its rotation before spawnign in cse player dashes and dies
-        DestroyTextIndicatorGO();
-
+        DestroyAllEffectsGO();
     }
 
 }

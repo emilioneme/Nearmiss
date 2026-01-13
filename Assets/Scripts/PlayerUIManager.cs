@@ -137,12 +137,7 @@ public class PlayerUIManager : MonoBehaviour
     {
         TotalPointsText.text = Tools.ProcessFloat(points, 2);
 
-        TotalPointsGO.transform.DOKill();
-
-        TotalPointsGO.transform
-            .DOScale(0.5f, 0.25f)   // go smaller
-            .SetEase(Ease.InOutSine)
-            .SetLoops(2, LoopType.Yoyo);
+        DOBounceTween(ref TotalPointsGO, .5f, .25f);
     }
 
     void DestroyCourutineSafely(ref Coroutine Routine) 
@@ -193,12 +188,17 @@ public class PlayerUIManager : MonoBehaviour
     #region Combos
     public void UpdateComboMult(float comboMult)
     {
-        Debug.Log(comboMult);
         if (comboMult > 1)
+        {
             ComboNumText.text = "x" + Tools.LimitNumberLength(comboMult, 4);
-        else
+            DOBounceTween(ref ComboNumGO, .5f, .25f);
+            DOBounceTween(ref TotalPointsGO, .9f, .25f);
+        }
+        else 
+        {
             ComboNumText.text = " ";
-
+        }
+            
     }
 
     public void ResetedNumberOfCombo(float numberOfCombos)
@@ -238,6 +238,16 @@ public class PlayerUIManager : MonoBehaviour
     {
     }
     #endregion
+
+    public void DOBounceTween(ref GameObject GO, float toScale, float duration, Ease easeType = Ease.InOutSine) 
+    {
+        GO.transform.DOKill();
+        GO.transform.localScale = Vector3.one;
+        GO.transform
+            .DOScale(toScale, duration)   // go smaller
+            .SetEase(easeType)
+            .SetLoops(2, LoopType.Yoyo);
+    }
 
     public void PlayerSpawned() 
     {

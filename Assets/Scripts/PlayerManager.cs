@@ -113,23 +113,13 @@ public class PlayerManager : MonoBehaviour
             droneMovement.Dash(dir, animAxis);
         }
 
-        /*
+        //*
         if (playerInput.dashBackwardAction.IsPressed())
             droneMovement.Dash(Vector3.back, Vector3.left);
         if (playerInput.dashForwardAction.IsPressed())
             droneMovement.Dash(Vector3.forward, Vector3.right);
         //*/
-
-        /*
-        if (playerInput.dashRightAction.IsPressed())
-            droneMovement.Dash(Vector3.right, Vector3.back);
-        if (playerInput.dashLeftAction.IsPressed())
-            droneMovement.Dash(Vector3.left, Vector3.forward);
-        if (playerInput.dashUpAction.IsPressed())
-            droneMovement.Dash(Vector3.up, Vector3.down);
-        if (playerInput.dashDownAction.IsPressed())
-            droneMovement.Dash(Vector3.down, Vector3.up);
-        //*/
+        
     }
     #endregion
 

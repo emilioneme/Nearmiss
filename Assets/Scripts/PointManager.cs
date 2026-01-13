@@ -22,6 +22,8 @@ public class PointManager : MonoBehaviour
     #region  Multipliers
     [Header("Point Calculation")]
     [SerializeField]
+    public float runningPointsMultiplier = .5f;
+    [SerializeField]
     public float speedPointsMultiplier = .5f;
 
     [Header("Combo Calculation")]
@@ -122,6 +124,9 @@ public class PointManager : MonoBehaviour
     void UpdateNumberOfSkims(float normalizedDistance) 
     {
         numberOfSkimCombos++;
+
+        if (numberOfSkimCombos == 1)
+            return;
         UpdatedNumberOfSkims.Invoke(numberOfSkimCombos);
         UpdateCombMult(normalizedDistance);
     }
@@ -246,7 +251,7 @@ public class PointManager : MonoBehaviour
     #region Point Fomrulas
     float RunnignPointsCalculation(float normalizedDistance, int numberOfHits, float velocity, float speedPointsMultiplier)
     {
-        return (1 + normalizedDistance) * SpeedPoints(velocity, speedPointsMultiplier, numberOfHits);
+        return  SpeedPoints(velocity, speedPointsMultiplier, numberOfHits) * (1 + normalizedDistance) * runningPointsMultiplier;
     }
     float SpeedPoints(float droneVelocity, float speedPointsMultiplier, int numberOfHits)
     {

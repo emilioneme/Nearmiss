@@ -6,6 +6,7 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
 using Unity.Cinemachine;
+using UnityEngine.TextCore.Text;
 
 [RequireComponent(typeof(PlayerInput))]
 [RequireComponent(typeof(DroneMovement))]
@@ -90,10 +91,9 @@ public class PlayerManager : MonoBehaviour
     #region Input
     void HandleLookInput() 
     {
-        bool isDashing = droneMovement.enabled? droneMovement.isDashing : false;
-        if (playerInput.LookInput.y != 0 && !isDashing)
+        if (playerInput.LookInput.y != 0)
             planeLook.LookUpDown(playerInput.LookInput.y);
-        if (playerInput.LookInput.x != 0 && !isDashing)
+        if (playerInput.LookInput.x != 0)
             planeLook.LookLeftRight(playerInput.LookInput.x);
 
         //Rotation
@@ -105,7 +105,22 @@ public class PlayerManager : MonoBehaviour
 
     void HandleMovementInput() 
     {
-        //Dashing
+        Vector2 dashAction = playerInput.DashInput;
+        if (dashAction.sqrMagnitude > 0.01f)
+        {
+            Vector3 dir = new Vector3(dashAction.x, dashAction.y, 0).normalized;
+            Vector3 animAxis = Vector3.Cross(Vector3.forward, dir).normalized;
+            droneMovement.Dash(dir, animAxis);
+        }
+
+        /*
+        if (playerInput.dashBackwardAction.IsPressed())
+            droneMovement.Dash(Vector3.back, Vector3.left);
+        if (playerInput.dashForwardAction.IsPressed())
+            droneMovement.Dash(Vector3.forward, Vector3.right);
+        //*/
+
+        /*
         if (playerInput.dashRightAction.IsPressed())
             droneMovement.Dash(Vector3.right, Vector3.back);
         if (playerInput.dashLeftAction.IsPressed())
@@ -114,12 +129,7 @@ public class PlayerManager : MonoBehaviour
             droneMovement.Dash(Vector3.up, Vector3.down);
         if (playerInput.dashDownAction.IsPressed())
             droneMovement.Dash(Vector3.down, Vector3.up);
-
-
-        if (playerInput.dashBackwardAction.IsPressed())
-            droneMovement.Dash(Vector3.back, Vector3.left);
-        if (playerInput.dashForwardAction.IsPressed())
-            droneMovement.Dash(Vector3.forward, Vector3.right);
+        //*/
     }
     #endregion
 

@@ -18,14 +18,9 @@ public class PlayerInput : MonoBehaviour
 
     [Header("Dash to Side")]
     [SerializeField]
-    public InputAction dashLeftAction;
-    [SerializeField]
-    public InputAction dashRightAction;
-
-    [SerializeField]
-    public InputAction dashUpAction;
-    [SerializeField]
-    public InputAction dashDownAction;
+    public InputAction dashAction;
+    [HideInInspector]
+    public Vector2 DashInput;
 
     [Header("Dash Forward and Back")]
     [SerializeField]
@@ -44,10 +39,7 @@ public class PlayerInput : MonoBehaviour
         rotateLeftAction.Enable();
         rotateRightAction.Enable();
 
-        dashLeftAction.Enable();
-        dashRightAction.Enable();
-        dashUpAction.Enable();
-        dashDownAction.Enable();
+        dashAction.Enable();
 
         dashForwardAction.Enable();
         dashBackwardAction.Enable();
@@ -62,11 +54,6 @@ public class PlayerInput : MonoBehaviour
         rotateLeftAction.Disable();
         rotateRightAction.Disable();
 
-        dashLeftAction.Disable();
-        dashRightAction.Disable();
-        dashUpAction.Disable();
-        dashDownAction.Disable();
-
         dashForwardAction.Disable();
         dashBackwardAction.Disable();
 
@@ -76,14 +63,17 @@ public class PlayerInput : MonoBehaviour
 
     private void Update()
     {
-        Vector2 raw = lookAction.ReadValue<Vector2>();
+        Vector2 rawLook = lookAction.ReadValue<Vector2>();
         Vector3 look;
         if (lookAction.activeControl?.device is Mouse)
-            look = raw * UserData.Instance.mouseSensitivity;
+            look = rawLook * UserData.Instance.mouseSensitivity;
         else
-            look = raw * UserData.Instance.stickSensitivity;
+            look = rawLook * UserData.Instance.stickSensitivity;
 
         LookInput = look;
+
+        DashInput = dashAction.ReadValue<Vector2>();
+
     }
 
 }

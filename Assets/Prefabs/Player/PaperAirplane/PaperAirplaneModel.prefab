@@ -345,10 +345,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Model: {fileID: 7333470297127026644}
   CrashModelPrefab: {fileID: 4506088508073926183, guid: d144c7db4e56d1949a92289c38badf40, type: 3}
-  TrailRenderers: []
+  TrailRenderers:
+  - {fileID: 3775175880098832305}
+  - {fileID: 8952869510432006971}
   NearmissEffect: {fileID: 5180424412602173278, guid: 9473ace48b5321a4e92d991a27233668, type: 3}
-  TextParticleEffect: {fileID: 8626851510750251126, guid: e8ab91d8accfd02438145abde16ca5a8, type: 3}
-  TextIndicatorEffect: {fileID: 8626851510750251126, guid: 0adeef749bd06634a91c9f229216a095, type: 3}
 --- !u!1 &7333470297127026644
 GameObject:
   m_ObjectHideFlags: 0

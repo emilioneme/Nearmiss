@@ -1598,9 +1598,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2261438374942895116}
-  m_Father: {fileID: 337245745654256030}
+  m_Children: []
+  m_Father: {fileID: 6394622754353006204}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6243719523112130423
 MonoBehaviour:
@@ -1619,8 +1618,8 @@ MonoBehaviour:
   TextParticlePrefab: {fileID: 8626851510750251126, guid: e8ab91d8accfd02438145abde16ca5a8, type: 3}
   PlayerModelGO: {fileID: 0}
   PlayerModelContainer: {fileID: 0}
-  wallEffectForwardMultiplier: 3
-  maxWallParticles: 5
+  wallEffectForwardMultiplier: 5
+  maxWallParticles: 10
   trailFadeTimeMultiplier: 0.1
   maxDroneSpeedForTrail: 30
   textIndicatorForwardOffsett: 1
@@ -1656,9 +1655,9 @@ MonoBehaviour:
   plusPointsMultiplier: 0.15
   textParticleCooldown: 0.15
   timeBeforeGavityOff: 0.1
-  maxTextParticles: 5
+  maxTextParticles: 10
   PlayerCamera: {fileID: 413372053444866132}
-  TextEffectCamera: {fileID: 413372053444866132}
+  Pivot: {fileID: 6394622754353006204}
   SpawnedCrashObject:
     m_PersistentCalls:
       m_Calls:
@@ -1674,6 +1673,38 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1 &3009151511539630774
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6394622754353006204}
+  m_Layer: 3
+  m_Name: PlayerModelPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6394622754353006204
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3009151511539630774}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1707325475761266659}
+  m_Father: {fileID: 337245745654256030}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3092305973525957627
 GameObject:
   m_ObjectHideFlags: 0
@@ -1822,7 +1853,7 @@ LookAtConstraint:
   m_Active: 1
   m_IsLocked: 1
   m_Sources:
-  - sourceTransform: {fileID: 1707325475761266659}
+  - sourceTransform: {fileID: 6394622754353006204}
     weight: 1
 --- !u!114 &3091516420691245503
 MonoBehaviour:
@@ -1836,7 +1867,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6388b5405d3ff6045a4769cb220feb80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toMatch: {fileID: 1707325475761266659}
+  toMatch: {fileID: 4474402397683634576}
   positionOffset: {x: 1, y: 0, z: 0}
 --- !u!1 &3424252737124397031
 GameObject:
@@ -4281,7 +4312,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -161, y: -173}
+  m_AnchoredPosition: {x: -161, y: -165}
   m_SizeDelta: {x: 263.58545, y: 263.58545}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6332144810403860489
@@ -5697,7 +5728,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2410972109914740752}
-  - {fileID: 1707325475761266659}
+  - {fileID: 6394622754353006204}
   - {fileID: 7555546643151443013}
   - {fileID: 9137125072013478834}
   - {fileID: 21474568119022800}
@@ -5920,16 +5951,16 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings:
     - m_Name: 
-      m_Id: 9759ef1f-206b-4fd5-9063-5006f794e78e
-      m_Path: <Gamepad>/leftStick/left
+      m_Id: a63438c3-12e5-4056-a671-1f6e6a61c880
+      m_Path: <Mouse>/leftButton
       m_Interactions: 
       m_Processors: 
       m_Groups: 
       m_Action: Rotate Left
       m_Flags: 0
     - m_Name: 
-      m_Id: a63438c3-12e5-4056-a671-1f6e6a61c880
-      m_Path: <Mouse>/leftButton
+      m_Id: 0965c48c-be18-4456-853c-caa272fd5129
+      m_Path: <Gamepad>/rightTrigger
       m_Interactions: 
       m_Processors: 
       m_Groups: 
@@ -5945,14 +5976,6 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings:
     - m_Name: 
-      m_Id: 995f2ce9-9792-4cbd-bc01-43d7272c31a4
-      m_Path: <Gamepad>/leftStick/right
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Rotate Right
-      m_Flags: 0
-    - m_Name: 
       m_Id: d39ad8a1-12a3-4562-bc2d-0a837c482004
       m_Path: <Mouse>/rightButton
       m_Interactions: 
@@ -5960,139 +5983,73 @@ MonoBehaviour:
       m_Groups: 
       m_Action: Rotate Right
       m_Flags: 0
+    - m_Name: 
+      m_Id: 057e3ee0-38ad-45c3-9a65-d3b9e3150a0f
+      m_Path: <Gamepad>/leftTrigger
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Rotate Right
+      m_Flags: 0
     m_Flags: 0
-  dashLeftAction:
-    m_Name: Dash Left
+  dashAction:
+    m_Name: Dash
     m_Type: 0
     m_ExpectedControlType: 
-    m_Id: b9321930-ad1f-42fd-bff4-f698a75b261e
+    m_Id: f141da3b-6d16-49ff-9e85-3142c26578a2
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings:
     - m_Name: 
-      m_Id: 91391f07-5bff-4ae1-9d65-d7ed60847745
-      m_Path: <Keyboard>/a
+      m_Id: e9e05475-c0a7-4a64-9964-7b45bd96f23e
+      m_Path: <Gamepad>/leftStick
       m_Interactions: 
       m_Processors: 
       m_Groups: 
-      m_Action: Dash Left
+      m_Action: Dash
       m_Flags: 0
-    - m_Name: 
-      m_Id: af48175f-dc83-46c7-871b-4ce49221bb1b
-      m_Path: <Gamepad>/dpad/left
+    - m_Name: 2D Vector
+      m_Id: 78c7875c-744f-45dc-8470-971a3d34e108
+      m_Path: 2DVector
       m_Interactions: 
       m_Processors: 
       m_Groups: 
-      m_Action: Dash Left
-      m_Flags: 0
-    - m_Name: 
-      m_Id: c5125e91-b6ab-4c4c-88c8-f3fb8ef4d63f
-      m_Path: <Gamepad>/leftStick/left
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Dash Left
-      m_Flags: 0
-    m_Flags: 0
-  dashRightAction:
-    m_Name: Dash Right
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 9953d0b9-40f8-444c-b51f-959ce4e2766e
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: 4c927046-2e53-4b89-ad88-06421fb1176b
-      m_Path: <Keyboard>/d
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Dash Right
-      m_Flags: 0
-    - m_Name: 
-      m_Id: d8c4407c-4afb-4a30-9996-a03b2bfefebd
-      m_Path: <Gamepad>/dpad/right
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Dash Right
-      m_Flags: 0
-    - m_Name: 
-      m_Id: 3e3c059a-0dea-4016-9781-1dc1b39c2658
-      m_Path: <Gamepad>/leftStick/right
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Dash Right
-      m_Flags: 0
-    m_Flags: 0
-  dashUpAction:
-    m_Name: Dash Up
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 636a74d4-8188-4aae-bf34-295d3168d87f
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: 7c603321-e8b4-41e5-a477-6bfbb7a4f55d
+      m_Action: Dash
+      m_Flags: 4
+    - m_Name: up
+      m_Id: 9bee7dd5-8d4b-4441-b4b6-e3a4c5502912
       m_Path: <Keyboard>/w
       m_Interactions: 
       m_Processors: 
       m_Groups: 
-      m_Action: Dash Up
-      m_Flags: 0
-    - m_Name: 
-      m_Id: a0fec356-6839-4e56-baff-778f9be284bc
-      m_Path: <Gamepad>/dpad/up
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Dash Up
-      m_Flags: 0
-    - m_Name: 
-      m_Id: bbd779f6-9d6d-426e-96c2-ccaf5abff49a
-      m_Path: <Gamepad>/leftStick/up
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Dash Up
-      m_Flags: 0
-    m_Flags: 0
-  dashDownAction:
-    m_Name: Dash Down
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 22009782-614e-4bf7-9512-323833d66529
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: 25ce970a-d76b-4c3d-89e4-d04227e498cc
+      m_Action: Dash
+      m_Flags: 8
+    - m_Name: down
+      m_Id: aaedc9b1-0d8c-4a31-94a3-b207117ba4d6
       m_Path: <Keyboard>/s
       m_Interactions: 
       m_Processors: 
       m_Groups: 
-      m_Action: Dash Down
-      m_Flags: 0
-    - m_Name: 
-      m_Id: 00a6a379-87aa-49a6-a0d1-bf9ce04409f4
-      m_Path: <Gamepad>/dpad/down
+      m_Action: Dash
+      m_Flags: 8
+    - m_Name: left
+      m_Id: a88f6c64-c36c-4d79-b7cd-1a79033a0894
+      m_Path: <Keyboard>/a
       m_Interactions: 
       m_Processors: 
       m_Groups: 
-      m_Action: Dash Down
-      m_Flags: 0
-    - m_Name: 
-      m_Id: da912801-5b91-480e-91d1-703744bc9063
-      m_Path: <Gamepad>/leftStick/down
+      m_Action: Dash
+      m_Flags: 8
+    - m_Name: right
+      m_Id: 0373f82a-2db4-4e66-b7cc-cbb13d082c28
+      m_Path: <Keyboard>/d
       m_Interactions: 
       m_Processors: 
       m_Groups: 
-      m_Action: Dash Down
-      m_Flags: 0
+      m_Action: Dash
+      m_Flags: 8
     m_Flags: 0
+  DookInput: {x: 0, y: 0}
   dashForwardAction:
     m_Name: Dash Forward
     m_Type: 0
@@ -6466,38 +6423,12 @@ MonoBehaviour:
   totalPoints: 0
   runningPoints: 0
   expectedPoints: 0
-  numberOfCombos: 0
-  speedPointsMultiplier: 0.1
-  maxComboMultiplier: 5
-  comboMultiplierCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 6.5827756
-      outSlope: 6.5827756
-      tangentMode: 0
-      weightedMode: 3
-      inWeight: 0
-      outWeight: 0.15091081
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 4.4861426
-      outSlope: 4.4861426
-      tangentMode: 0
-      weightedMode: 3
-      inWeight: 0.1279071
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  minComboMultiplier: 1
-  minCombos: 1
-  maxCombos: 10
-  numberOfDashCombos: 0
+  comboMultiplier: 0
+  numberOfSwerveCombos: 0
   numberOfSkimCombos: 0
+  speedPointsMultiplier: 0.1
+  swerveMultiplier: 1
+  skimMultiplier: 0.25
   timeToSecurePoints: 2
   timeToSkim: 0.3
   RunStarted:
@@ -6614,12 +6545,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  UpdatedNumberOfCombos:
+  UpdatedComboMultiplier:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6013544378837716508}
         m_TargetAssemblyTypeName: PlayerUIManager, Assembly-CSharp
-        m_MethodName: UpdateNumberOfCombo
+        m_MethodName: UpdateComboMult
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6629,19 +6560,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 6243719523112130423}
-        m_TargetAssemblyTypeName: PlayerModelHandler, Assembly-CSharp
-        m_MethodName: UpdateNumberOfCombo
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  UpdatedComboMultiplier:
+  UpdatedNumberOfSkims:
+    m_PersistentCalls:
+      m_Calls: []
+  UpdatedNumberOfSwerves:
     m_PersistentCalls:
       m_Calls: []
   ResetedRunningPoints:
@@ -6680,21 +6602,6 @@ MonoBehaviour:
       - m_Target: {fileID: 6013544378837716508}
         m_TargetAssemblyTypeName: PlayerUIManager, Assembly-CSharp
         m_MethodName: ResetedTotalPoints
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  ResetedNumberOfCombos:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6013544378837716508}
-        m_TargetAssemblyTypeName: PlayerUIManager, Assembly-CSharp
-        m_MethodName: ResetedNumberOfCombo
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7394,14 +7301,14 @@ RectTransform:
   m_GameObject: {fileID: 8629105014202683539}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.70560426, y: 0.70560426, z: 0.70560426}
+  m_LocalScale: {x: 0.6806541, y: 0.6806541, z: 0.6806541}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8142175652355085643}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -38, y: 7.0999756}
+  m_AnchoredPosition: {x: -35.2, y: 8.5}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3606750008893578652
@@ -7497,7 +7404,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 75.672455, y: 0, z: -33.07798, w: -32.322227}
+  m_margin: {x: 90.43964, y: 0, z: -16.215866, w: -32.322227}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -7872,66 +7779,4 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 9093789261417600976, guid: ab4de2df79c78a3459681a22567ece38, type: 3}
   m_PrefabInstance: {fileID: 2590899576013150584}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &8682107142628067952
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1707325475761266659}
-    m_Modifications:
-    - target: {fileID: 4506088508073926183, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_Name
-      value: PaperAirplaneModel
-      objectReference: {fileID: 0}
-    - target: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
---- !u!4 &2261438374942895116 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-  m_PrefabInstance: {fileID: 8682107142628067952}
   m_PrefabAsset: {fileID: 0}

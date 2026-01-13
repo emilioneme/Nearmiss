@@ -63,7 +63,7 @@ public class PlayerModelHandler : MonoBehaviour
     [SerializeField]
     Camera PlayerCamera;
     [SerializeField]
-    Camera TextEffectCamera;
+    Transform Pivot;
 
     [Header("Event")]
     public UnityEvent<GameObject> SpawnedCrashObject;
@@ -95,21 +95,24 @@ public class PlayerModelHandler : MonoBehaviour
     {
         if (PlayerModelGO == null)
             PlayerModelGO = Instantiate(PlayerModelPrefab, transform);
-        PlayerModelContainer = GetComponentInChildren<PlayerModelContainer>();
-        if (PlayerModelContainer == null)
-            Debug.LogWarning("No Player Model Visuals Found");
+
+        PlayerModelContainer = PlayerModelGO.GetComponent<PlayerModelContainer>();
+        
+
         TextParticleGOs = new Queue<GameObject>();
         WallParticleGOs = new Queue<GameObject>();
     }
 
     private void FixedUpdate()
     {
-        foreach (TrailRenderer trail in PlayerModelContainer.TrailRenderers)
+        if (PlayerModelContainer) 
         {
-            float velocityNomralized = UserData.Instance.droneVelocity.magnitude / maxDroneSpeedForTrail;
-            trail.time = velocityNomralized * trailFadeTimeMultiplier;
+            foreach (TrailRenderer trail in PlayerModelContainer.TrailRenderers)
+            {
+                float velocityNomralized = UserData.Instance.droneVelocity.magnitude / maxDroneSpeedForTrail;
+                trail.time = velocityNomralized * trailFadeTimeMultiplier;
+            }
         }
-        
     }
     #endregion
 
@@ -186,14 +189,14 @@ public class PlayerModelHandler : MonoBehaviour
         {
             TextParticleGO = Instantiate(
             TextParticlePrefab,
-            transform
+            Pivot.transform
             );
         }
 
         // Reset + reuse
         TextParticleEffect ParticleEffect =
             TextParticleGO.GetComponent<TextParticleEffect>();
-        ParticleEffect.cam = TextEffectCamera;
+        ParticleEffect.cam = PlayerCamera;
         ParticleEffect.rb.useGravity = false;
         ParticleEffect.SetText(text); // whatever you already use
         ParticleEffect.rb.linearVelocity = Vector3.zero;
@@ -232,7 +235,7 @@ public class PlayerModelHandler : MonoBehaviour
     #region WallParticles
     void SpawnWallParticle(RaycastHit hit)
     {
-        Vector3 pos = hit.point + (transform.forward * wallEffectForwardMultiplier);
+        Vector3 pos = hit.point + (Pivot.transform.forward * wallEffectForwardMultiplier);
 
         GameObject WallParticleGO;
         if (WallParticleGOs.Count >= maxWallParticles)
@@ -250,6 +253,7 @@ public class PlayerModelHandler : MonoBehaviour
             );
         }
 
+        WallParticleGO.SetActive(true);
         WallParticleGO.transform.position = pos;
         WallParticleGO.transform.rotation = Quaternion.identity;
 
@@ -260,9 +264,9 @@ public class PlayerModelHandler : MonoBehaviour
     #region TextIndicator
     void SpawnTextIndicator(Vector3 position)
     {
-        TextIndicatorGO = Instantiate(TextIndicatorPrefab, position, Quaternion.identity, transform.parent);
+        TextIndicatorGO = Instantiate(TextIndicatorPrefab, position, Quaternion.identity, Pivot.transform);
         TextIndicatorEffectGO = TextIndicatorGO.GetComponent<TextIndicatorEffect>();
-        TextIndicatorEffectGO.cam = TextEffectCamera;
+        TextIndicatorEffectGO.cam = PlayerCamera;
         TextIndicatorEffectGO.SetText(" ");
     }
     #endregion

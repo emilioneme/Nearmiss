@@ -191,14 +191,16 @@ public class PlayerUIManager : MonoBehaviour
     #endregion
 
     #region Combos
-    public void UpdateNumberOfCombo(float numberOfCombos)
+    public void UpdateComboMult(float comboMult)
     {
-        if(numberOfCombos > 1)
-            ComboNumText.text = "x" + numberOfCombos.ToString();
+        Debug.Log(comboMult);
+        if (comboMult > 1)
+            ComboNumText.text = "x" + Tools.LimitNumberLength(comboMult, 4);
         else
             ComboNumText.text = " ";
 
     }
+
     public void ResetedNumberOfCombo(float numberOfCombos)
     {
         ComboNumText.text = " ";

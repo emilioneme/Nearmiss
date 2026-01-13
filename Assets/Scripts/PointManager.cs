@@ -12,28 +12,23 @@ public class PointManager : MonoBehaviour
     [SerializeField]
     public float expectedPoints = 0;
     [SerializeField]
-    public int numberOfCombos = 0;
+    public float comboMultiplier = 0;
+
+    [Header("TypesOfCOmbo")]
+    [SerializeField] int numberOfSwerveCombos = 0;
+    [SerializeField] int numberOfSkimCombos = 0;
+
 
     #region  Multipliers
     [Header("Point Calculation")]
     [SerializeField]
     public float speedPointsMultiplier = .5f;
-    [SerializeField]
-    public float maxComboMultiplier = 10;
 
     [Header("Combo Calculation")]
     [SerializeField]
-    AnimationCurve comboMultiplierCurve;
+    float swerveMultiplier = 2;
     [SerializeField]
-    public float minComboMultiplier = 1;
-    [SerializeField]
-    public float minCombos = 1;
-    [SerializeField]
-    public float maxCombos = 10;
-
-    [Header("TypesOfCOmbo")]
-    [SerializeField] int numberOfDashCombos = 0;
-    [SerializeField] int numberOfSkimCombos = 0;
+    float skimMultiplier = .25f;
     #endregion
 
     #region Expected Points
@@ -61,18 +56,19 @@ public class PointManager : MonoBehaviour
     [SerializeField]
     UnityEvent<float> UpdatedTotalPoints;
     [SerializeField]
-    UnityEvent<float> UpdatedNumberOfCombos; //number of combos = number of skims + number of swerves
-    [SerializeField]
     UnityEvent<float> UpdatedComboMultiplier; //comboMuliplierCalciation
-    
+
+    [SerializeField]
+    UnityEvent<float> UpdatedNumberOfSkims; //comboMuliplierCalciation
+    [SerializeField]
+    UnityEvent<float> UpdatedNumberOfSwerves; //comboMuliplierCalciation
+
     [SerializeField]
     UnityEvent<float> ResetedRunningPoints;
     [SerializeField]
     UnityEvent<float> ResetedExpectedPoints;
     [SerializeField]
     UnityEvent<float> ResetedTotalPoints;
-    [SerializeField]
-    UnityEvent<float> ResetedNumberOfCombos;
     [SerializeField]
     UnityEvent<float> ResetedComboMultiplier;
 
@@ -96,13 +92,16 @@ public class PointManager : MonoBehaviour
     {
         float diff = Time.time - lastNearmiss;
         float normalized = diff / timeToSecurePoints;
-        if (normalized > timeToSkim)
-            UpdateNumberOfCombos(); // skim combo
-
-        if(dashCoroutine != null) 
+        
+        if (dashCoroutine != null) 
         {
             DestroyCourutineSafely(ref dashCoroutine);
-            UpdateNumberOfCombos();
+            UpdateNumberOfSwerves(normalizedDistance);
+        }
+        
+        if (normalized > timeToSkim)
+        {
+            UpdateNumberOfSkims(normalizedDistance);
         }
 
 
@@ -111,11 +110,27 @@ public class PointManager : MonoBehaviour
         SetSecureTimer();
     }
 
-    void UpdateNumberOfCombos()
+    void UpdateCombMult(float normalizedDistance)
     {
-        numberOfCombos++;
-        UpdatedNumberOfCombos.Invoke(numberOfCombos);
-        UpdatedComboMultiplier.Invoke(ComboPointsMultiplier());
+        float vel = UserData.Instance.droneVelocity.sqrMagnitude;
+        float swerve = numberOfSwerveCombos * swerveMultiplier;
+        float skims = numberOfSkimCombos * skimMultiplier;
+        comboMultiplier = 1 + swerve + skims;
+        UpdatedComboMultiplier.Invoke(comboMultiplier);
+    }
+
+    void UpdateNumberOfSkims(float normalizedDistance) 
+    {
+        numberOfSkimCombos++;
+        UpdatedNumberOfSkims.Invoke(numberOfSkimCombos);
+        UpdateCombMult(normalizedDistance);
+    }
+
+    void UpdateNumberOfSwerves(float normalizedDistance)
+    {
+        numberOfSwerveCombos++;
+        UpdatedNumberOfSwerves.Invoke(numberOfSwerveCombos);
+        UpdateCombMult(normalizedDistance);
     }
 
     public void Dashed(Vector3 dir, Vector3 axis, float duration) 
@@ -140,7 +155,7 @@ public class PointManager : MonoBehaviour
     void UpdatePoints(float normalizedDistance, int numberOfHits)
     {
         float points = RunnignPointsCalculation(normalizedDistance, numberOfHits, UserData.Instance.droneVelocity.magnitude, speedPointsMultiplier);
-        runningPoints += points * ComboPointsMultiplier();
+        runningPoints += points * comboMultiplier;
         expectedPoints = totalPoints + runningPoints;
 
         UpdatedRunningPoints.Invoke(runningPoints);
@@ -199,12 +214,11 @@ public class PointManager : MonoBehaviour
     void ResetRunPoints()
     {
         runningPoints = 0;
-        numberOfCombos = 0;
+        numberOfSkimCombos = 0;
+        numberOfSwerveCombos = 0;
 
         ResetedRunningPoints.Invoke(runningPoints);
-        ResetedNumberOfCombos.Invoke(numberOfCombos);
-        ResetedComboMultiplier.Invoke(ComboPointsMultiplier());
-
+        ResetedComboMultiplier.Invoke(1);
         ResetSecureTimer();
     }
     #endregion
@@ -238,25 +252,20 @@ public class PointManager : MonoBehaviour
     {
         return droneVelocity * speedPointsMultiplier * numberOfHits;
     }
-    public float ComboPointsMultiplier()
-    {
-        if (numberOfCombos <= 1)
-            return numberOfCombos;
-        float lerped = Mathf.InverseLerp(minCombos, maxCombos, numberOfCombos);
-        return Mathf.Clamp(comboMultiplierCurve.Evaluate(lerped) * maxComboMultiplier, minComboMultiplier, maxComboMultiplier);
-    }
     #endregion
 
     public void ResetPoints()
     {
         totalPoints = 0;
         runningPoints = 0;
-        numberOfCombos = 0;
         expectedPoints = 0;
+
+        numberOfSkimCombos = 0;
+        numberOfSwerveCombos = 0;
 
         ResetedTotalPoints.Invoke(totalPoints);
         ResetedRunningPoints.Invoke(runningPoints);
-        ResetedNumberOfCombos.Invoke(numberOfCombos);
+        ResetedComboMultiplier.Invoke(1);
         ResetedExpectedPoints.Invoke(expectedPoints);
 
         DestroyCourutineSafely(ref secureTimer);

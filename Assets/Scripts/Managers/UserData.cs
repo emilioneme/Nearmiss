@@ -51,6 +51,10 @@ public class UserData : MonoBehaviour
     [Header("In Game Stats")]
     [SerializeReference]
     public Vector3 droneVelocity = Vector3.zero;
+    [SerializeReference]
+    public float deltaVelocity = 0;
+    [SerializeReference]
+    public float avgVelocity = 0;
 
     #region  Multipliers
     [Header("Point Calculation")]

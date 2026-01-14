@@ -60,6 +60,8 @@ public class DroneMovement : MonoBehaviour
     public bool enableFlying = true;
     public bool allowDash = true;
 
+    [SerializeField] float averageAdaptSpeed = 1;
+
     [Header("Event")]
     public UnityEvent DroneMoved;
 
@@ -83,9 +85,7 @@ public class DroneMovement : MonoBehaviour
     {
         if (!cc)
             return;
-        Vector3 velocity = GetTotalVelocity();
-        UserData.Instance.droneVelocity = velocity;
-        cc.Move(velocity * Time.deltaTime);
+        cc.Move(GetTotalVelocity() * Time.deltaTime);
         DroneMoved.Invoke();
     }
     #endregion
@@ -179,9 +179,16 @@ public class DroneMovement : MonoBehaviour
     #endregion
 
     #region Total Velocity
-    public Vector3 GetTotalVelocity()
+    Vector3 GetTotalVelocity()
     {
-        return CurrentDownVelocity() + GetForwardVelocity() + GetDashVelocity();
+        Vector3 vel = CurrentDownVelocity() + GetForwardVelocity() + GetDashVelocity();
+        float speed = vel.magnitude;
+        // This should be a tunable constant/field, NOT avgSpeed itself
+        float avgT = 1f - Mathf.Exp(-averageAdaptSpeed * Time.deltaTime);
+        UserData.Instance.avgVelocity = Mathf.Lerp(UserData.Instance.avgVelocity, speed, avgT);
+        UserData.Instance.deltaVelocity = speed - UserData.Instance.avgVelocity;
+        UserData.Instance.droneVelocity = vel;
+        return vel;
     }
     #endregion
 

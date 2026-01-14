@@ -60,23 +60,22 @@ public class PlayerUIManager : MonoBehaviour
 
 
     [Header("FOV")]
-    [SerializeField]
-    float minFov = 60;
-    [SerializeField]
-    float maxFovAdditive = 30;
-    [SerializeField]
-    float minVelocityFOV = 30f;
-    [SerializeField]
-    float maxVelocityFOV = 100;
-
+    [SerializeField] float baseFov = 60f;
+    // How many degrees of FOV you get per 1 m/s above the running average.
+    [SerializeField] float degreesPerSpeed = 1;
+    // Clamp the effect so it doesn’t go crazy.
+    [SerializeField] float maxFovOffset = 20f;
+    // Smooth the actual camera FOV change.
+    [SerializeField] float fovSmoothSpeed = 8f;
+    float currentFov;
     Coroutine RunRoutine;
-
     Tween shakeTween;
 
 
     void Update()
     {
         UpdateFOV();
+        UpdateSpeedometer();
         UpdatePanelShake();
     }
 
@@ -118,7 +117,6 @@ public class PlayerUIManager : MonoBehaviour
         return normlized * maxStrenghShake;
     }
     #endregion
-
 
     #region  Run 
     public void RunStarted(float timeToSecure)
@@ -225,10 +223,19 @@ public class PlayerUIManager : MonoBehaviour
         SpeedText.text = Tools.ProcessFloat(UserData.Instance.droneVelocity.magnitude * speedometerMultiplier, 3);
     }
 
-    public void UpdateFOV() 
+    //public void UpdateFOV()
+    //{
+    //  float speedFOV = minFov + Mathf.InverseLerp(minVelocityFOV, maxVelocityFOV, UserData.Instance.droneVelocity.magnitude) * maxFovAdditive;
+    //  cam.Lens.FieldOfView = speedFOV;
+    // }
+
+    public void UpdateFOV()
     {
-        float speedFOV = minFov + Mathf.InverseLerp(minVelocityFOV, maxVelocityFOV, UserData.Instance.droneVelocity.magnitude) * maxFovAdditive;
-        cam.Lens.FieldOfView = speedFOV;
+        float targetOffset = Mathf.Clamp(UserData.Instance.deltaVelocity * degreesPerSpeed, -maxFovOffset, maxFovOffset);
+        float targetFov = baseFov + targetOffset;
+        float fovT = 1f - Mathf.Exp(-fovSmoothSpeed * Time.deltaTime);
+        currentFov = Mathf.Lerp(currentFov == 0 ? baseFov : currentFov, targetFov, fovT);
+        cam.Lens.FieldOfView = currentFov;
     }
     #endregion
 

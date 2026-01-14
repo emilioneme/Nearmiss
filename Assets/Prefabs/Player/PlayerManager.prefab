@@ -549,10 +549,11 @@ MonoBehaviour:
   fadeOutShake: 0
   minVelocityShake: 10
   maxVelocityShake: 100
-  minFov: 60
-  maxFovAdditive: 30
-  minVelocityFOV: 30
-  maxVelocityFOV: 100
+  baseFov: 70
+  averageAdaptSpeed: 1
+  degreesPerSpeed: 1
+  maxFovOffset: 20
+  fovSmoothSpeed: 8
 --- !u!1 &1381249230625344753
 GameObject:
   m_ObjectHideFlags: 0
@@ -6710,31 +6711,7 @@ MonoBehaviour:
   allowDash: 1
   DroneMoved:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6013544378837716508}
-        m_TargetAssemblyTypeName: PlayerUIManager, Assembly-CSharp
-        m_MethodName: UpdateSpeedometer
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 6013544378837716508}
-        m_TargetAssemblyTypeName: PlayerUIManager, Assembly-CSharp
-        m_MethodName: UpdateFOV
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &8714170458392586884
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -6111,8 +6111,9 @@ GameObject:
   - component: {fileID: 416101309412079257}
   - component: {fileID: 2746193758524380571}
   - component: {fileID: 2070999249770834481}
+  - component: {fileID: 1542127289218287564}
   m_Layer: 3
-  m_Name: Player
+  m_Name: PlayerManager
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7122,6 +7123,18 @@ MonoBehaviour:
   crashPriority: 20
   crashBlendTime: 0.15
   respawnBlendTime: 0.5
+--- !u!114 &1542127289218287564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8266162087823780538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a7e76c6c44fd4f1e8a60ec07295428a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8282424030411924373
 GameObject:
   m_ObjectHideFlags: 0

@@ -44,39 +44,27 @@ public class PointManager : MonoBehaviour
 
 
     #region Events
+    [Header("Run")]
     [SerializeField]
     UnityEvent<float> RunStarted; //minTimeBeforeCombo and comboWindowDuration
     [SerializeField]
     UnityEvent<float> RunContinued; //minTimeBeforeCombo and comboWindowDuration
-    [SerializeField]
-    UnityEvent<float> RunningPointsCalculated;
 
+    [Header("UpdatedPoints")]
     [SerializeField]
     UnityEvent<float> UpdatedRunningPoints;
-    [SerializeField]
-    UnityEvent<float> UpdatedExpectedPoints;
     [SerializeField]
     UnityEvent<float> UpdatedTotalPoints;
     [SerializeField]
     UnityEvent<float> UpdatedComboMultiplier; //comboMuliplierCalciation
 
+    [Header("UpdatedComb")]
     [SerializeField]
     UnityEvent<float> UpdatedNumberOfSkims; //comboMuliplierCalciation
     [SerializeField]
     UnityEvent<float> UpdatedNumberOfSwerves; //comboMuliplierCalciation
 
-    [SerializeField]
-    UnityEvent<float> ResetedRunningPoints;
-    [SerializeField]
-    UnityEvent<float> ResetedExpectedPoints;
-    [SerializeField]
-    UnityEvent<float> ResetedTotalPoints;
-    [SerializeField]
-    UnityEvent<float> ResetedComboMultiplier;
 
-
-    [SerializeField]
-    UnityEvent<float, float> ComboStarted; //minTimeBeforeCombo and comboWindowDuration
     [SerializeField]
     UnityEvent<float> NewHighScore;
     [SerializeField]
@@ -164,7 +152,6 @@ public class PointManager : MonoBehaviour
         expectedPoints = totalPoints + runningPoints;
 
         UpdatedRunningPoints.Invoke(runningPoints);
-        UpdatedExpectedPoints.Invoke(expectedPoints);
     }
     #endregion
 
@@ -206,7 +193,6 @@ public class PointManager : MonoBehaviour
     void PointsSecured()
     {
         totalPoints = expectedPoints;
-
         ScuredPoints.Invoke(totalPoints);
         UpdatedTotalPoints.Invoke(totalPoints);
 
@@ -221,9 +207,6 @@ public class PointManager : MonoBehaviour
         runningPoints = 0;
         numberOfSkimCombos = 0;
         numberOfSwerveCombos = 0;
-
-        ResetedRunningPoints.Invoke(runningPoints);
-        ResetedComboMultiplier.Invoke(1);
         ResetSecureTimer();
     }
     #endregion
@@ -269,12 +252,6 @@ public class PointManager : MonoBehaviour
         numberOfSwerveCombos = 0;
 
         comboMultiplier = 1;
-
-        ResetedTotalPoints.Invoke(totalPoints);
-        ResetedRunningPoints.Invoke(runningPoints);
-        ResetedComboMultiplier.Invoke(1);
-        ResetedExpectedPoints.Invoke(expectedPoints);
-
         DestroyCourutineSafely(ref secureTimer);
     }
 
@@ -290,5 +267,6 @@ public class PointManager : MonoBehaviour
     {
         DestroyCourutineSafely(ref secureTimer);
         DestroyCourutineSafely(ref dashCoroutine);
+        ResetPoints();
     }
 }

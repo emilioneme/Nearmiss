@@ -55,12 +55,10 @@ public class SettingsManager : MonoBehaviour
         settingsCanvas.SetActive(false);
     }
 
-
     private void Start()
     {
         UpdateSettings();
     }
-
 
     void UpdateSettings() 
     {
@@ -73,15 +71,18 @@ public class SettingsManager : MonoBehaviour
     }
 
     #region Set Setting
+    //Volume
     public void SetVolume() 
     {
-        UserData.Instance.masterVolume = volumeSlider.value;
+        UserData.Instance.ChangeMasterVolume(volumeSlider.value);
     }
 
     public void SetMusic()
     {
-        UserData.Instance.musicVolume = musicSlider.value;
+        UserData.Instance.ChangeMusicVolume(volumeSlider.value);
     }
+
+    //Mouse Sense
     public void SetMouseSens()
     {
         UserData.Instance.mouseSensitivity = mouseSensSlider.value;
@@ -91,6 +92,7 @@ public class SettingsManager : MonoBehaviour
         UserData.Instance.stickSensitivity = stickSensSlider.value;
     }
 
+    //Respawen
     public void SetRespawn() 
     {
         UserData.Instance.automaticRespawn = automaticRespawn.isOn;
@@ -117,6 +119,7 @@ public class SettingsManager : MonoBehaviour
     {
         Debug.Log("Scene loaded: " + scene.name);
         settingsCanvas.SetActive(false);
+        UpdateSettings();
     }
 
 }

@@ -5,8 +5,6 @@ using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.ProBuilder.AutoUnwrapSettings;
-using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerUIManager : MonoBehaviour
 {
@@ -98,6 +96,11 @@ public class PlayerUIManager : MonoBehaviour
     {
         DestroyCourutineSafely(ref RunRoutine);
         RunRoutine = StartCoroutine(RunCooldownCoroutine(timeToSecure));
+
+        ComboNumText.text = "";
+        if (!ComboNumGO.activeSelf)
+            ComboNumGO.SetActive(true);
+        DOBounceTween(ref ComboNumGO, 1.3f, .25f);
     }
 
     public void RunContinued(float timeToSecure)
@@ -109,8 +112,10 @@ public class PlayerUIManager : MonoBehaviour
     public void PointsSecured(float points)
     {
         TotalPointsText.text = Tools.ProcessFloat(points, 2);
-
         DOBounceTween(ref TotalPointsGO, .5f, .25f);
+        ComboNumGO.transform
+            .DOScale(0f, .25f)
+            .OnComplete(HideComboUI);
     }
 
     void DestroyCourutineSafely(ref Coroutine Routine) 
@@ -141,18 +146,8 @@ public class PlayerUIManager : MonoBehaviour
     #endregion
 
     #region Run Points
-    public void UpdateRunPoints(float points)
+    void HideComboUI()
     {
-        //RunningPointsText.text = Tools.ProcessFloat(points, 2);
-        if (!RunningPointsGO.activeSelf)
-            //RunningPointsGO.SetActive(true);
-        if (!ComboNumGO.activeSelf)
-            ComboNumGO.SetActive(true);
-    }
-
-    public void ResetedRunPoints(float points)
-    {
-        //RunningPointsText.text = Tools.ProcessFloat(points, 2);
         RunningPointsGO.SetActive(false);
         ComboNumGO.SetActive(false);
     }
@@ -171,7 +166,6 @@ public class PlayerUIManager : MonoBehaviour
         {
             ComboNumText.text = " ";
         }
-            
     }
 
     public void ResetedNumberOfCombo(float numberOfCombos)
@@ -216,25 +210,15 @@ public class PlayerUIManager : MonoBehaviour
 
     #region CrashUI
 
-    public void TriggerCrashUI(ControllerColliderHit hit) 
+    public void OnCrash(ControllerColliderHit hit) 
     {
+        HideComboUI();
     }
     #endregion
 
-    public void DOBounceTween(ref GameObject GO, float toScale, float duration, Ease easeType = Ease.InOutSine) 
+    public void PlayerSpawned()
     {
-        GO.transform.DOKill();
-        GO.transform.localScale = Vector3.one;
-        GO.transform
-            .DOScale(toScale, duration)   // go smaller
-            .SetEase(easeType)
-            .SetLoops(2, LoopType.Yoyo);
-    }
-
-    public void PlayerSpawned() 
-    {
-        RunningPointsGO.SetActive(false);
-        ComboNumGO.SetActive(false);
+        HideComboUI();
     }
 
     public void HidePlayerUI() 
@@ -246,5 +230,17 @@ public class PlayerUIManager : MonoBehaviour
     {
         PlayerUICanvas.SetActive(true);
     }
-    
+
+    #region tool
+    public void DOBounceTween(ref GameObject GO, float toScale, float duration, Ease easeType = Ease.InOutSine)
+    {
+        GO.transform.DOKill();
+        GO.transform.localScale = Vector3.one;
+        GO.transform
+            .DOScale(toScale, duration)   // go smaller
+            .SetEase(easeType)
+            .SetLoops(2, LoopType.Yoyo);
+    }
+    #endregion
+
 }

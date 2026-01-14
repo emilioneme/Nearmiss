@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public class UserData : MonoBehaviour
 {
@@ -56,6 +58,8 @@ public class UserData : MonoBehaviour
     [SerializeReference]
     public float avgVelocity = 0;
 
+    public UnityEvent<float> MusicVolumeChange;
+
     #region  Multipliers
     [Header("Point Calculation")]
     [SerializeField]
@@ -67,6 +71,17 @@ public class UserData : MonoBehaviour
     [SerializeField]
     static public float maxComboMultiplier = 10;
     #endregion
+
+    public void ChangeMusicVolume(float vol) 
+    {
+        musicVolume = vol;
+        MusicVolumeChange.Invoke(musicVolume);
+    }
+    public void ChangeMasterVolume(float vol)
+    {
+        masterVolume = vol;
+        AudioListener.volume = vol;
+    }
 
     void OnEnable()
     {

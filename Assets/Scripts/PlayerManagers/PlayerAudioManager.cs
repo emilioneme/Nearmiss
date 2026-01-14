@@ -5,7 +5,8 @@ public class PlayerAudioManager : MonoBehaviour
 {
     [SerializeField] GameObject DashAudioPrefab;
     [SerializeField] GameObject SecureAudioPrefab;
-    [SerializeField] GameObject ComboAudioPrefab;
+    [SerializeField] GameObject SwerveAudioPrefab;
+    [SerializeField] GameObject SkimAudioPrefab;
     [SerializeField] GameObject RespawnAudioPrefab;
     [SerializeField] GameObject CrashAudioPrefab;
     [SerializeField] GameObject WallAudioPrefab;
@@ -38,29 +39,34 @@ public class PlayerAudioManager : MonoBehaviour
 
     public void PlayDashSound() 
     {
-        Destroy(Instantiate(DashAudioPrefab, transform), 1f);
+        Destroy(Instantiate(DashAudioPrefab, transform.position, Quaternion.identity), 1f);
     }
 
     public void PlaySecureSound()
     {
-        Destroy(Instantiate(SecureAudioPrefab, transform), 1f);
+        Destroy(Instantiate(SecureAudioPrefab, transform.position, Quaternion.identity), 1f);
         DestoryWallSund();
     }
 
-    public void PlayComboSound()
+    public void PlaySkimSound()
     {
-        Destroy(Instantiate(ComboAudioPrefab, transform), 1f);
+        Destroy(Instantiate(SkimAudioPrefab, transform.position, Quaternion.identity), 1f);
+    }
+
+    public void PlaySwerveSound()
+    {
+        Destroy(Instantiate(SwerveAudioPrefab, transform.position, Quaternion.identity), 1f);
     }
 
     public void PlayRespawnSound()
     {
-        Destroy(Instantiate(RespawnAudioPrefab, transform), 1f);
+        Destroy(Instantiate(RespawnAudioPrefab, transform.position, Quaternion.identity), 1f);
         DestoryWallSund();
     }
 
     public void PlayCrashSound()
     {
-        Destroy(Instantiate(CrashAudioPrefab, transform), 1f);
+        Destroy(Instantiate(CrashAudioPrefab, transform.position, Quaternion.identity), 1f);
         DestoryWallSund();
     }
 

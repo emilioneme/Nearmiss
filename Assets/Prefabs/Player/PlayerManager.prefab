@@ -5011,7 +5011,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.3443396, g: 0.7523062, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5653,7 +5653,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DashAudioPrefab: {fileID: 7082854550985821893, guid: 19f87959e33e7ec4c87f88abc51f7f2d, type: 3}
   SecureAudioPrefab: {fileID: 7082854550985821893, guid: d38edcdebf324ba4a87137856898681d, type: 3}
-  ComboAudioPrefab: {fileID: 7082854550985821893, guid: 5e7730b5bff474343b11e94a0936f96e, type: 3}
+  SwerveAudioPrefab: {fileID: 7082854550985821893, guid: 5e7730b5bff474343b11e94a0936f96e, type: 3}
+  SkimAudioPrefab: {fileID: 7082854550985821893, guid: ebc4455c1f2eb3940b704d8e6f37ca7f, type: 3}
   RespawnAudioPrefab: {fileID: 7082854550985821893, guid: 552e088c961ecb84d98a2bbc3bd293c0, type: 3}
   CrashAudioPrefab: {fileID: 7082854550985821893, guid: a529075803e06c540b5983c8d4927fa8, type: 3}
   WallAudioPrefab: {fileID: 7082854550985821893, guid: 90155d8613433824996a7e5359890302, type: 3}
@@ -6953,9 +6954,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  RunningPointsCalculated:
-    m_PersistentCalls:
-      m_Calls: []
   UpdatedRunningPoints:
     m_PersistentCalls:
       m_Calls:
@@ -6983,9 +6981,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  UpdatedExpectedPoints:
-    m_PersistentCalls:
-      m_Calls: []
   UpdatedTotalPoints:
     m_PersistentCalls:
       m_Calls:
@@ -7028,9 +7023,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  UpdatedNumberOfSkims:
+    m_PersistentCalls:
+      m_Calls:
       - m_Target: {fileID: 8121728279894473426}
         m_TargetAssemblyTypeName: PlayerAudioManager, Assembly-CSharp
-        m_MethodName: PlayComboSound
+        m_MethodName: PlaySkimSound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7040,19 +7038,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  UpdatedNumberOfSkims:
-    m_PersistentCalls:
-      m_Calls: []
   UpdatedNumberOfSwerves:
     m_PersistentCalls:
-      m_Calls: []
-  ResetedRunningPoints:
-    m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6013544378837716508}
-        m_TargetAssemblyTypeName: PlayerUIManager, Assembly-CSharp
-        m_MethodName: ResetedRunPoints
-        m_Mode: 0
+      - m_Target: {fileID: 8121728279894473426}
+        m_TargetAssemblyTypeName: PlayerAudioManager, Assembly-CSharp
+        m_MethodName: PlaySwerveSound
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -7061,54 +7053,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  ResetedExpectedPoints:
-    m_PersistentCalls:
-      m_Calls: []
-  ResetedTotalPoints:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8634580918364863695}
-        m_TargetAssemblyTypeName: DroneMovement, Assembly-CSharp
-        m_MethodName: ResetedPoints
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 6013544378837716508}
-        m_TargetAssemblyTypeName: PlayerUIManager, Assembly-CSharp
-        m_MethodName: ResetedTotalPoints
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  ResetedComboMultiplier:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6013544378837716508}
-        m_TargetAssemblyTypeName: PlayerUIManager, Assembly-CSharp
-        m_MethodName: ResetedNumberOfCombo
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  ComboStarted:
-    m_PersistentCalls:
-      m_Calls: []
   NewHighScore:
     m_PersistentCalls:
       m_Calls:
@@ -7828,8 +7772,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4294951000
+  m_fontColor: {r: 0.34509805, g: 0.7529412, b: 1, a: 1}
   m_enableVertexGradient: 1
   m_colorMode: 0
   m_fontColorGradient:
@@ -7846,12 +7790,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
+  m_fontSize: 65.8
   m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 65.8
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512

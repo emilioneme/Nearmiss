@@ -12,7 +12,7 @@ public class PointManager : MonoBehaviour
     [SerializeField]
     public float expectedPoints = 0;
     [SerializeField]
-    public float comboMultiplier = 0;
+    public float comboMultiplier = 1;
 
     [Header("TypesOfCOmbo")]
     [SerializeField] int numberOfSwerveCombos = 0;
@@ -267,6 +267,8 @@ public class PointManager : MonoBehaviour
 
         numberOfSkimCombos = 0;
         numberOfSwerveCombos = 0;
+
+        comboMultiplier = 1;
 
         ResetedTotalPoints.Invoke(totalPoints);
         ResetedRunningPoints.Invoke(runningPoints);

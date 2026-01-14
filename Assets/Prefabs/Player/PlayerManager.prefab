@@ -4180,7 +4180,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0.00010681152, y: 0.00022888184}
   m_SizeDelta: {x: -200, y: -200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5426007665130617307
@@ -5608,6 +5608,56 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1 &7647898044086763832
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4413069508281939949}
+  - component: {fileID: 8121728279894473426}
+  m_Layer: 3
+  m_Name: PlayerAudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4413069508281939949
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7647898044086763832}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 337245745654256030}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8121728279894473426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7647898044086763832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a7e76c6c44fd4f1e8a60ec07295428a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DashAudioPrefab: {fileID: 7082854550985821893, guid: 19f87959e33e7ec4c87f88abc51f7f2d, type: 3}
+  SecureAudioPrefab: {fileID: 7082854550985821893, guid: d38edcdebf324ba4a87137856898681d, type: 3}
+  ComboAudioPrefab: {fileID: 7082854550985821893, guid: 5e7730b5bff474343b11e94a0936f96e, type: 3}
+  RespawnAudioPrefab: {fileID: 7082854550985821893, guid: 552e088c961ecb84d98a2bbc3bd293c0, type: 3}
+  CrashAudioPrefab: {fileID: 7082854550985821893, guid: a529075803e06c540b5983c8d4927fa8, type: 3}
+  WallAudioPrefab: {fileID: 7082854550985821893, guid: 90155d8613433824996a7e5359890302, type: 3}
 --- !u!1 &7807779072465573284
 GameObject:
   m_ObjectHideFlags: 0
@@ -6090,7 +6140,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 300, y: -276}
+  m_AnchoredPosition: {x: 274, y: -276}
   m_SizeDelta: {x: 482.0475, y: 456.0495}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8266162087823780538
@@ -6111,7 +6161,6 @@ GameObject:
   - component: {fileID: 416101309412079257}
   - component: {fileID: 2746193758524380571}
   - component: {fileID: 2070999249770834481}
-  - component: {fileID: 1542127289218287564}
   m_Layer: 3
   m_Name: PlayerManager
   m_TagString: Player
@@ -6137,6 +6186,7 @@ Transform:
   - {fileID: 7555546643151443013}
   - {fileID: 9137125072013478834}
   - {fileID: 21474568119022800}
+  - {fileID: 4413069508281939949}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &5706241324656954214
@@ -6222,6 +6272,18 @@ MonoBehaviour:
       - m_Target: {fileID: 6013544378837716508}
         m_TargetAssemblyTypeName: PlayerUIManager, Assembly-CSharp
         m_MethodName: UnhidePlayerUI
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8121728279894473426}
+        m_TargetAssemblyTypeName: PlayerAudioManager, Assembly-CSharp
+        m_MethodName: PlayRespawnSound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6631,6 +6693,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8121728279894473426}
+        m_TargetAssemblyTypeName: PlayerAudioManager, Assembly-CSharp
+        m_MethodName: PlayDashSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   applyGravity: 1
   enableFlying: 1
   allowDash: 1
@@ -6755,9 +6829,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 6243719523112130423}
-        m_TargetAssemblyTypeName: PlayerModelHandler, Assembly-CSharp
-        m_MethodName: DestroyTextIndicatorGO
+      - m_Target: {fileID: 8121728279894473426}
+        m_TargetAssemblyTypeName: PlayerAudioManager, Assembly-CSharp
+        m_MethodName: PlayCrashSound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6813,6 +6887,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8121728279894473426}
+        m_TargetAssemblyTypeName: PlayerAudioManager, Assembly-CSharp
+        m_MethodName: PlayWallSound
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2746193758524380571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6828,7 +6914,7 @@ MonoBehaviour:
   totalPoints: 0
   runningPoints: 0
   expectedPoints: 0
-  comboMultiplier: 0
+  comboMultiplier: 1
   numberOfSwerveCombos: 0
   numberOfSkimCombos: 0
   runningPointsMultiplier: 0.1
@@ -6966,6 +7052,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8121728279894473426}
+        m_TargetAssemblyTypeName: PlayerAudioManager, Assembly-CSharp
+        m_MethodName: PlayComboSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   UpdatedNumberOfSkims:
     m_PersistentCalls:
       m_Calls: []
@@ -7092,9 +7190,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 6243719523112130423}
-        m_TargetAssemblyTypeName: PlayerModelHandler, Assembly-CSharp
-        m_MethodName: DestroyTextIndicatorGO
+      - m_Target: {fileID: 8121728279894473426}
+        m_TargetAssemblyTypeName: PlayerAudioManager, Assembly-CSharp
+        m_MethodName: PlaySecureSound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7123,18 +7221,6 @@ MonoBehaviour:
   crashPriority: 20
   crashBlendTime: 0.15
   respawnBlendTime: 0.5
---- !u!114 &1542127289218287564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8266162087823780538}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a7e76c6c44fd4f1e8a60ec07295428a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &8282424030411924373
 GameObject:
   m_ObjectHideFlags: 0

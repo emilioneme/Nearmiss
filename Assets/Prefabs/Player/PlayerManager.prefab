@@ -507,7 +507,9 @@ MonoBehaviour:
   PlayerUICanvas: {fileID: 5747174012559405633}
   cam: {fileID: 4626820148296802279}
   speedometerMultiplier: 1
-  Panel: {fileID: 5016091858297433976}
+  Panel: {fileID: 8499950506930239205}
+  camTransform: {fileID: 210037848881162436}
+  droneTransform: {fileID: 6394622754353006204}
   SpeedText: {fileID: 8798721798373133340}
   RunningPointsGO: {fileID: 1762025075378765817}
   ComboNumGO: {fileID: 1762343550732796643}
@@ -542,15 +544,11 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  maxStrenghShake: 30
-  durationShake: 0.5
-  vibratoShake: 10
-  randomnessShake: 100
-  fadeOutShake: 0
-  minVelocityShake: 10
-  maxVelocityShake: 100
+  minLagSpeed: 20
+  maxLagSpeed: 3
+  maxLagDistance: 1
+  distStrength: 5
   baseFov: 70
-  averageAdaptSpeed: 1
   degreesPerSpeed: 1
   maxFovOffset: 20
   fovSmoothSpeed: 8
@@ -6709,6 +6707,7 @@ MonoBehaviour:
   applyGravity: 1
   enableFlying: 1
   allowDash: 1
+  averageAdaptSpeed: 1
   DroneMoved:
     m_PersistentCalls:
       m_Calls: []

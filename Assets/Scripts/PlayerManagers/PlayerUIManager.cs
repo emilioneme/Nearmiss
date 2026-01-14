@@ -6,6 +6,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.ProBuilder.AutoUnwrapSettings;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerUIManager : MonoBehaviour
 {
@@ -19,7 +20,9 @@ public class PlayerUIManager : MonoBehaviour
     [SerializeField] float speedometerMultiplier = 10;
 
     [Header("UI")]
-    [SerializeField] GameObject Panel;
+    [SerializeField] RectTransform Panel;
+    [SerializeField] Transform camTransform;   // your camera (or Cinemachine brain output camera)
+    [SerializeField] Transform droneTransform; // your plane
 
     [SerializeField] TMP_Text SpeedText;
 
@@ -40,82 +43,54 @@ public class PlayerUIManager : MonoBehaviour
 
     [SerializeField] AnimationCurve CircleFillCurve;
 
-    [Header("Screen Effcts")]
+    //[Header("Screen Effcts")]
 
-    [Header("Shake")]
-    [SerializeField] 
-    float maxStrenghShake = 30f;
-    [SerializeField]
-    float durationShake = 0.5f;
-    [SerializeField]
-    int vibratoShake = 10;
-    [SerializeField]
-    float randomnessShake = 90;
-    [SerializeField]
-    bool fadeOutShake = false;
-    [SerializeField]
-    float minVelocityShake = 0;
-    [SerializeField]
-    float maxVelocityShake = 100;
-
+    [Header("Lag")]
+    [SerializeField] float minLagSpeed = 20f;   // when close
+    [SerializeField] float maxLagSpeed = 3f;    // when far
+    [SerializeField] float maxLagDistance = 200f;
+    [SerializeField] float distStrength = 1f;
 
     [Header("FOV")]
     [SerializeField] float baseFov = 60f;
-    // How many degrees of FOV you get per 1 m/s above the running average.
     [SerializeField] float degreesPerSpeed = 1;
-    // Clamp the effect so it doesn’t go crazy.
     [SerializeField] float maxFovOffset = 20f;
-    // Smooth the actual camera FOV change.
     [SerializeField] float fovSmoothSpeed = 8f;
     float currentFov;
     Coroutine RunRoutine;
-    Tween shakeTween;
+
 
 
     void Update()
     {
         UpdateFOV();
+        UpdatePanelLag(AchnorePosition());
         UpdateSpeedometer();
-        UpdatePanelShake();
     }
 
-    #region SHake
-    void UpdatePanelShake() 
+    #region Lag
+    public Vector2 AchnorePosition() 
     {
-        float strengthShake = GetShakeStrength();
-        if (strengthShake > 0.1f)
-        {
-            Panel.transform.localPosition = Vector3.zero;
-            shakeTween?.Kill();
-            shakeTween = Panel.transform.DOShakePosition(
-                duration: durationShake,
-                strength: strengthShake, // start with no shake
-                vibrato: vibratoShake,
-                randomness: randomnessShake,
-                fadeOut: fadeOutShake
-            )
-            .SetLoops(-1)
-            .SetUpdate(true);
-        }
-        else
-        {
-            StopShake();
-        }
+        float diffX = camTransform.position.x - droneTransform.position.x;
+        float diffY = camTransform.position.y - droneTransform.position.y;
+        return new Vector2 (diffX, diffY) * distStrength;
+    }
+    public void UpdatePanelLag(Vector2 targetAnchoredPos)
+    {
+        Vector2 current = Panel.anchoredPosition;
+        float distance = Vector2.Distance(current, targetAnchoredPos);
+        // Normalize distance (0 = close, 1 = far)
+        float t = Mathf.Clamp01(distance / maxLagDistance);
+
+        // Invert so far = slower
+        float followSpeed = Mathf.Lerp(minLagSpeed, maxLagSpeed, t);
+        Panel.anchoredPosition = Vector2.Lerp(
+            current,
+            targetAnchoredPos,
+            followSpeed * Time.unscaledDeltaTime
+        );
     }
 
-    void StopShake()
-    {
-        shakeTween?.Kill();
-        shakeTween = null;
-        Panel.transform.localPosition = Vector3.zero;
-    }
-
-    float GetShakeStrength()
-    {
-        float v = UserData.Instance.droneVelocity.magnitude;
-        float normlized = Mathf.InverseLerp(minVelocityShake, maxVelocityShake, v);
-        return normlized * maxStrenghShake;
-    }
     #endregion
 
     #region  Run 

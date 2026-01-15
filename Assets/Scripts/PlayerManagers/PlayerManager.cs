@@ -146,9 +146,8 @@ public class PlayerManager : MonoBehaviour
 
     public void InitiatePlayerSpawning() 
     {
-        Transform[] spawnPoints = SpawnPointsManager.Instance.spawnPoints;
-        int randomSpawnIndex = Random.Range(0, spawnPoints.Length);
-        transform.position = spawnPoints[randomSpawnIndex].position;
+        //Transform[] spawnPoints = SpawnPointsManager.Instance.spawnPoints;
+        //int randomSpawnIndex = Random.Range(0, spawnPoints.Length);
 
         if (UserData.Instance.freezeBeforeSpawn)
             StartCoroutine(FreezeSpawn(freezeDuration));
@@ -158,8 +157,22 @@ public class PlayerManager : MonoBehaviour
 
     void SpawnPlayer() 
     {
+        StartCoroutine(SpawnRoutine());
+    }
+
+    IEnumerator SpawnRoutine() 
+    {
+        yield return new WaitForSeconds(.1f);
+        TeleportPlayerToSpawn();
         PlayerSpawned.Invoke();
         EnablePlayer();
+    }
+
+    void TeleportPlayerToSpawn() 
+    {
+        Transform[] spawnPoints = SpawnPointsManager.Instance.spawnPoints;
+        int randomSpawnIndex = Random.Range(0, spawnPoints.Length);
+        transform.position = spawnPoints[randomSpawnIndex].position;
     }
 
     IEnumerator FreezeSpawn(float freezeTime) 
@@ -169,6 +182,7 @@ public class PlayerManager : MonoBehaviour
         planeLook.enabled = true;
         playerInput.enabled = true;
         PlayerModel.SetActive(true);
+        TeleportPlayerToSpawn();
 
         yield return new WaitForSeconds(freezeTime);
         SpawnPlayer();

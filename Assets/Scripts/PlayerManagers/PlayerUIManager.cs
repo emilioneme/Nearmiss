@@ -57,8 +57,6 @@ public class PlayerUIManager : MonoBehaviour
     float currentFov;
     Coroutine RunRoutine;
 
-
-
     void Update()
     {
         UpdateFOV();

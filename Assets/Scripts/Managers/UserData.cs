@@ -57,6 +57,8 @@ public class UserData : MonoBehaviour
     public float deltaVelocity = 0;
     [SerializeReference]
     public float avgVelocity = 0;
+    [SerializeField] 
+    public float averageAdaptSpeed = 1;
 
     public UnityEvent<float> MusicVolumeChange;
 

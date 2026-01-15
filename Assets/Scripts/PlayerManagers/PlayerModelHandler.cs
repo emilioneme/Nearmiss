@@ -31,8 +31,6 @@ public class PlayerModelHandler : MonoBehaviour
 
     [Header("TextIndicatorEffct")]
     [SerializeField]
-    float textIndicatorForwardOffsett = 1;
-    [SerializeField]
     float textIndicatorDistance = 1;
 
     [Header("SecureTextIndicatorEffct")]

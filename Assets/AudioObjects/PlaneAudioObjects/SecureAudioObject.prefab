@@ -144,7 +144,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pitchRandomizerOffset: 0.1
   AudioClips:
-  - {fileID: 8300000, guid: f53c727d7d8ad3b498ba997fb02232db, type: 3}
+  - {fileID: 8300000, guid: 609372212ea4aa24681b4265087d7880, type: 3}
   loop: 0
+  automaticDestroy: 0
   playOnStart: 1
   playOnEnable: 1

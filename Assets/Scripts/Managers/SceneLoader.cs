@@ -29,29 +29,39 @@ namespace eneme
         [SerializeField]
         Image LoadingBar;
 
-        public async void LoadScene(string sceneName)
+        public void LoadScene(string sceneName)
+        {
+            StartCoroutine(LoadSceneRoutine(sceneName));
+        }
+
+        IEnumerator LoadSceneRoutine(string sceneName)
         {
             var scene = SceneManager.LoadSceneAsync(sceneName);
 
             scene.allowSceneActivation = false;
             LoadingCanvas.SetActive(true);
 
-            do 
+            while (scene.progress < 0.9f)
             {
-                await Task.Delay(1000);
-                LoadingBar.fillAmount = scene.progress;
-            }while (scene.progress < 0.9f);
+                LoadingBar.fillAmount = Mathf.Clamp01(scene.progress + .1f);
+                yield return null; // <- the key
+            }
 
             scene.allowSceneActivation = true;
-            StartCoroutine(deactivateCanvas(.1f));
         }
 
-        IEnumerator deactivateCanvas(float time) 
+        void OnEnable()
         {
-            yield return new WaitForSeconds(time);
-            SettingsManager.Instance.CloseSettings();
-            LoadingCanvas.SetActive(false);
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
-
+        void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+        void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            LoadingCanvas.SetActive(false);
+            LoadingBar.fillAmount = .1f;
+        }
     }
 }

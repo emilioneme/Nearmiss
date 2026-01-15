@@ -51,5 +51,15 @@ MonoBehaviour:
   stickExponent: 2
   masterVolume: 0.5
   musicVolume: 0.5
-  automaticRespawn: 1
+  automaticRespawn: 0
   freezeBeforeSpawn: 1
+  canPause: 0
+  isPaused: 0
+  isDead: 0
+  droneVelocity: {x: 0, y: 0, z: 0}
+  deltaVelocity: 0
+  avgVelocity: 0
+  averageAdaptSpeed: 1
+  MusicVolumeChange:
+    m_PersistentCalls:
+      m_Calls: []

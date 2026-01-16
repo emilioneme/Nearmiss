@@ -2,6 +2,7 @@ using eneme;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 public class PauseManager : MonoBehaviour
 {
@@ -28,11 +29,6 @@ public class PauseManager : MonoBehaviour
     [SerializeField]
     Camera GlobalCamera;
 
-    [Header("Event")]
-    public UnityEvent Paused;
-    public UnityEvent UnPaused;
-
-
     private void Start()
     {
         if(UserData.Instance.isPaused)
@@ -43,7 +39,7 @@ public class PauseManager : MonoBehaviour
 
     private void Update()
     {
-        if (playerInput.pauseAction.WasReleasedThisFrame() && UserData.Instance.canPause) 
+        if (Keyboard.current.escapeKey.wasReleasedThisFrame && UserData.Instance.canPause) 
             TogglePause();
     }   
 
@@ -59,7 +55,6 @@ public class PauseManager : MonoBehaviour
     {
         UserData.Instance.isPaused = false;
         pauseCanvas.SetActive(false);
-        UnPaused.Invoke();
 
         if(!UserData.Instance.isDead) 
         {
@@ -83,10 +78,9 @@ public class PauseManager : MonoBehaviour
     {
         UserData.Instance.isPaused = true;
         pauseCanvas.SetActive(true);
-        Paused.Invoke();
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-        Time.timeScale = .1f;
+        Time.timeScale = 0;
     }
     #endregion
     public void GoToScene(string sceneName)

@@ -34,11 +34,10 @@ public class FreezeScreenManager : MonoBehaviour
             float rounded = Mathf.Round(countDown * 10) / 10;
             int interger = Mathf.RoundToInt(countDown);
 
-            if (Time.time - lastIntTime >= .95f) 
+            if (Time.time - lastIntTime >= .5f) 
             {
                 lastIntTime = Time.time;
                 FreezeCountDownInt.Invoke();
-                Debug.Log(countDown);
             }
 
             if (countDown > 1)

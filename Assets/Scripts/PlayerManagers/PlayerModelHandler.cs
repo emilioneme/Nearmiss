@@ -77,10 +77,7 @@ public class PlayerModelHandler : MonoBehaviour
     float lastTextParticle = 0;
 
     #region Instantiate
-    private void Awake()
-    {
-        InitiatePlayerModel();
-    }
+
     public void SetPlayerModelVisual(GameObject newPlayerModelPrefab)
     {
         if(PlayerModelGO != null)
@@ -89,7 +86,8 @@ public class PlayerModelHandler : MonoBehaviour
         PlayerModelPrefab = newPlayerModelPrefab;
         InitiatePlayerModel();
     }
-    void InitiatePlayerModel() 
+
+    public void InitiatePlayerModel() 
     {
         if (PlayerModelGO == null)
             PlayerModelGO = Instantiate(PlayerModelPrefab, transform);
@@ -335,6 +333,7 @@ public class PlayerModelHandler : MonoBehaviour
 
         DestroyGO(ref TextSecuredGO);
         TextIndicatorEffectGO = null;
+
         DestroyGO(ref TextIndicatorGO);
 
         DestroyCourutineSafely(ref RunRoutine);
@@ -365,7 +364,7 @@ public class PlayerModelHandler : MonoBehaviour
         Destroy(CrashObject, 10f);
     }
 
-    public void OnCrash() 
+    public void ResetPlayerModel() 
     {
         SpawnCrashModel();
         transform.localRotation = Quaternion.Euler(Vector3.zero); //fixing its rotation before spawnign in cse player dashes and dies

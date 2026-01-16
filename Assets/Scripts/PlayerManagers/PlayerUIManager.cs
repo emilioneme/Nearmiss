@@ -57,6 +57,8 @@ public class PlayerUIManager : MonoBehaviour
     float currentFov;
     Coroutine RunRoutine;
 
+    bool hiddenBeforePause = false;
+
     void Update()
     {
         UpdateFOV();
@@ -113,7 +115,7 @@ public class PlayerUIManager : MonoBehaviour
         DOBounceTween(ref TotalPointsGO, .5f, .25f);
         ComboNumGO.transform
             .DOScale(0f, .25f)
-            .OnComplete(HideComboUI);
+            .OnComplete(()=> ComboNumGO.SetActive(false));
     }
 
     void DestroyCourutineSafely(ref Coroutine Routine) 
@@ -143,14 +145,6 @@ public class PlayerUIManager : MonoBehaviour
     }
     #endregion
 
-    #region Run Points
-    void HideComboUI()
-    {
-        RunningPointsGO.SetActive(false);
-        ComboNumGO.SetActive(false);
-    }
-    #endregion
-
     #region Combos
     public void UpdateComboMult(float comboMult)
     {
@@ -163,6 +157,7 @@ public class PlayerUIManager : MonoBehaviour
         else 
         {
             ComboNumText.text = " ";
+            ComboNumGO.SetActive(false);
         }
     }
 
@@ -206,19 +201,7 @@ public class PlayerUIManager : MonoBehaviour
     }
     #endregion
 
-    #region CrashUI
-
-    public void OnCrash(ControllerColliderHit hit) 
-    {
-        HideComboUI();
-    }
-    #endregion
-
-    public void PlayerSpawned()
-    {
-        HideComboUI();
-    }
-
+    #region Hide UI
     public void HidePlayerUI() 
     {
         PlayerUICanvas.SetActive(false);
@@ -234,6 +217,27 @@ public class PlayerUIManager : MonoBehaviour
         Panel.transform
             .DOScale(1, .2f);
     }
+
+    public void Paused() 
+    {
+        hiddenBeforePause = PlayerUICanvas.activeSelf;
+        if(!hiddenBeforePause)
+            HidePlayerUI();
+    }   
+
+    public void UnPaused() 
+    {
+        if(!hiddenBeforePause)
+            UnhidePlayerUI();
+    }
+
+    public void ResetUI() 
+    {
+        ComboNumGO.SetActive(false);
+        Panel.anchoredPosition = Vector3.zero;
+    }
+
+    #endregion
 
     #region tool
     public void DOBounceTween(ref GameObject GO, float toScale, float duration, Ease easeType = Ease.InOutSine)

@@ -31,13 +31,17 @@ public class PlayerManager : MonoBehaviour
 
     [Header("Events")]
     [SerializeField]
-    UnityEvent PlayerSpawned;
+    UnityEvent PlayerDied; //freeze duration
+
     [SerializeField]
     UnityEvent CrashScreen;
     [SerializeField]
     UnityEvent CrashCamera;
+
     [SerializeField]
-    UnityEvent<float> FreezeSpawning; //freeze duration
+    UnityEvent<float> PlayerSpawnInitiated; //freeze duration
+    [SerializeField]
+    UnityEvent PlayerSpawned; //freeze duration
 
     [Header("GameObjects")]
     [SerializeField]
@@ -59,7 +63,7 @@ public class PlayerManager : MonoBehaviour
     [HideInInspector]
     public PointManager pointManager;
     [HideInInspector]
-    public CharacterController charcaterController;
+    public CharacterController cc;
 
     [HideInInspector] //playerHandler
     public PlayerModelHandler playerModelHandler;
@@ -73,14 +77,16 @@ public class PlayerManager : MonoBehaviour
         collisionHandler = GetComponent<CollisionHandler>();
         pointManager = GetComponent<PointManager>();
         planeLook = GetComponent<PlaneLook>();
-        charcaterController = GetComponent<CharacterController>();
+        cc = GetComponent<CharacterController>();
 
         playerModelHandler = GetComponentInChildren<PlayerModelHandler>();
     }
 
     private void Start()
     {
-        SpawnPlayer();
+        playerModelHandler.InitiatePlayerModel();
+        DisablePlayer();
+        SpawnPlayer(freezeDuration);
     }
 
     private void Update()
@@ -129,75 +135,77 @@ public class PlayerManager : MonoBehaviour
     #region CrashHandler
     public void PlayerCrashed(ControllerColliderHit hit)
     {
+        PlayerDeathHandler();
+    }
+    #endregion
+
+    void PlayerDeathHandler() 
+    {
+        PlayerDied.Invoke();
         DisablePlayer();
         if (UserData.Instance.automaticRespawn)
             InitiatePlayerSpawning();
         else
             ActivateCrashCamera();
     }
+
+    #region Spawning
+    public void InitiatePlayerSpawning() 
+    {
+        if (UserData.Instance.freezeBeforeSpawn)
+            SpawnPlayer(freezeDuration);
+        else
+            SpawnPlayer(0);
+    }
+
+    void SpawnPlayer(float freezeDuration) 
+    {
+        StartCoroutine(FreezeSpawn(freezeDuration));
+    }
+
+    IEnumerator FreezeSpawn(float freezeDuration) 
+    {
+        PlayerSpawnInitiated.Invoke(freezeDuration);
+        TeleportPlayer(GetRandomSpawn());
+        planeLook.enabled = true;
+        playerInput.enabled = true;
+        PlayerModel.SetActive(true);
+        yield return new WaitForSeconds(freezeDuration);
+        EnablePlayer();
+        PlayerSpawned.Invoke();
+    }
     #endregion
 
-    #region Crash Cam
-    public void ActivateCrashCamera() 
+    #region Crash Cam and Screen
+    public void ActivateCrashCamera()
     {
         CrashCamera.Invoke();
         StartCoroutine(CrashScreenCoroutine());
     }
 
-    IEnumerator CrashScreenCoroutine() 
+    IEnumerator CrashScreenCoroutine()
     {
         yield return new WaitForSeconds(crashScreenDurstion);
         CrashScreen.Invoke();
     }
     #endregion
 
-    #region Spawning
-    public void InitiatePlayerSpawning() 
+    #region Port
+    void TeleportPlayer(Vector3 pos)
     {
-        if (UserData.Instance.freezeBeforeSpawn)
-            StartCoroutine(FreezeSpawn(freezeDuration));
-        else
-            SpawnPlayer();
+        bool ccState = cc.enabled;
+        cc.enabled = false;
+        transform.position = pos;
+        cc.enabled = ccState;
     }
 
-    void SpawnPlayer() 
-    {
-        StartCoroutine(SpawnRoutine());
-    }
-
-    IEnumerator SpawnRoutine() 
-    {
-        yield return new WaitForSeconds(.1f);
-        TeleportPlayerToSpawn();
-        PlayerSpawned.Invoke();
-        EnablePlayer();
-    }
-    #endregion
-
-    #region Freezespawning
-    IEnumerator FreezeSpawn(float freezeTime) 
-    {
-        FreezeSpawning.Invoke(freezeTime);
-
-        planeLook.enabled = true;
-        playerInput.enabled = true;
-        PlayerModel.SetActive(true);
-        TeleportPlayerToSpawn();
-
-        yield return new WaitForSeconds(freezeTime);
-        SpawnPlayer();
-    }
-    #endregion
-
-    #region Tools
-    void TeleportPlayerToSpawn()
+    Vector3 GetRandomSpawn()
     {
         Transform[] spawnPoints = SpawnPointsManager.Instance.spawnPoints;
         int randomSpawnIndex = Random.Range(0, spawnPoints.Length);
-        transform.position = spawnPoints[randomSpawnIndex].position;
+        return spawnPoints[randomSpawnIndex].position;
     }
     #endregion
-
 
     void DisablePlayer() 
     {
@@ -213,7 +221,6 @@ public class PlayerManager : MonoBehaviour
 
         UserData.Instance.isDead = true;
     }
-
     void EnablePlayer()
     {
         droneMovement.enabled = true;

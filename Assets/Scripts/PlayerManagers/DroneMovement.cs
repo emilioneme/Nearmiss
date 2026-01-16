@@ -73,10 +73,6 @@ public class DroneMovement : MonoBehaviour
         MoveDrone();
     }
 
-    public void OnCrash() 
-    {
-        DestroyCourutineSafely(ref DashRutine);
-    }
 
     #region Movement
     public void MoveDrone() 
@@ -167,6 +163,11 @@ public class DroneMovement : MonoBehaviour
         DashRutine = null;
     }
 
+    public void ResetDash()
+    {
+        DestroyCourutineSafely(ref DashRutine);
+    }
+
     public Vector3 GetDashVelocity() // so we can add it to total velocity
     {
         if (DashRutine == null)
@@ -244,7 +245,6 @@ public class DroneMovement : MonoBehaviour
             StopCoroutine(Routine);
         Routine = null;
     }
-
 
 
 }

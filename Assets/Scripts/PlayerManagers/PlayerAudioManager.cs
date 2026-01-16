@@ -108,11 +108,11 @@ public class PlayerAudioManager : MonoBehaviour
         AirSound.pitch = airPitch + NoseDiveSpeed() * pitchDeltaMultiplier;
     }
 
-    public void AvtivateAir() 
+    public void ActivateFlySound() 
     {
         AirSound.enabled = true;
     }
-    public void DeAvtivateAir()
+    public void DeActivateFlySound()
     {
         AirSound.enabled = false;
     }
@@ -128,7 +128,7 @@ public class PlayerAudioManager : MonoBehaviour
     #region Freeze SCreen
     public void PlayTickSound() 
     {
-        Destroy(Instantiate(TickAudioPrefab, transform), 1f);
+        Destroy(Instantiate(TickAudioPrefab, transform), .5f);
     }
 
     #endregion

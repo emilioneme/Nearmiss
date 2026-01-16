@@ -24,4 +24,6 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     public string highScorer = "Anonymus";
 
+
+
 }

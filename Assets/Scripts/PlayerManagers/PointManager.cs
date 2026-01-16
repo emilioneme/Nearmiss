@@ -42,7 +42,6 @@ public class PointManager : MonoBehaviour
     public float timeToSkim = .3f;
     #endregion
 
-
     #region Events
     [Header("Run")]
     [SerializeField]
@@ -242,7 +241,7 @@ public class PointManager : MonoBehaviour
     }
     #endregion
 
-    public void ResetPoints()
+    public void ResetPointManager()
     {
         totalPoints = 0;
         runningPoints = 0;
@@ -253,6 +252,7 @@ public class PointManager : MonoBehaviour
 
         comboMultiplier = 1;
         DestroyCourutineSafely(ref secureTimer);
+        DestroyCourutineSafely(ref dashCoroutine);
     }
 
 
@@ -262,11 +262,5 @@ public class PointManager : MonoBehaviour
             StopCoroutine(Routine);
         Routine = null;
     }
-
-    public void OnCrash()
-    {
-        DestroyCourutineSafely(ref secureTimer);
-        DestroyCourutineSafely(ref dashCoroutine);
-        ResetPoints();
-    }
+    
 }

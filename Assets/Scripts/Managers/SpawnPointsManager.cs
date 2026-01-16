@@ -9,6 +9,7 @@ public class SpawnPointsManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            spawnPoints = spawnPointParent.GetComponentsInChildren<Transform>();
         }
         else
         {
@@ -22,9 +23,5 @@ public class SpawnPointsManager : MonoBehaviour
 
     [HideInInspector]
     public Transform[] spawnPoints;
-
-    private void Start() 
-    {
-        spawnPoints = spawnPointParent.GetComponentsInChildren<Transform>();
-    }
+    
 }

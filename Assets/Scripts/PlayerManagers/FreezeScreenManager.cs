@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
@@ -11,6 +12,8 @@ public class FreezeScreenManager : MonoBehaviour
     [SerializeField] Transform CountGO;
     [SerializeField] TMP_Text CountDownText;
     string text;
+    
+    public UnityEvent FreezeCountDownInt;
 
     public void FreezeStarted(float duration) 
     {
@@ -23,15 +26,24 @@ public class FreezeScreenManager : MonoBehaviour
     IEnumerator FreezeRoutine(float duration) 
     {
         float countDown = duration;
+        float lastIntTime = Time.time;
+        FreezeCountDownInt.Invoke();
         while (0 < countDown) 
         {
             countDown -= Time.deltaTime;
             float rounded = Mathf.Round(countDown * 10) / 10;
             int interger = Mathf.RoundToInt(countDown);
 
-            if (countDown > 2)
+            if (Time.time - lastIntTime >= .95f) 
+            {
+                lastIntTime = Time.time;
+                FreezeCountDownInt.Invoke();
+                Debug.Log(countDown);
+            }
+
+            if (countDown > 1)
                 CountDownText.text = interger.ToString();
-            else
+            else 
                 CountDownText.text = rounded.ToString();
             yield return null;
         }

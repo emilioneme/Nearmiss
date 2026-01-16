@@ -10,6 +10,7 @@ using UnityEngine.TextCore.Text;
 [RequireComponent(typeof(PlayerInput))]
 [RequireComponent(typeof(DroneMovement))]
 [RequireComponent(typeof(PlaneLook))]
+[RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(NearmissHandler))]
 [RequireComponent(typeof(CollisionHandler))]
 [RequireComponent(typeof(PointManager))]
@@ -57,6 +58,8 @@ public class PlayerManager : MonoBehaviour
     public CollisionHandler collisionHandler;
     [HideInInspector]
     public PointManager pointManager;
+    [HideInInspector]
+    public CharacterController charcaterController;
 
     [HideInInspector] //playerHandler
     public PlayerModelHandler playerModelHandler;
@@ -70,6 +73,7 @@ public class PlayerManager : MonoBehaviour
         collisionHandler = GetComponent<CollisionHandler>();
         pointManager = GetComponent<PointManager>();
         planeLook = GetComponent<PlaneLook>();
+        charcaterController = GetComponent<CharacterController>();
 
         playerModelHandler = GetComponentInChildren<PlayerModelHandler>();
     }
@@ -131,7 +135,9 @@ public class PlayerManager : MonoBehaviour
         else
             ActivateCrashCamera();
     }
+    #endregion
 
+    #region Crash Cam
     public void ActivateCrashCamera() 
     {
         CrashCamera.Invoke();
@@ -143,12 +149,11 @@ public class PlayerManager : MonoBehaviour
         yield return new WaitForSeconds(crashScreenDurstion);
         CrashScreen.Invoke();
     }
+    #endregion
 
+    #region Spawning
     public void InitiatePlayerSpawning() 
     {
-        //Transform[] spawnPoints = SpawnPointsManager.Instance.spawnPoints;
-        //int randomSpawnIndex = Random.Range(0, spawnPoints.Length);
-
         if (UserData.Instance.freezeBeforeSpawn)
             StartCoroutine(FreezeSpawn(freezeDuration));
         else
@@ -167,14 +172,9 @@ public class PlayerManager : MonoBehaviour
         PlayerSpawned.Invoke();
         EnablePlayer();
     }
+    #endregion
 
-    void TeleportPlayerToSpawn() 
-    {
-        Transform[] spawnPoints = SpawnPointsManager.Instance.spawnPoints;
-        int randomSpawnIndex = Random.Range(0, spawnPoints.Length);
-        transform.position = spawnPoints[randomSpawnIndex].position;
-    }
-
+    #region Freezespawning
     IEnumerator FreezeSpawn(float freezeTime) 
     {
         FreezeSpawning.Invoke(freezeTime);
@@ -187,8 +187,18 @@ public class PlayerManager : MonoBehaviour
         yield return new WaitForSeconds(freezeTime);
         SpawnPlayer();
     }
-
     #endregion
+
+    #region Tools
+    void TeleportPlayerToSpawn()
+    {
+        Transform[] spawnPoints = SpawnPointsManager.Instance.spawnPoints;
+        int randomSpawnIndex = Random.Range(0, spawnPoints.Length);
+        transform.position = spawnPoints[randomSpawnIndex].position;
+    }
+    #endregion
+
+
     void DisablePlayer() 
     {
         droneMovement.enabled = false;

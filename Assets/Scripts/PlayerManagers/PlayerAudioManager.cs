@@ -24,6 +24,7 @@ public class PlayerAudioManager : MonoBehaviour
     [Header("Dead")]
     [SerializeField] GameObject RespawnAudioPrefab;
     [SerializeField] GameObject CrashAudioPrefab;
+    [SerializeField] GameObject TickAudioPrefab;
     [Header("Wall")]
     [SerializeField] GameObject WallAudioPrefab;
     GameObject WallAudioSound;
@@ -31,7 +32,8 @@ public class PlayerAudioManager : MonoBehaviour
 
     private void Update()
     {
-        FlySound();
+        if(AirSound.enabled)
+            FlySound();
     }
 
     #region Wall
@@ -100,9 +102,19 @@ public class PlayerAudioManager : MonoBehaviour
     #endregion
 
     #region FlySound
+
     void FlySound() 
     {
         AirSound.pitch = airPitch + NoseDiveSpeed() * pitchDeltaMultiplier;
+    }
+
+    public void AvtivateAir() 
+    {
+        AirSound.enabled = true;
+    }
+    public void DeAvtivateAir()
+    {
+        AirSound.enabled = false;
     }
 
     float NoseDiveSpeed()
@@ -113,11 +125,15 @@ public class PlayerAudioManager : MonoBehaviour
 
     #endregion
 
-    #region Tools
-    float lerpedVelocity() 
+    #region Freeze SCreen
+    public void PlayTickSound() 
     {
-        return Mathf.Clamp(UserData.Instance.deltaVelocity / maxVelocityChange, -1, 1);
+        Destroy(Instantiate(TickAudioPrefab, transform), 1f);
     }
+
+    #endregion
+
+    #region Tools
 
     void DestoryCoroutneSafely(ref Coroutine routine) 
     {

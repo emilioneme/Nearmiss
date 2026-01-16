@@ -222,11 +222,17 @@ public class PlayerUIManager : MonoBehaviour
     public void HidePlayerUI() 
     {
         PlayerUICanvas.SetActive(false);
+        Panel.transform.localScale = Vector3.one;
+        Panel.transform
+            .DOScale(0, .2f);
     }
 
     public void UnhidePlayerUI()
     {
         PlayerUICanvas.SetActive(true);
+        Panel.transform.localScale = Vector3.zero;
+        Panel.transform
+            .DOScale(1, .2f);
     }
 
     #region tool

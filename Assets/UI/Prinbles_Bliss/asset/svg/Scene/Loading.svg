@@ -1,0 +1,58 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Scene/Loading" clip-path="url(#clip0_2_161)">
+<g id="MainBackground" clip-path="url(#clip1_2_161)">
+<rect id="Background" width="1280" height="720" fill="#55A3FF"/>
+</g>
+<g id="Loader">
+<g id="LoadingText">
+<text id="Loading..." fill="white" xml:space="preserve" style="white-space: pre" font-family="Ubuntu Titling" font-size="48" font-weight="bold" letter-spacing="0em"><tspan x="540" y="290">loading...</tspan></text>
+</g>
+<g id="ProgressBar/Example">
+<g id="ProgressBar/Background">
+<g id="ProgressBar/Background_2">
+<g id="Background_2" opacity="0.85" filter="url(#filter0_d_2_161)">
+<mask id="path-3-inside-1_2_161" fill="white">
+<path d="M400 352C400 346.477 404.477 342 410 342H870C875.523 342 880 346.477 880 352V380C880 385.523 875.523 390 870 390H410C404.477 390 400 385.523 400 380V352Z"/>
+</mask>
+<path d="M400 352C400 346.477 404.477 342 410 342H870C875.523 342 880 346.477 880 352V380C880 385.523 875.523 390 870 390H410C404.477 390 400 385.523 400 380V352Z" fill="white"/>
+<path d="M396 352C396 344.268 402.268 338 410 338H870C877.732 338 884 344.268 884 352H876C876 348.686 873.314 346 870 346H410C406.686 346 404 348.686 404 352H396ZM884 380C884 387.732 877.732 394 870 394H410C402.268 394 396 387.732 396 380H404C404 383.314 406.686 386 410 386H870C873.314 386 876 383.314 876 380H884ZM410 394C402.268 394 396 387.732 396 380V352C396 344.268 402.268 338 410 338V346C406.686 346 404 348.686 404 352V380C404 383.314 406.686 386 410 386V394ZM870 338C877.732 338 884 344.268 884 352V380C884 387.732 877.732 394 870 394V386C873.314 386 876 383.314 876 380V352C876 348.686 873.314 346 870 346V338Z" fill="#8FD7FF" mask="url(#path-3-inside-1_2_161)"/>
+</g>
+</g>
+</g>
+<g id="ProgressBar/Line">
+<g id="Line" filter="url(#filter1_d_2_161)">
+<rect x="407" y="350" width="192" height="32" rx="5" fill="#519EE6"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<filter id="filter0_d_2_161" x="399" y="342" width="482" height="50" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="1"/>
+<feGaussianBlur stdDeviation="0.5"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0.1169 0 0 0 0 0.4175 0 0 0 0.6 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2_161"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_2_161" result="shape"/>
+</filter>
+<filter id="filter1_d_2_161" x="406" y="350" width="194" height="34" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="1"/>
+<feGaussianBlur stdDeviation="0.5"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0.1169 0 0 0 0 0.4175 0 0 0 0.6 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2_161"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_2_161" result="shape"/>
+</filter>
+<clipPath id="clip0_2_161">
+<rect width="1280" height="720" fill="white"/>
+</clipPath>
+<clipPath id="clip1_2_161">
+<rect width="1280" height="720" fill="white"/>
+</clipPath>
+</defs>
+</svg>

@@ -34,9 +34,7 @@ public class SettingsManager : MonoBehaviour
 
     [Header("Sense")]
     [SerializeField]
-    Slider mouseSensSlider;
-    [SerializeField]
-    Slider stickSensSlider;
+    Slider lookSensSlider;
 
     [Header("Respawn")]
     [SerializeField]
@@ -64,8 +62,7 @@ public class SettingsManager : MonoBehaviour
     {
         volumeSlider.value = UserData.Instance.masterVolume;
         musicSlider.value = UserData.Instance.musicVolume;
-        mouseSensSlider.value = UserData.Instance.mouseSensitivity;
-        stickSensSlider.value = UserData.Instance.stickSensitivity;
+        lookSensSlider.value = UserData.Instance.lookSensitivity;
         automaticRespawn.isOn = UserData.Instance.automaticRespawn;
         freezeRespawn.isOn = UserData.Instance.freezeBeforeSpawn;
     }
@@ -83,14 +80,11 @@ public class SettingsManager : MonoBehaviour
     }
 
     //Mouse Sense
-    public void SetMouseSens()
+    public void SetLookSensitivity()
     {
-        UserData.Instance.mouseSensitivity = mouseSensSlider.value;
+        UserData.Instance.lookSensitivity = lookSensSlider.value;
     }
-    public void SetStickSense()
-    {
-        UserData.Instance.stickSensitivity = stickSensSlider.value;
-    }
+  
 
     //Respawen
     public void SetRespawn() 

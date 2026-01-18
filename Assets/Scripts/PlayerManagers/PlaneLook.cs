@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Windows;
 
 public class PlaneLook : MonoBehaviour
 {
@@ -14,6 +15,9 @@ public class PlaneLook : MonoBehaviour
     public float rotationSpeedMultiplier = 1.0f;
     float rotationSpeed = 1;
     [SerializeField]
+    public float manuverSpeedMultiplier = 1.0f;
+    float manuverSpeed = 1;
+    [SerializeField]
     float yRotationInputThershhold = 3;
     [SerializeField]
     float xRotationInputThershhold = 3;
@@ -23,6 +27,12 @@ public class PlaneLook : MonoBehaviour
     public bool allowRotate = true;
 
     #region Look
+    public void Look(Vector2 input) 
+    {
+        LookUpDown(input.y);
+        LookLeftRight(input.x);
+    }
+
     public void LookUpDown(float y)
     {
         if (!allowLook)
@@ -37,15 +47,17 @@ public class PlaneLook : MonoBehaviour
             return;
         float xClamped = Mathf.Clamp(x, -xRotationInputThershhold, xRotationInputThershhold);
         float loookAmount = xClamped * lookSpeed * lookSpeedMultiplier * Time.deltaTime;
+        Quaternion prevRotation = transform.rotation;
+        Quaternion toRotation = transform.rotation * Quaternion.Euler(0, loookAmount, 0);
         transform.rotation = transform.rotation * Quaternion.Euler(0, loookAmount, 0);
-        Manuver(x);
+        Manuver(xClamped);
     }
 
     public void Manuver(float magnitude)
     {
         if (!allowLookRotate)
             return;
-        float rotationAmount = rotationSpeed * rotationSpeedMultiplier * -magnitude * Time.deltaTime;
+        float rotationAmount = manuverSpeed * manuverSpeedMultiplier * -magnitude * Time.deltaTime;
         transform.rotation = transform.rotation * Quaternion.Euler(0, 0, rotationAmount);
     }
     #endregion

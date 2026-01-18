@@ -756,7 +756,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 124.900024, y: 472.7}
+  m_AnchoredPosition: {x: 124.900024, y: 480.7}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1762343550732796643
@@ -792,7 +792,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -1, y: -152}
+  m_AnchoredPosition: {x: -1, y: -144}
   m_SizeDelta: {x: 228.56058, y: 228.56055}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2030929783122147593
@@ -3293,7 +3293,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &8667045513555344707
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3857,7 +3857,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -161, y: -165}
+  m_AnchoredPosition: {x: -161, y: -157}
   m_SizeDelta: {x: 263.58545, y: 263.58545}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6332144810403860489
@@ -5381,7 +5381,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 274, y: -276}
+  m_AnchoredPosition: {x: 274, y: -268}
   m_SizeDelta: {x: 482.0475, y: 456.0495}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8266162087823780538
@@ -5396,12 +5396,13 @@ GameObject:
   - component: {fileID: 5706241324656954214}
   - component: {fileID: 258765007938475946}
   - component: {fileID: 7656071518626593655}
-  - component: {fileID: 1198496267197566280}
   - component: {fileID: 8634580918364863695}
   - component: {fileID: 8714170458392586884}
   - component: {fileID: 416101309412079257}
   - component: {fileID: 2746193758524380571}
   - component: {fileID: 2070999249770834481}
+  - component: {fileID: 3340113612327398287}
+  - component: {fileID: 8349134553639841187}
   m_Layer: 3
   m_Name: PlayerManager
   m_TagString: Player
@@ -5467,7 +5468,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c1c112e64044df48b785bb84a495736, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  freezeDuration: 3
+  freezeDuration: 4
   PlayerCamera: {fileID: 413372053444866132}
   Brain: {fileID: 5447292232356129678}
   crashScreenDurstion: 2
@@ -5528,18 +5529,6 @@ MonoBehaviour:
       - m_Target: {fileID: 3378469617271188346}
         m_TargetAssemblyTypeName: CrashScreenManager, Assembly-CSharp
         m_MethodName: OpenCrashCanvas
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PauseManager, Assembly-CSharp
-        m_MethodName: OpenedCrashScreen
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5627,6 +5616,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8121728279894473426}
+        m_TargetAssemblyTypeName: PlayerAudioManager, Assembly-CSharp
+        m_MethodName: ActivateFlySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   PlayerSpawned:
     m_PersistentCalls:
       m_Calls:
@@ -5667,7 +5668,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   PlayerModel: {fileID: 2792319079415859505}
-  playerInput: {fileID: 0}
+  playerInputHandler: {fileID: 0}
   droneMovement: {fileID: 0}
   planeLook: {fileID: 0}
   playerUIManager: {fileID: 0}
@@ -5715,211 +5716,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &1198496267197566280
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8266162087823780538}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3bc4bfa7aeda2b4a9b89536816a6cd4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lookAction:
-    m_Name: Look
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 5bd89fcf-2430-429f-8396-db6fdaf2f998
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: 59f2beeb-fd1e-4844-b5f6-25d83e0efd0c
-      m_Path: <Gamepad>/rightStick
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Look
-      m_Flags: 0
-    - m_Name: 
-      m_Id: b7505ff4-2831-4759-bbde-2c8a8d0e7685
-      m_Path: <Mouse>/delta
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Look
-      m_Flags: 0
-    m_Flags: 0
-  LookInput: {x: 0, y: 0}
-  rotateLeftAction:
-    m_Name: Rotate Left
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 75cef60b-a6ed-461c-b2ec-b0c8a52413df
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: a63438c3-12e5-4056-a671-1f6e6a61c880
-      m_Path: <Mouse>/leftButton
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Rotate Left
-      m_Flags: 0
-    - m_Name: 
-      m_Id: 0965c48c-be18-4456-853c-caa272fd5129
-      m_Path: <Gamepad>/rightTrigger
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Rotate Left
-      m_Flags: 0
-    m_Flags: 0
-  rotateRightAction:
-    m_Name: Rotate Right
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 0921f24c-1bcd-42ba-8f7f-a4aa84d7cb55
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: d39ad8a1-12a3-4562-bc2d-0a837c482004
-      m_Path: <Mouse>/rightButton
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Rotate Right
-      m_Flags: 0
-    - m_Name: 
-      m_Id: 057e3ee0-38ad-45c3-9a65-d3b9e3150a0f
-      m_Path: <Gamepad>/leftTrigger
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Rotate Right
-      m_Flags: 0
-    m_Flags: 0
-  dashAction:
-    m_Name: Dash
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: f141da3b-6d16-49ff-9e85-3142c26578a2
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: e9e05475-c0a7-4a64-9964-7b45bd96f23e
-      m_Path: <Gamepad>/leftStick
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Dash
-      m_Flags: 0
-    - m_Name: 2D Vector
-      m_Id: 78c7875c-744f-45dc-8470-971a3d34e108
-      m_Path: 2DVector
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Dash
-      m_Flags: 4
-    - m_Name: up
-      m_Id: 9bee7dd5-8d4b-4441-b4b6-e3a4c5502912
-      m_Path: <Keyboard>/w
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Dash
-      m_Flags: 8
-    - m_Name: down
-      m_Id: aaedc9b1-0d8c-4a31-94a3-b207117ba4d6
-      m_Path: <Keyboard>/s
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Dash
-      m_Flags: 8
-    - m_Name: left
-      m_Id: a88f6c64-c36c-4d79-b7cd-1a79033a0894
-      m_Path: <Keyboard>/a
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Dash
-      m_Flags: 8
-    - m_Name: right
-      m_Id: 0373f82a-2db4-4e66-b7cc-cbb13d082c28
-      m_Path: <Keyboard>/d
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Dash
-      m_Flags: 8
-    m_Flags: 0
-  DashInput: {x: 0, y: 0}
-  dashForwardAction:
-    m_Name: Dash Forward
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: c03b8ed9-3013-4a92-9769-bbd1f7037f81
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: 8be0f69a-1747-44f6-a6d5-4ab1661f9d13
-      m_Path: <Keyboard>/space
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Dash Forward
-      m_Flags: 0
-    - m_Name: 
-      m_Id: 022f49f6-6e70-4193-9a02-2c554e2dd5b2
-      m_Path: <Gamepad>/buttonNorth
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Dash Forward
-      m_Flags: 0
-    m_Flags: 0
-  dashBackwardAction:
-    m_Name: Dash Backward
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 1dd1db8c-05b9-4cf3-9e70-2c37b270fd47
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  pauseAction:
-    m_Name: Pause
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 3157d114-ffc9-4a53-b8dc-71dcb36f6086
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: 1b7a4479-34ee-4ca8-8f0a-b10560a9cc7f
-      m_Path: <Keyboard>/escape
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Pause
-      m_Flags: 0
-    - m_Name: 
-      m_Id: 317a0848-5d44-47f9-82c2-bb5efeaf4e48
-      m_Path: <Gamepad>/start
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Pause
-      m_Flags: 0
-    m_Flags: 0
 --- !u!114 &8634580918364863695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6069,6 +5865,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lookSpeedMultiplier: 100
   rotationSpeedMultiplier: 100
+  manuverSpeedMultiplier: 100
   yRotationInputThershhold: 3
   xRotationInputThershhold: 3
   allowLook: 1
@@ -6397,6 +6194,118 @@ MonoBehaviour:
   crashPriority: 20
   crashBlendTime: 0.15
   respawnBlendTime: 0.5
+--- !u!114 &3340113612327398287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8266162087823780538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38a6186af614fa141bdf4908430343cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerInput: {fileID: 8349134553639841187}
+  OnLook:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8714170458392586884}
+        m_TargetAssemblyTypeName: PlaneLook, Assembly-CSharp
+        m_MethodName: Look
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnRotateLeft:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8714170458392586884}
+        m_TargetAssemblyTypeName: PlaneLook, Assembly-CSharp
+        m_MethodName: RotateLeft
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnRotateRight:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8714170458392586884}
+        m_TargetAssemblyTypeName: PlaneLook, Assembly-CSharp
+        m_MethodName: RotateRight
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnDash:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8634580918364863695}
+        m_TargetAssemblyTypeName: DroneMovement, Assembly-CSharp
+        m_MethodName: Dash
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  mouseLookScale: 1
+  touchLookScale: 0.2
+  stickDeadzone: 0.15
+  lookClamp: 1
+  dashDeadzone: 0.25
+  computerScheme: Keyboard and Mouse
+  gamepadScheme: Gamepad
+  mobileScheme: Mobile
+  currentScheme: 0
+--- !u!114 &8349134553639841187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8266162087823780538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 672b3d9e83805d647874beb418cca687, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: Keyboard and Mouse
+  m_DefaultActionMap: Flight
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &8443272681886184683
 GameObject:
   m_ObjectHideFlags: 0

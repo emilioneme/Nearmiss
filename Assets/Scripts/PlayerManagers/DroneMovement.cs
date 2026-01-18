@@ -130,6 +130,11 @@ public class DroneMovement : MonoBehaviour
 
     #region Dash
     public Coroutine DashRutine;
+    public void Dash(Vector2 direction) 
+    {
+        Vector2 animateAxis = Vector3.Cross(Vector3.forward, direction).normalized;
+        Dash(direction, animateAxis);
+    }
     public void Dash(Vector3 direction, Vector3 animateAxis)  
     {
         if(!allowDash)

@@ -28,12 +28,7 @@ public class UserData : MonoBehaviour
     public float personalHighScore = 0;
 
     [Header("Sense")]
-    [Range(0.1f, 2.0f)]
-    public float mouseSensitivity = 1;
-    [Range(0.1f, 2.0f)]
-    public float stickSensitivity = 180;
-    [Range(1f, 4f)]
-    public float stickExponent = 2.0f; // curve: higher = faster near edge
+    public float lookSensitivity = 1;
 
     [Header("Volume")]
     [Range(0f, 1f)]

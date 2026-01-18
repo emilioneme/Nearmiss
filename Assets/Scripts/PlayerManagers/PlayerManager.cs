@@ -7,7 +7,7 @@ using Unity.VisualScripting;
 using Unity.Cinemachine;
 using UnityEngine.TextCore.Text;
 
-[RequireComponent(typeof(PlayerInput))]
+[RequireComponent(typeof(PlayerInputHandler))]
 [RequireComponent(typeof(DroneMovement))]
 [RequireComponent(typeof(PlaneLook))]
 [RequireComponent(typeof(CharacterController))]
@@ -49,7 +49,7 @@ public class PlayerManager : MonoBehaviour
 
     #region Managers
     [HideInInspector]
-    public PlayerInput playerInput;
+    public PlayerInputHandler playerInputHandler;
     [HideInInspector]
     public DroneMovement droneMovement;
     [HideInInspector]
@@ -71,7 +71,7 @@ public class PlayerManager : MonoBehaviour
 
     private void Awake()
     {
-        playerInput = GetComponent<PlayerInput>();
+        playerInputHandler = GetComponent<PlayerInputHandler>();
         droneMovement = GetComponent<DroneMovement>();
         nearmissHandler = GetComponent<NearmissHandler>();
         collisionHandler = GetComponent<CollisionHandler>();
@@ -88,49 +88,6 @@ public class PlayerManager : MonoBehaviour
         DisablePlayer();
         SpawnPlayer(freezeDuration);
     }
-
-    private void Update()
-    {
-        if(planeLook.enabled)
-            HandleLookInput();
-        if(droneMovement.enabled)
-            HandleMovementInput();
-    }
-
-    #region Input
-    void HandleLookInput() 
-    {
-        if (playerInput.LookInput.y != 0)
-            planeLook.LookUpDown(playerInput.LookInput.y);
-        if (playerInput.LookInput.x != 0)
-            planeLook.LookLeftRight(playerInput.LookInput.x);
-
-        //Rotation
-        if (playerInput.rotateLeftAction.IsPressed())
-            planeLook.RotateLeft();
-        if (playerInput.rotateRightAction.IsPressed())
-            planeLook.RotateRight();
-    }
-
-    void HandleMovementInput() 
-    {
-        Vector2 dashAction = playerInput.DashInput;
-        if (dashAction.sqrMagnitude > 0.01f)
-        {
-            Vector3 dir = new Vector3(dashAction.x, dashAction.y, 0).normalized;
-            Vector3 animAxis = Vector3.Cross(Vector3.forward, dir).normalized;
-            droneMovement.Dash(dir, animAxis);
-        }
-
-        //*
-        if (playerInput.dashBackwardAction.IsPressed())
-            droneMovement.Dash(Vector3.back, Vector3.left);
-        if (playerInput.dashForwardAction.IsPressed())
-            droneMovement.Dash(Vector3.forward, Vector3.right);
-        //*/
-        
-    }
-    #endregion
 
     #region CrashHandler
     public void PlayerCrashed(ControllerColliderHit hit)
@@ -168,7 +125,7 @@ public class PlayerManager : MonoBehaviour
         PlayerSpawnInitiated.Invoke(freezeDuration);
         TeleportPlayer(GetRandomSpawn());
         planeLook.enabled = true;
-        playerInput.enabled = true;
+        playerInputHandler.enabled = true;
         PlayerModel.SetActive(true);
         yield return new WaitForSeconds(freezeDuration);
         EnablePlayer();
@@ -214,7 +171,7 @@ public class PlayerManager : MonoBehaviour
         collisionHandler.enabled = false;
         pointManager.enabled = false;
         planeLook.enabled = false;
-        playerInput.enabled = false;
+        playerInputHandler.enabled = false;
 
         playerModelHandler.enabled = false;
         PlayerModel.SetActive(false);
@@ -228,7 +185,7 @@ public class PlayerManager : MonoBehaviour
         collisionHandler.enabled = true;
         pointManager.enabled = true;
         planeLook.enabled = true;
-        playerInput.enabled = true;
+        playerInputHandler.enabled = true;
 
         playerModelHandler.enabled = true;
         PlayerModel.SetActive(true);

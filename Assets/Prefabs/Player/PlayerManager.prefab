@@ -5861,7 +5861,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lookSpeedMultiplier: 100
-  manuverRotationSpeedMultiplier: 2
+  manuverRotationSpeedMultiplier: 0.3
   rotationSpeedMultiplier: 100
   manuverSpeedMultiplier: 100
   yRotationInputThershhold: 4

@@ -22,11 +22,6 @@ public class PlaneLook : MonoBehaviour
     public float manuverSpeedMultiplier = 1.0f;
     float manuverSpeed = 1;
 
-    [SerializeField]
-    float yRotationInputThershhold = 3;
-    [SerializeField]
-    float xRotationInputThershhold = 3;
-
     public bool allowLook = true;
     public bool allowLookRotate = true;
     public bool allowRotate = true;

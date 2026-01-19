@@ -1268,8 +1268,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 5494058198141884548}
+  m_Children: []
   m_Father: {fileID: 6394622754353006204}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6243719523112130423
@@ -4820,7 +4819,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   airPitch: 0.5
   pitchDeltaMultiplier: 1
-  maxVelocityChange: 3
   AirSound: {fileID: 5295039235057477379}
   DashAudioPrefab: {fileID: 7082854550985821893, guid: 19f87959e33e7ec4c87f88abc51f7f2d, type: 3}
   SecureAudioPrefab: {fileID: 7082854550985821893, guid: d38edcdebf324ba4a87137856898681d, type: 3}
@@ -5898,8 +5896,6 @@ MonoBehaviour:
   manuverRotationSpeedMultiplier: 0.3
   rotationSpeedMultiplier: 100
   manuverSpeedMultiplier: 100
-  yRotationInputThershhold: 4
-  xRotationInputThershhold: 4
   allowLook: 1
   allowLookRotate: 1
   allowRotate: 1
@@ -5955,6 +5951,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: PlayerAudioManager, Assembly-CSharp
         m_MethodName: PlayWallSound
         m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3340113612327398287}
+        m_TargetAssemblyTypeName: PlayerInputHandler, Assembly-CSharp
+        m_MethodName: NearmissFeedback
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -7370,66 +7378,4 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 9093789261417600976, guid: ab4de2df79c78a3459681a22567ece38, type: 3}
   m_PrefabInstance: {fileID: 2590899576013150584}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &3108016562205097720
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1707325475761266659}
-    m_Modifications:
-    - target: {fileID: 4506088508073926183, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_Name
-      value: PaperAirplaneModel
-      objectReference: {fileID: 0}
-    - target: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
---- !u!4 &5494058198141884548 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7430715403184252540, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}
-  m_PrefabInstance: {fileID: 3108016562205097720}
   m_PrefabAsset: {fileID: 0}

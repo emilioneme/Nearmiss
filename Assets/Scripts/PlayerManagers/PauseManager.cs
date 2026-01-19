@@ -31,10 +31,7 @@ public class PauseManager : MonoBehaviour
 
     private void Start()
     {
-        if(UserData.Instance.isPaused)
-            Pause();
-        else
-            UnPause();
+        UnPause();
     }
 
     private void Update()

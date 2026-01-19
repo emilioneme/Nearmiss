@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -149,6 +150,31 @@ public class PlayerInputHandler : MonoBehaviour
         if (v.sqrMagnitude < dashDeadzone * dashDeadzone)
             return;
         OnDash.Invoke(v.normalized);
+    }
+
+    #region Shake
+    public void NearmissFeedback() 
+    {
+        ShakeController();
+    }
+
+    Coroutine shakeCoroutine;
+    public void ShakeController(float lowFreq = .25f, float highFreq = .75f) 
+    {
+        if (shakeCoroutine != null)
+            StopCoroutine(shakeCoroutine);
+
+        if (currentScheme == ControlScheme.Gamepad)
+            shakeCoroutine = StartCoroutine(ShakeCoroutine());
+    }
+    #endregion
+
+    IEnumerator ShakeCoroutine(float lowFreq = .25f, float highFreq = .75f) 
+    {
+        if (currentScheme == ControlScheme.Gamepad)
+            Gamepad.current.SetMotorSpeeds(lowFreq, highFreq);
+        yield return new WaitForSeconds(.1f);
+        Gamepad.current.SetMotorSpeeds(0, 0);
     }
 
     #region tools

@@ -9,8 +9,6 @@ public class PlayerAudioManager : MonoBehaviour
     float airPitch = 1.0f;
     [SerializeField]
     float pitchDeltaMultiplier = .5f;
-    [SerializeField]
-    float maxVelocityChange = 3;
 
     [Header("Air")]
     [SerializeField] AudioSource AirSound;

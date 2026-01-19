@@ -23,6 +23,8 @@ public class PlayerModelHandler : MonoBehaviour
 
     [Header("Wall Particles")]
     [SerializeField]
+    float wallParticleCooldown = 1;
+    [SerializeField]
     float wallEffectForwardMultiplier = 1;
     [SerializeField]
     int maxWallParticles = 5;
@@ -45,22 +47,6 @@ public class PlayerModelHandler : MonoBehaviour
     [SerializeField]
     AnimationCurve secureLerpCurve;
 
-    [Header("TextParticleEffct")]
-    [SerializeField]
-    float particleForwardOffsett = 1;
-    [SerializeField]
-    float textParticleDistance = 1.2f;
-    [SerializeField]
-    float plusPointsMultiplier = 10;
-    [SerializeField]
-    [Range(0f, 1f)]
-    float textParticleCooldown = .2f;
-    [SerializeField]
-    [Range(0f, 1f)]
-    float timeBeforeGavityOff = 1f;
-    [SerializeField]
-    int maxTextParticles = 5;
-
     [Header("Cam")]
     [SerializeField]
     Camera PlayerCamera;
@@ -71,14 +57,12 @@ public class PlayerModelHandler : MonoBehaviour
     public UnityEvent<GameObject> SpawnedCrashObject;
 
     [Header("Other")]
-    Queue<GameObject> WallParticleGOs = new Queue<GameObject>();
     GameObject TextIndicatorGO = null;
     GameObject TextSecuredGO = null;
     TextIndicatorEffect TextIndicatorEffectGO;
     Coroutine RunRoutine;
-    float lastWallParticle;
-    #region Instantiate
 
+    #region Instantiate
     public void SetPlayerModelVisual(GameObject newPlayerModelPrefab)
     {
         if(PlayerModelGO != null)
@@ -94,8 +78,6 @@ public class PlayerModelHandler : MonoBehaviour
             PlayerModelGO = Instantiate(PlayerModelPrefab, transform);
 
         PlayerModelContainer = PlayerModelGO.GetComponent<PlayerModelContainer>();
-
-        WallParticleGOs = new Queue<GameObject>();
     }
 
     private void FixedUpdate()
@@ -161,36 +143,7 @@ public class PlayerModelHandler : MonoBehaviour
             TextIndicatorEffectGO.SetText(eneme.Tools.ProcessFloat(points, 2));
     }
     #endregion
-  
 
-    #region WallParticles
-    void SpawnWallParticle(RaycastHit hit)
-    {
-        Vector3 pos = hit.point + (Pivot.transform.forward * wallEffectForwardMultiplier);
-
-        GameObject WallParticleGO;
-        if (WallParticleGOs.Count >= maxWallParticles)
-        {
-            WallParticleGO = WallParticleGOs.Dequeue();
-            WallParticleGO.SetActive(false);
-        }
-        else
-        {
-            WallParticleGO = Instantiate
-            (
-                PlayerModelContainer.NearmissEffect,
-                pos,
-                Quaternion.identity
-            );
-        }
-
-        WallParticleGO.SetActive(true);
-        WallParticleGO.transform.position = pos;
-        WallParticleGO.transform.rotation = Quaternion.identity;
-
-        WallParticleGOs.Enqueue(WallParticleGO);
-    }
-    #endregion
 
     #region TextIndicator
     void SpawnTextIndicator(Vector3 position)
@@ -247,9 +200,6 @@ public class PlayerModelHandler : MonoBehaviour
 
     public void NeamissEffetcSpawner(float normalDistance, int numberOfHits, Vector3 origin, RaycastHit hit)
     {
-        if (Time.time - lastWallParticle > textParticleCooldown)
-            SpawnWallParticle(hit);
-
         if(TextIndicatorGO == null) 
         {
             SpawnTextIndicator(transform.position + eneme.Tools.projectedDirection(textIndicatorDistance, transform, origin, hit));

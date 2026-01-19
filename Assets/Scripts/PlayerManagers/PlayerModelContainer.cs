@@ -7,7 +7,4 @@ public class PlayerModelContainer : MonoBehaviour
     public GameObject CrashModelPrefab;
     [Header("Trails")]
     public TrailRenderer[] TrailRenderers;
-    [Header("Nearmis")]
-    public GameObject NearmissEffect;
-    
 }

@@ -10,8 +10,6 @@ public class PlayerModelHandler : MonoBehaviour
     public GameObject PlayerModelPrefab;
     [SerializeField]
     public GameObject TextIndicatorPrefab;
-    [SerializeField]
-    public GameObject TextParticlePrefab;
     [HideInInspector]
     public GameObject PlayerModelGO;
     [HideInInspector]
@@ -22,7 +20,6 @@ public class PlayerModelHandler : MonoBehaviour
     int numberOfFlips = 1;
     [SerializeField]
     AnimationCurve dashRotationSpeed;
-
 
     [Header("Wall Particles")]
     [SerializeField]
@@ -75,14 +72,11 @@ public class PlayerModelHandler : MonoBehaviour
 
     [Header("Other")]
     Queue<GameObject> WallParticleGOs = new Queue<GameObject>();
-    Queue<GameObject> TextParticleGOs = new Queue<GameObject>();
     GameObject TextIndicatorGO = null;
     GameObject TextSecuredGO = null;
     TextIndicatorEffect TextIndicatorEffectGO;
     Coroutine RunRoutine;
-
-    float lastTextParticle = 0;
-
+    float lastWallParticle;
     #region Instantiate
 
     public void SetPlayerModelVisual(GameObject newPlayerModelPrefab)
@@ -100,9 +94,7 @@ public class PlayerModelHandler : MonoBehaviour
             PlayerModelGO = Instantiate(PlayerModelPrefab, transform);
 
         PlayerModelContainer = PlayerModelGO.GetComponent<PlayerModelContainer>();
-        
 
-        TextParticleGOs = new Queue<GameObject>();
         WallParticleGOs = new Queue<GameObject>();
     }
 
@@ -169,71 +161,7 @@ public class PlayerModelHandler : MonoBehaviour
             TextIndicatorEffectGO.SetText(eneme.Tools.ProcessFloat(points, 2));
     }
     #endregion
-
-    #region TexctParticles
-    public void SpawnTextParticle(float normalDistance, Vector3 position)
-    {
-        lastTextParticle = Time.time;
-
-        Vector3 forwardOffset = transform.forward * particleForwardOffsett;
-        Vector3 pos = position + forwardOffset;
-
-        float points = (1 + Mathf.Abs(normalDistance - 1)) * UserData.Instance.droneVelocity.magnitude * plusPointsMultiplier;
-        string text = "+" + eneme.Tools.ProcessFloat(points, 1);
-
-        GameObject TextParticleGO;
-        
-        if (TextParticleGOs.Count >= maxTextParticles)
-        {
-            TextParticleGO = TextParticleGOs.Dequeue();
-            TextParticleGO.SetActive(false);
-        }
-        else
-        {
-            TextParticleGO = Instantiate(
-            TextParticlePrefab,
-            Pivot.transform
-            );
-        }
-
-        // Reset + reuse
-        TextParticleEffect ParticleEffect =
-            TextParticleGO.GetComponent<TextParticleEffect>();
-        ParticleEffect.cam = PlayerCamera;
-        ParticleEffect.rb.useGravity = false;
-        ParticleEffect.SetText(text); // whatever you already use
-        ParticleEffect.rb.linearVelocity = Vector3.zero;
-        ParticleEffect.rb.angularVelocity = Vector3.zero;
-
-        TextParticleGO.transform.position = pos;
-        TextParticleGO.transform.rotation = Quaternion.identity;
-        TextParticleGO.SetActive(true);
-
-
-        // stop old life coroutine for this particle
-        if (ParticleEffect.lifeRoutine != null)
-        {
-            StopCoroutine(ParticleEffect.lifeRoutine);
-            ParticleEffect.lifeRoutine = null;
-        }
-
-        // start new life coroutine
-        ParticleEffect.lifeRoutine = StartCoroutine(
-            SpawnTextParticleCoroutine(TextParticleGO, ParticleEffect)
-        );
-
-        TextParticleGOs.Enqueue(TextParticleGO);
-    }
-
-    IEnumerator SpawnTextParticleCoroutine(GameObject TextParticleGO, TextParticleEffect ParticleEffect)
-    {
-        yield return new WaitForSeconds(timeBeforeGavityOff);
-        ParticleEffect.rb.useGravity = true;
-        yield return new WaitForSeconds(.5f);
-        ParticleEffect.rb.useGravity = false;
-        TextParticleGO.SetActive(false);
-    }
-    #endregion
+  
 
     #region WallParticles
     void SpawnWallParticle(RaycastHit hit)
@@ -309,18 +237,6 @@ public class PlayerModelHandler : MonoBehaviour
     #endregion
 
     #region Tools
-    Vector3 projectedDirection(float pointEffectDistance, Vector3 origin, RaycastHit hit)
-    {
-        Vector3 direction = (hit.point - origin).normalized;
-        Vector3 projectedDirection =
-            Vector3.ProjectOnPlane(direction, transform.forward);
-        if (projectedDirection.sqrMagnitude < 0.0001f)
-            projectedDirection = transform.right;
-
-        projectedDirection.Normalize();
-
-        return (projectedDirection * pointEffectDistance);
-    }
     void DestroyCourutineSafely(ref Coroutine Routine)
     {
         if (Routine != null)
@@ -331,21 +247,18 @@ public class PlayerModelHandler : MonoBehaviour
 
     public void NeamissEffetcSpawner(float normalDistance, int numberOfHits, Vector3 origin, RaycastHit hit)
     {
-        if (Time.time - lastTextParticle > textParticleCooldown)
+        if (Time.time - lastWallParticle > textParticleCooldown)
             SpawnWallParticle(hit);
-        if(Time.time - lastTextParticle > textParticleCooldown)
-            SpawnTextParticle(normalDistance, transform.position + projectedDirection(textParticleDistance, origin, hit));
 
         if(TextIndicatorGO == null) 
         {
-            SpawnTextIndicator(transform.position + projectedDirection(textIndicatorDistance, origin, hit));
+            SpawnTextIndicator(transform.position + eneme.Tools.projectedDirection(textIndicatorDistance, transform, origin, hit));
         }
     }
     
     public void DestroyAllEffectsGO()
     {
-        DestroyPool(ref TextParticleGOs);
-        DestroyPool(ref WallParticleGOs);
+        //DestroyPool(ref WallParticleGOs);
 
         DestroyGO(ref TextSecuredGO);
         TextIndicatorEffectGO = null;
@@ -355,16 +268,6 @@ public class PlayerModelHandler : MonoBehaviour
         DestroyCourutineSafely(ref RunRoutine);
     }
 
-    public void DestroyPool(ref Queue<GameObject> GOs) 
-    {
-        foreach (GameObject go in GOs)
-        {
-            if (go != null)
-                Destroy(go);
-        }
-        GOs.Clear();
-        GOs = new Queue<GameObject>();
-    }
     public void DestroyGO(ref GameObject GO) 
     {
         if (GO != null)

@@ -45,6 +45,19 @@ namespace eneme
             return s.Substring(0, length);
         }
 
+        public static Vector3 projectedDirection(float pointEffectDistance, Transform transform, Vector3 origin, RaycastHit hit)
+        {
+            Vector3 direction = (hit.point - origin).normalized;
+            Vector3 projectedDirection =
+                Vector3.ProjectOnPlane(direction, transform.forward);
+            if (projectedDirection.sqrMagnitude < 0.0001f)
+                projectedDirection = transform.right;
+
+            projectedDirection.Normalize();
+
+            return (projectedDirection * pointEffectDistance);
+        }
+
     }
 }
 

@@ -63,7 +63,7 @@ public class PlaneLook : MonoBehaviour
         float yawDelta = Quaternion.Angle(prevRotation, transform.rotation); // degrees this frame (positive)
         float signedDelta = yawDelta * Mathf.Sign(yawDegPerSec);              // keep direction
 
-        Manuver(signedDelta);
+        Manuver(signedDelta * manuverRotationSpeedMultiplier);
     }
 
     public void Manuver(float magnitude)

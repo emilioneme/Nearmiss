@@ -1289,7 +1289,7 @@ MonoBehaviour:
   TextIndicatorPrefab: {fileID: 8626851510750251126, guid: 0adeef749bd06634a91c9f229216a095, type: 3}
   PlayerModelGO: {fileID: 0}
   PlayerModelContainer: {fileID: 0}
-  numberOfFlips: 1
+  numberOfFlips: 2
   dashRotationSpeed:
     serializedVersion: 2
     m_Curve:
@@ -1323,9 +1323,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  wallParticleCooldown: 1
-  wallEffectForwardMultiplier: 5
-  maxWallParticles: 10
   trailFadeTimeMultiplier: 0.1
   maxDroneSpeedForTrail: 30
   textIndicatorDistance: 1

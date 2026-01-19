@@ -21,14 +21,6 @@ public class PlayerModelHandler : MonoBehaviour
     [SerializeField]
     AnimationCurve dashRotationSpeed;
 
-    [Header("Wall Particles")]
-    [SerializeField]
-    float wallParticleCooldown = 1;
-    [SerializeField]
-    float wallEffectForwardMultiplier = 1;
-    [SerializeField]
-    int maxWallParticles = 5;
-
     [Header("Trails")]
     [SerializeField]
     float trailFadeTimeMultiplier = 5;

@@ -3,6 +3,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using static UnityEngine.UI.Image;
 
 public class NearmissHandler : MonoBehaviour
 {
@@ -75,7 +76,9 @@ public class NearmissHandler : MonoBehaviour
                 {
                     minDistance = hit.distance;
                     hitPoint = hit;
-                    Debug.DrawLine(rayOrigin, rayOrigin + dir, Color.red);
+                    //Debug.DrawLine(rayOrigin, rayOrigin + dir, Color.red);
+                    float normalizedDistance = Mathf.Abs(minDistance / rayDistance) - 1;
+                    NearmissEvent.Invoke(normalizedDistance, numberOfHits, rayOrigin, hitPoint); //1 = as close as it can get, 0, is not close at all
                 }
             }
         }

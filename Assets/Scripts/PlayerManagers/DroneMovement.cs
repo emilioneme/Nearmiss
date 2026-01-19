@@ -60,8 +60,6 @@ public class DroneMovement : MonoBehaviour
     public bool enableFlying = true;
     public bool allowDash = true;
 
-    [Header("Event")]
-    public UnityEvent DroneMoved;
 
     private void Awake()
     {
@@ -73,14 +71,12 @@ public class DroneMovement : MonoBehaviour
         MoveDrone();
     }
 
-
     #region Movement
     public void MoveDrone() 
     {
         if (!cc)
             return;
         cc.Move(GetTotalVelocity() * Time.deltaTime);
-        DroneMoved.Invoke();
     }
     #endregion
 

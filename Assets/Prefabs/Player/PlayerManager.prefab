@@ -5361,7 +5361,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2629083042626061357
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5848,9 +5848,6 @@ MonoBehaviour:
   applyGravity: 1
   enableFlying: 1
   allowDash: 1
-  DroneMoved:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &8714170458392586884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5884,7 +5881,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rayDistance: 4
-  numberOfRays: 50
+  numberOfRays: 30
   shotsPerSecond: 20
   layerMask:
     serializedVersion: 2
@@ -6267,8 +6264,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  mouseLookScale: 1
-  touchLookScale: 0.2
+  mouseLookScale: 2
+  touchLookScale: 2
   stickDeadzone: 0.15
   lookClamp: 1
   dashDeadzone: 0.25

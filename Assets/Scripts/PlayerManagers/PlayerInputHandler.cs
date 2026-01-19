@@ -22,7 +22,6 @@ public class PlayerInputHandler : MonoBehaviour
 
     [Header("Dash Tuning")]
     [SerializeField] private float dashDeadzone = 0.25f;
-    private bool dashArmed = true;
 
     [Header("Sckemes")]
     [SerializeField] private string computerScheme = "Keyboard and Mouse";
@@ -43,6 +42,8 @@ public class PlayerInputHandler : MonoBehaviour
     private InputAction rotateLeftAction;
     private InputAction rotateRightAction;
     private InputAction dashAction;
+
+    #region Set up
     void EnableActions()
     {
         lookAction.Enable();
@@ -69,13 +70,6 @@ public class PlayerInputHandler : MonoBehaviour
     private void OnEnable()
     {
         EnableActions();
-
-        rotateLeftAction.performed += _ => OnRotateLeft.Invoke();
-        rotateRightAction.performed += _ => OnRotateRight.Invoke();
-
-        dashAction.performed += OnDashPerformed; // interpret dash before unity event invoke
-        dashAction.canceled -= OnDashCanceled; //
-
         playerInput.onControlsChanged += OnControlsChanged;
         OnControlsChanged(playerInput); // initialize current scheme
     }
@@ -85,7 +79,29 @@ public class PlayerInputHandler : MonoBehaviour
         playerInput.onControlsChanged -= OnControlsChanged;
         DisabelActions();
     }
+    #endregion
 
+    private void Update()
+    {
+        Vector2 rawLook = lookAction.ReadValue<Vector2>();
+        Vector2 interpretedLook = InterpretLook(rawLook);
+        interpretedLook *= UserData.Instance.lookSensitivity;
+
+        if (interpretedLook.sqrMagnitude > 0.000001f)
+            OnLook.Invoke(interpretedLook);
+
+        if (dashAction.IsPressed())
+            OnDashPerformed(dashAction.ReadValue<Vector2>());
+
+        if (rotateLeftAction.inProgress)
+            OnRotateLeft.Invoke();
+
+        if (rotateRightAction.inProgress)
+            OnRotateRight.Invoke();
+
+    }
+
+    #region Control Scheme CHange
     private void OnControlsChanged(PlayerInput input)
     {
         currentScheme = SchemeFromString(input.currentControlScheme);
@@ -100,17 +116,7 @@ public class PlayerInputHandler : MonoBehaviour
         Debug.LogWarning("Uknown Scheme: " + scheme);
         return ControlScheme.Unknown;
     }
-
-    private void Update()
-    {
-        Vector2 rawLook = lookAction.ReadValue<Vector2>();
-        Vector2 interpretedLook = InterpretLook(rawLook);
-        interpretedLook *= UserData.Instance.lookSensitivity;
-
-        if (interpretedLook.sqrMagnitude > 0.000001f)
-            OnLook.Invoke(interpretedLook);
-    }
-
+    #endregion
     private Vector2 InterpretLook(Vector2 raw)
     {
         if (currentScheme == ControlScheme.Gamepad)
@@ -134,33 +140,23 @@ public class PlayerInputHandler : MonoBehaviour
         return Vector2.zero;
     }
 
-    private void OnDashPerformed(InputAction.CallbackContext ctx)
+    private void OnDashPerformed(Vector2 v)
     {
-        if (!dashArmed)
-            return;
-
-        Vector2 v = ctx.ReadValue<Vector2>();
-
         if (v.sqrMagnitude < dashDeadzone * dashDeadzone)
             return;
-
-        dashArmed = false;
-
         OnDash.Invoke(v.normalized);
     }
 
-    private void OnDashCanceled(InputAction.CallbackContext ctx)
-    {
-        dashArmed = true;
-    }
-
+    #region tools
     private static Vector2 ApplyRadialDeadzone(Vector2 v, float deadzone)
     {
         float mag = v.magnitude;
-        if (mag <= deadzone) return Vector2.zero;
+        if (mag <= deadzone)
+            return Vector2.zero;
 
         // Rescale so it starts at 0 after deadzone (nice feel)
         float scaled = (mag - deadzone) / (1f - deadzone);
         return v.normalized * Mathf.Clamp01(scaled);
     }
+    #endregion
 }

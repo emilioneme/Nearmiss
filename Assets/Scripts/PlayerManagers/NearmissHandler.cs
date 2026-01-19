@@ -1,7 +1,9 @@
 using NUnit.Framework;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static UnityEngine.UI.Image;
 
@@ -59,7 +61,14 @@ public class NearmissHandler : MonoBehaviour
         ShootRaySpehere(origin, ref minDistance, ref numberOfHits);
         float normalizedDistance = Mathf.Abs(minDistance / rayDistance) - 1;
         if (numberOfHits > 0)
+        {
             NearmissEvent.Invoke(normalizedDistance, numberOfHits, origin, hitPoint); //1 = as close as it can get, 0, is not close at all
+            Gamepad.current.SetMotorSpeeds(0.25f, 0.75f);
+        }
+        else
+        {
+            Gamepad.current.SetMotorSpeeds(0, 0);
+        }
     }
 
     #region RayShooting

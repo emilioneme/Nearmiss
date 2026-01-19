@@ -43,11 +43,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - emissiveTexture:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: dc3383d9056c5144a9be6a6e74a17b85, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - metallicRoughnessTexture:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: ad6d8b9de4d2539428cfc544d4c5224b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - normalTexture:

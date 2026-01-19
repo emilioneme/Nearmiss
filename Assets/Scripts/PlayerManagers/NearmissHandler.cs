@@ -78,7 +78,7 @@ public class NearmissHandler : MonoBehaviour
                     hitPoint = hit;
                     //Debug.DrawLine(rayOrigin, rayOrigin + dir, Color.red);
                     float normalizedDistance = Mathf.Abs(minDistance / rayDistance) - 1;
-                    NearmissEvent.Invoke(normalizedDistance, numberOfHits, rayOrigin, hitPoint); //1 = as close as it can get, 0, is not close at all
+                    //NearmissEvent.Invoke(normalizedDistance, numberOfHits, rayOrigin, hitPoint); // this is very frame expensive
                 }
             }
         }

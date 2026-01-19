@@ -5861,13 +5861,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lookSpeedMultiplier: 100
+  manuverRotationSpeedMultiplier: 2
   rotationSpeedMultiplier: 100
   manuverSpeedMultiplier: 100
-  yRotationInputThershhold: 3
-  xRotationInputThershhold: 3
+  yRotationInputThershhold: 4
+  xRotationInputThershhold: 4
   allowLook: 1
   allowLookRotate: 1
   allowRotate: 1
+  maxYawDegPerSec: 360
+  maxPitchDegPerSec: 240
 --- !u!114 &416101309412079257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5881,7 +5884,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rayDistance: 4
-  numberOfRays: 30
+  numberOfRays: 15
   shotsPerSecond: 20
   layerMask:
     serializedVersion: 2
@@ -6265,9 +6268,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   mouseLookScale: 2
-  touchLookScale: 2
-  stickDeadzone: 0.15
-  lookClamp: 1
+  touchLookScale: 10
+  stickDeadzone: 0.1
   dashDeadzone: 0.25
   computerScheme: Keyboard and Mouse
   gamepadScheme: Gamepad

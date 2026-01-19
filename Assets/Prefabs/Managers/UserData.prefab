@@ -46,9 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UserName: Anonymus
   personalHighScore: 0
-  mouseSensitivity: 0.3
-  stickSensitivity: 2
-  stickExponent: 2
+  lookSensitivity: 0.5
   masterVolume: 0.5
   musicVolume: 0.5
   automaticRespawn: 0

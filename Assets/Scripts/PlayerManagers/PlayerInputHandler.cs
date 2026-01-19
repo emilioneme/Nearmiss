@@ -14,11 +14,14 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] private UnityEvent<Vector2> OnDash;     // direction intent (-1..1)
 
     [Header("Look Tuning")]
-    [Tooltip("Stick is already -1..1. Mouse is usually delta-per-frame, so scale it here.")]
-    [SerializeField] private float mouseLookScale = 0.02f;
-    [SerializeField] private float touchLookScale = 0.02f;
-    [SerializeField] private float stickDeadzone = 0.15f;
-    [SerializeField] private float lookClamp = 1f;
+    [Tooltip("Stick is already -1..1. Mouse is usually delta-per-frame.")]
+    [Header("Mouse")]
+    [SerializeField] private float mouseLookScale = 1f;
+    [Header("Touch")]
+    [SerializeField] private float touchLookScale = 1f;
+    [Header("Stick")]
+    [SerializeField] private float stickDeadzone = 1f;
+
 
     [Header("Dash Tuning")]
     [SerializeField] private float dashDeadzone = 0.25f;
@@ -122,19 +125,19 @@ public class PlayerInputHandler : MonoBehaviour
         if (currentScheme == ControlScheme.Gamepad)
         {
             raw = ApplyRadialDeadzone(raw, stickDeadzone);// Stick: already -1..1, apply deadzone.
-            return Vector2.ClampMagnitude(raw, lookClamp);
+            return raw;
         }
 
         if (currentScheme == ControlScheme.Mobile)
         {
             Vector2 scaled = raw * touchLookScale; // Mouse/touch: often comes as delta-per-frame. Scale to feel like stick.
-            return Vector2.ClampMagnitude(scaled, lookClamp);
+            return scaled;
         }
 
         if (currentScheme == ControlScheme.Computer)
         {
             Vector2 mouseScaled = raw * mouseLookScale;
-            return Vector2.ClampMagnitude(mouseScaled, lookClamp);
+            return mouseScaled;
         }
 
         return Vector2.zero;

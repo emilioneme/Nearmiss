@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Windows;
@@ -10,6 +11,9 @@ public class PlaneLook : MonoBehaviour
     public float lookSpeedMultiplier = 1.0f;
     float lookSpeed = 1;
 
+    [Header("Manuvers")]
+    public float manuverRotationSpeedMultiplier = 1.0f;
+
     [Header("Turning Rotation")]
     [SerializeField]
     public float rotationSpeedMultiplier = 1.0f;
@@ -17,6 +21,7 @@ public class PlaneLook : MonoBehaviour
     [SerializeField]
     public float manuverSpeedMultiplier = 1.0f;
     float manuverSpeed = 1;
+
     [SerializeField]
     float yRotationInputThershhold = 3;
     [SerializeField]
@@ -33,24 +38,32 @@ public class PlaneLook : MonoBehaviour
         LookLeftRight(input.x);
     }
 
+    [SerializeField] float maxYawDegPerSec = 360f;
+    [SerializeField] float maxPitchDegPerSec = 240f;
+
     public void LookUpDown(float y)
     {
-        if (!allowLook)
-            return;
-        float yClamped = Mathf.Clamp(y, -yRotationInputThershhold, yRotationInputThershhold);
-        float loookAmount = -yClamped * lookSpeed * lookSpeedMultiplier * Time.deltaTime;
-        transform.rotation = transform.rotation * Quaternion.Euler(loookAmount, 0, 0);
+        if (!allowLook) return;
+        float pitchDegPerSec = (-y) * lookSpeed * lookSpeedMultiplier;
+        pitchDegPerSec = Mathf.Clamp(pitchDegPerSec, -maxPitchDegPerSec, maxPitchDegPerSec);
+
+        float step = pitchDegPerSec * Time.deltaTime;
+        transform.rotation *= Quaternion.Euler(step, 0f, 0f);
     }
+
     public void LookLeftRight(float x)
     {
-        if (!allowLook)
-            return;
-        float xClamped = Mathf.Clamp(x, -xRotationInputThershhold, xRotationInputThershhold);
-        float loookAmount = xClamped * lookSpeed * lookSpeedMultiplier * Time.deltaTime;
+        if (!allowLook) return;
+        float yawDegPerSec = x * lookSpeed * lookSpeedMultiplier;
+        yawDegPerSec = Mathf.Clamp(yawDegPerSec, -maxYawDegPerSec, maxYawDegPerSec);
+        float step = yawDegPerSec * Time.deltaTime;
         Quaternion prevRotation = transform.rotation;
-        Quaternion toRotation = transform.rotation * Quaternion.Euler(0, loookAmount, 0);
-        transform.rotation = transform.rotation * Quaternion.Euler(0, loookAmount, 0);
-        Manuver(xClamped);
+        transform.rotation *= Quaternion.Euler(0f, step, 0f);
+
+        float yawDelta = Quaternion.Angle(prevRotation, transform.rotation); // degrees this frame (positive)
+        float signedDelta = yawDelta * Mathf.Sign(yawDegPerSec);              // keep direction
+
+        Manuver(signedDelta);
     }
 
     public void Manuver(float magnitude)

@@ -20,6 +20,7 @@ public class PlayerInputHandler : MonoBehaviour
     [Header("Touch")]
     [SerializeField] private float touchLookScale = 1f;
     [Header("Stick")]
+    [SerializeField] private float tickLookScale = 1f;
     [SerializeField] private float stickDeadzone = 1f;
 
 
@@ -124,7 +125,7 @@ public class PlayerInputHandler : MonoBehaviour
     {
         if (currentScheme == ControlScheme.Gamepad)
         {
-            raw = ApplyRadialDeadzone(raw, stickDeadzone);// Stick: already -1..1, apply deadzone.
+            raw = ApplyRadialDeadzone(raw, stickDeadzone) * tickLookScale;// Stick: already -1..1, apply deadzone.
             return raw;
         }
 

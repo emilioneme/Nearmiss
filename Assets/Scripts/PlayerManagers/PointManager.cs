@@ -125,7 +125,7 @@ public class PointManager : MonoBehaviour
         UpdateCombMult(normalizedDistance);
     }
 
-    public void Dashed(Vector3 dir, Vector3 axis, float duration) 
+    public void Dashed(Vector2 dir, float duration) 
     {
         if (dashCoroutine == null)
             DestroyCourutineSafely(ref dashCoroutine);

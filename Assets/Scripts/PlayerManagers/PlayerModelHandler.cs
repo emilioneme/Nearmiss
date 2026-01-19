@@ -17,6 +17,13 @@ public class PlayerModelHandler : MonoBehaviour
     [HideInInspector]
     public PlayerModelContainer PlayerModelContainer;
 
+    [Header("Dash Amimation")]
+    [SerializeField]
+    int numberOfFlips = 1;
+    [SerializeField]
+    AnimationCurve dashRotationSpeed;
+
+
     [Header("Wall Particles")]
     [SerializeField]
     float wallEffectForwardMultiplier = 1;
@@ -269,21 +276,30 @@ public class PlayerModelHandler : MonoBehaviour
 
     #region Dash
     Coroutine dashSpinRoutine;
-    public void AnimateDash(Vector3 direction, Vector3 animationAxis, float duration)
+    public void AnimateDash(Vector2 direction, float duration)
     {
         if (dashSpinRoutine != null) StopCoroutine(dashSpinRoutine);
-        dashSpinRoutine = StartCoroutine(AnimateDashCoroutine(direction, animationAxis, duration));
+        dashSpinRoutine = StartCoroutine(AnimateDashCoroutine(direction, duration));
     }
 
-    IEnumerator AnimateDashCoroutine(Vector3 direction, Vector3 animationAxis, float duration)
+    IEnumerator AnimateDashCoroutine(Vector3 direction, float duration)
     {
         Quaternion start = transform.localRotation;
         float timer = 0f;
         while (timer < duration)
         {
             float t = timer / duration;
-            float angle = 360f * t * Mathf.Sign(direction.magnitude);
-            transform.localRotation = start * Quaternion.Euler(animationAxis.x * angle, animationAxis.y * angle, animationAxis.z * angle);
+            float angle = 360f * t;
+
+            Quaternion rotationForX = Quaternion.identity;
+            Quaternion rotationForY = Quaternion.identity;
+            if(direction.x != 0) 
+            {
+                rotationForX = Quaternion.Euler(0, 0, angle * -Mathf.Sign(direction.x));
+            }
+
+            transform.localRotation = start * rotationForX * rotationForY;
+
             timer += Time.deltaTime;
             yield return null;
         }

@@ -53,7 +53,7 @@ public class DroneMovement : MonoBehaviour
     AnimationCurve dashSpeedOverTime;
 
     [SerializeField]
-    UnityEvent<Vector3, Vector3, float> DashStarted; //direction, animate accis, duration
+    UnityEvent<Vector2, float> DashStarted; //direction, duration
 
     [Header("Physics")]
     public bool applyGravity = true;
@@ -126,12 +126,7 @@ public class DroneMovement : MonoBehaviour
 
     #region Dash
     public Coroutine DashRutine;
-    public void Dash(Vector2 direction) 
-    {
-        Vector2 animateAxis = Vector3.Cross(Vector3.forward, direction).normalized;
-        Dash(direction, animateAxis);
-    }
-    public void Dash(Vector3 direction, Vector3 animateAxis)  
+    public void Dash(Vector2 direction)  
     {
         if(!allowDash)
             return;
@@ -144,7 +139,7 @@ public class DroneMovement : MonoBehaviour
         if(DashRutine == null)
             DashRutine = StartCoroutine(DashCoroutine()); //takes direction from the classes scope
 
-        DashStarted.Invoke(direction, animateAxis, dashDuration);
+        DashStarted.Invoke(direction, dashDuration);
     }
 
     IEnumerator DashCoroutine()

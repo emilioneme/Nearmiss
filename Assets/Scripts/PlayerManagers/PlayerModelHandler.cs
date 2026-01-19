@@ -27,18 +27,6 @@ public class PlayerModelHandler : MonoBehaviour
     [SerializeField]
     float maxDroneSpeedForTrail = 300;
 
-    [Header("TextIndicatorEffct")]
-    [SerializeField]
-    float textIndicatorDistance = 1;
-
-    [Header("SecureTextIndicatorEffct")]
-    [SerializeField]
-    float securePointsEffectDuration = 1;
-    [SerializeField]
-    Vector3 secureLerpToPosition;
-    [SerializeField]
-    AnimationCurve secureLerpCurve;
-
     [Header("Cam")]
     [SerializeField]
     Camera PlayerCamera;
@@ -47,12 +35,6 @@ public class PlayerModelHandler : MonoBehaviour
 
     [Header("Event")]
     public UnityEvent<GameObject> SpawnedCrashObject;
-
-    [Header("Other")]
-    GameObject TextIndicatorGO = null;
-    GameObject TextSecuredGO = null;
-    TextIndicatorEffect TextIndicatorEffectGO;
-    Coroutine RunRoutine;
 
     #region Instantiate
     public void SetPlayerModelVisual(GameObject newPlayerModelPrefab)
@@ -71,7 +53,9 @@ public class PlayerModelHandler : MonoBehaviour
 
         PlayerModelContainer = PlayerModelGO.GetComponent<PlayerModelContainer>();
     }
+    #endregion
 
+    #region Trials
     private void FixedUpdate()
     {
         if (PlayerModelContainer) 
@@ -82,68 +66,6 @@ public class PlayerModelHandler : MonoBehaviour
                 trail.time = velocityNomralized * trailFadeTimeMultiplier;
             }
         }
-    }
-    #endregion
-
-    #region  Run Start
-    public void RunStarted(float timeToSecure)
-    {
-        if (!TextIndicatorGO)
-            return;
-        DestroyCourutineSafely(ref RunRoutine);
-        RunRoutine = StartCoroutine(RunCooldownCoroutine(timeToSecure));
-    }
-
-    public void RunContinued(float timeToSecure)
-    {
-        DestroyCourutineSafely(ref RunRoutine);
-        RunRoutine = StartCoroutine(RunCooldownCoroutine(timeToSecure));
-    }
-
-    IEnumerator RunCooldownCoroutine(float timeToSecure)
-    {
-        yield return new WaitForSeconds(timeToSecure);
-
-        DestroyGO(ref TextSecuredGO);
-        TextSecuredGO = TextIndicatorGO;
-        TextSecuredGO.transform.SetParent(PlayerCamera.transform, true);
-        TextIndicatorGO = null;
-        float timer = 0f;
-        Vector3 startLocal = TextSecuredGO.transform.localPosition;
-        Vector3 targetWorld = PlayerCamera.ViewportToWorldPoint(secureLerpToPosition);
-        Vector3 targetLocal = PlayerCamera.transform.InverseTransformPoint(targetWorld);
-
-        while (timer < securePointsEffectDuration)
-        {
-            timer += Time.deltaTime;
-            float normalized = timer / securePointsEffectDuration;
-            float t = secureLerpCurve.Evaluate(normalized);
-
-            targetWorld = PlayerCamera.ViewportToWorldPoint(secureLerpToPosition);
-            targetLocal = PlayerCamera.transform.InverseTransformPoint(targetWorld);
-
-            TextSecuredGO.transform.localPosition = Vector3.Lerp(startLocal, targetLocal, t);
-            yield return null;
-        }
-
-        DestroyGO(ref TextSecuredGO);
-    }
-
-    public void UpdateRunPoints(float points)
-    {
-        if(TextIndicatorEffectGO != null)
-            TextIndicatorEffectGO.SetText(eneme.Tools.ProcessFloat(points, 2));
-    }
-    #endregion
-
-
-    #region TextIndicator
-    void SpawnTextIndicator(Vector3 position)
-    {
-        TextIndicatorGO = Instantiate(TextIndicatorPrefab, position, Quaternion.identity, Pivot.transform);
-        TextIndicatorEffectGO = TextIndicatorGO.GetComponent<TextIndicatorEffect>();
-        TextIndicatorEffectGO.cam = PlayerCamera;
-        TextIndicatorEffectGO.SetText(" ");
     }
     #endregion
 
@@ -181,42 +103,6 @@ public class PlayerModelHandler : MonoBehaviour
     }
     #endregion
 
-    #region Tools
-    void DestroyCourutineSafely(ref Coroutine Routine)
-    {
-        if (Routine != null)
-            StopCoroutine(Routine);
-        Routine = null;
-    }
-    #endregion
-
-    public void NeamissEffetcSpawner(float normalDistance, int numberOfHits, Vector3 origin, RaycastHit hit)
-    {
-        if(TextIndicatorGO == null) 
-        {
-            SpawnTextIndicator(transform.position + eneme.Tools.projectedDirection(textIndicatorDistance, transform, origin, hit));
-        }
-    }
-    
-    public void DestroyAllEffectsGO()
-    {
-        //DestroyPool(ref WallParticleGOs);
-
-        DestroyGO(ref TextSecuredGO);
-        TextIndicatorEffectGO = null;
-
-        DestroyGO(ref TextIndicatorGO);
-
-        DestroyCourutineSafely(ref RunRoutine);
-    }
-
-    public void DestroyGO(ref GameObject GO) 
-    {
-        if (GO != null)
-            Destroy(GO);
-        GO = null;
-    }
-
     void SpawnCrashModel()
     {
         GameObject CrashObject = Instantiate
@@ -229,7 +115,6 @@ public class PlayerModelHandler : MonoBehaviour
     {
         SpawnCrashModel();
         transform.localRotation = Quaternion.Euler(Vector3.zero); //fixing its rotation before spawnign in cse player dashes and dies
-        DestroyAllEffectsGO();
     }
 
 }

@@ -4820,7 +4820,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   airPitch: 0.5
   pitchDeltaMultiplier: 1
-  maxVelocityChange: 3
   AirSound: {fileID: 5295039235057477379}
   DashAudioPrefab: {fileID: 7082854550985821893, guid: 19f87959e33e7ec4c87f88abc51f7f2d, type: 3}
   SecureAudioPrefab: {fileID: 7082854550985821893, guid: d38edcdebf324ba4a87137856898681d, type: 3}
@@ -5898,8 +5897,6 @@ MonoBehaviour:
   manuverRotationSpeedMultiplier: 0.3
   rotationSpeedMultiplier: 100
   manuverSpeedMultiplier: 100
-  yRotationInputThershhold: 4
-  xRotationInputThershhold: 4
   allowLook: 1
   allowLookRotate: 1
   allowRotate: 1
@@ -5955,6 +5952,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: PlayerAudioManager, Assembly-CSharp
         m_MethodName: PlayWallSound
         m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3340113612327398287}
+        m_TargetAssemblyTypeName: PlayerInputHandler, Assembly-CSharp
+        m_MethodName: NearmissFeedback
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

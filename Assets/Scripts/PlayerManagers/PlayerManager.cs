@@ -84,6 +84,8 @@ public class PlayerManager : MonoBehaviour
 
     private void Start()
     {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         playerModelHandler.InitiatePlayerModel();
         DisablePlayer();
         SpawnPlayer(freezeDuration);

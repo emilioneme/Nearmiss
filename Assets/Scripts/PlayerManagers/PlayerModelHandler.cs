@@ -289,14 +289,14 @@ public class PlayerModelHandler : MonoBehaviour
         while (timer < duration)
         {
             float t = timer / duration;
-            float angle = 360f * t;
+            float angle = 360f * numberOfFlips * t;
 
             Quaternion rotationForX = Quaternion.identity;
             Quaternion rotationForY = Quaternion.identity;
             if(direction.x != 0) 
-            {
                 rotationForX = Quaternion.Euler(0, 0, angle * -Mathf.Sign(direction.x));
-            }
+            else
+                rotationForX = Quaternion.Euler(0, 0, angle * -Mathf.Sign(direction.x));
 
             transform.localRotation = start * rotationForX * rotationForY;
 

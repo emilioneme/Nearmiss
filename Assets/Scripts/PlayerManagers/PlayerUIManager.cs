@@ -59,6 +59,12 @@ public class PlayerUIManager : MonoBehaviour
 
     bool hiddenBeforePause = false;
 
+
+    private void Start()
+    {
+        UpdateTotalPoints(0);
+    }
+
     void Update()
     {
         UpdateFOV();
@@ -170,12 +176,18 @@ public class PlayerUIManager : MonoBehaviour
     #region Totalpoints
     public void UpdateTotalPoints(float points)
     {
-        TotalPointsText.text = Tools.ProcessFloat(points, 2);
+        if(points == 0)
+            TotalPointsText.text = " ";
+        else
+            TotalPointsText.text = Tools.ProcessFloat(points, 2);
     }
 
     public void ResetedTotalPoints(float points)
     {
-        TotalPointsText.text = Tools.ProcessFloat(points, 2);
+        if (points == 0)
+            TotalPointsText.text = " ";
+        else
+            TotalPointsText.text = Tools.ProcessFloat(points, 2);
     }
     #endregion
 

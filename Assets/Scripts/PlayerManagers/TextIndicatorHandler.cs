@@ -72,6 +72,8 @@ public class TextIndicatorHandler : MonoBehaviour
 
         Transform textTransform = TextIndicatorGO.transform;
         TextSecuredGO = Instantiate(TextIndicatorGO, textTransform.position, textTransform.rotation, textTransform.parent);
+        Destroy(TextSecuredGO, securePointsEffectDuration);
+
         TextSecuredGO.transform.SetParent(PlayerCamera.transform, true);
 
         TextIndicatorGO.SetActive(false);

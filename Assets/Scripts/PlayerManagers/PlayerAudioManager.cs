@@ -35,7 +35,7 @@ public class PlayerAudioManager : MonoBehaviour
     }
 
     #region Wall
-    public void PlayWallSound(float normalizedDistance, int numberOfHits, Vector3 playerPos, RaycastHit hit)
+    public void PlayWallSound()
     {
         if(WallAudioSound == null)
             WallAudioSound = Instantiate(WallAudioPrefab, transform);

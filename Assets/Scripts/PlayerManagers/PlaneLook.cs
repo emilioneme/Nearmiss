@@ -26,15 +26,15 @@ public class PlaneLook : MonoBehaviour
     public bool allowLookRotate = true;
     public bool allowRotate = true;
 
+    [SerializeField] float maxYawDegPerSec = 360f;
+    [SerializeField] float maxPitchDegPerSec = 240f;
+
     #region Look
     public void Look(Vector2 input) 
     {
         LookUpDown(input.y);
         LookLeftRight(input.x);
     }
-
-    [SerializeField] float maxYawDegPerSec = 360f;
-    [SerializeField] float maxPitchDegPerSec = 240f;
 
     public void LookUpDown(float y)
     {

@@ -8,16 +8,15 @@ using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCou
 
 public class FreezeScreenManager : MonoBehaviour
 {
-    [SerializeField] GameObject Canvas;
+    [SerializeField] GameObject FreezePanel;
     [SerializeField] Transform CountGO;
     [SerializeField] TMP_Text CountDownText;
-    string text;
     
     public UnityEvent FreezeCountDownInt;
 
     public void FreezeStarted(float duration) 
     {
-        Canvas.SetActive(true);
+        FreezePanel.SetActive(true);
         CountGO.localScale = Vector3.zero;
         CountGO.transform.DOScale(1, .25f);
         StartCoroutine(FreezeRoutine(duration));
@@ -52,7 +51,8 @@ public class FreezeScreenManager : MonoBehaviour
     void FreezeEnded()
     {
         CountGO.transform.DOScale(0, .25f);
-        Canvas.SetActive(false);
+        FreezePanel.SetActive(false);
         CountGO.localScale = Vector3.zero;
+        //no invopke becauswe this is just wheplayer is spawned
     }
 }

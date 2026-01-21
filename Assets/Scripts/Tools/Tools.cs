@@ -58,6 +58,15 @@ namespace eneme
             return (projectedDirection * pointEffectDistance);
         }
 
+        public static void StopSafely(this MonoBehaviour owner, ref Coroutine routine)
+        {
+            if (routine != null)
+            {
+                owner.StopCoroutine(routine);
+                routine = null;
+            }
+        }
+
     }
 }
 

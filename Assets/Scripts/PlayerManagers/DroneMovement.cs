@@ -1,3 +1,4 @@
+using eneme;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -59,7 +60,7 @@ public class DroneMovement : MonoBehaviour
     public bool applyGravity = true;
     public bool enableFlying = true;
     public bool allowDash = true;
-
+    public Coroutine DashRutine = null;
 
     private void Awake()
     {
@@ -129,8 +130,6 @@ public class DroneMovement : MonoBehaviour
     {
             
     }
-
-    public Coroutine DashRutine;
     public void Dash(Vector2 direction)  
     {
         if (!allowDash || !this.enabled)
@@ -167,7 +166,7 @@ public class DroneMovement : MonoBehaviour
 
     public void ResetDash()
     {
-        DestroyCourutineSafely(ref DashRutine);
+        this.StopSafely(ref DashRutine);
     }
 
     public Vector3 GetDashVelocity() // so we can add it to total velocity
@@ -205,7 +204,7 @@ public class DroneMovement : MonoBehaviour
         float targetPoints = Mathf.Clamp01(totalPoints / maxPointsForSpeed);
 
         if (pointsCoroutine != null)
-            DestroyCourutineSafely(ref pointsCoroutine);
+            this.StopSafely(ref pointsCoroutine);
 
         pointsCoroutine = StartCoroutine(LerpSpeedChange(targetPoints));
     }
@@ -231,22 +230,14 @@ public class DroneMovement : MonoBehaviour
     private void OnEnable()
     {
         cc.enabled = true;
-        DestroyCourutineSafely(ref DashRutine);
+        this.StopSafely(ref DashRutine);
     }
 
     private void OnDisable()
     {
-        DestroyCourutineSafely(ref DashRutine);
+        this.StopSafely(ref DashRutine);
         cc.enabled = false;
     }
     #endregion
-
-    void DestroyCourutineSafely(ref Coroutine Routine)
-    {
-        if (Routine != null)
-            StopCoroutine(Routine);
-        Routine = null;
-    }
-
 
 }

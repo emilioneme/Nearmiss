@@ -7,7 +7,7 @@ using UnityEngine;
 public class CrashScreenManager : MonoBehaviour
 {
     [SerializeField]
-    GameObject CrashCanvas;
+    GameObject CrashPanel;
     [SerializeField]
     RectTransform Panel;
 
@@ -44,7 +44,7 @@ public class CrashScreenManager : MonoBehaviour
         UpdateHighScore();
         UpdatePersonalHighScore();
 
-        CrashCanvas.SetActive(true);
+        CrashPanel.SetActive(true);
         Panel.transform.localScale = Vector3.zero;
         Panel.transform
             .DOScale(1, .2f);
@@ -56,7 +56,7 @@ public class CrashScreenManager : MonoBehaviour
 
     public void CloseCrashCanvas()
     {
-        CrashCanvas.SetActive(false);
+        CrashPanel.SetActive(false);
         Panel.transform.localScale = Vector3.one;
         Panel.transform
             .DOScale(0, .2f);

@@ -1,3 +1,4 @@
+using eneme;
 using System.Collections;
 using UnityEngine;
 
@@ -56,13 +57,13 @@ public class TextIndicatorHandler : MonoBehaviour
     {
         if (!TextIndicatorGO)
             return;
-        DestroyCourutineSafely(ref RunRoutine);
+        this.StopSafely(ref RunRoutine);
         RunRoutine = StartCoroutine(RunCooldownCoroutine(timeToSecure));
     }
 
     public void RunContinued(float timeToSecure)
     {
-        DestroyCourutineSafely(ref RunRoutine);
+        this.StopSafely(ref RunRoutine);
         RunRoutine = StartCoroutine(RunCooldownCoroutine(timeToSecure));
     }
 
@@ -112,15 +113,6 @@ public class TextIndicatorHandler : MonoBehaviour
             Destroy(TextSecuredGO);
 
         TextIndicatorGO.SetActive(false);
-        DestroyCourutineSafely(ref RunRoutine);
+        this.StopSafely(ref RunRoutine);
     }
-
-    #region Tools
-    void DestroyCourutineSafely(ref Coroutine Routine)
-    {
-        if (Routine != null)
-            StopCoroutine(Routine);
-        Routine = null;
-    }
-    #endregion
 }

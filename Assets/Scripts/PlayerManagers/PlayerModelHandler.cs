@@ -21,12 +21,6 @@ public class PlayerModelHandler : MonoBehaviour
     [SerializeField]
     AnimationCurve dashRotationSpeed;
 
-    [Header("Cam")]
-    [SerializeField]
-    Camera PlayerCamera;
-    [SerializeField]
-    Transform Pivot;
-
     [Header("Event")]
     public UnityEvent<GameObject> SpawnedCrashObject;
 

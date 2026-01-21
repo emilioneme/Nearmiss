@@ -19,6 +19,7 @@ public class NearmissHandler : MonoBehaviour
     [SerializeField]
     int shotsPerSecond = 10;
     float nextShotTime;
+    float interval = 0;
 
     [Header("LayerMask")]
     [SerializeField]
@@ -38,11 +39,13 @@ public class NearmissHandler : MonoBehaviour
         nextShotTime = Time.time;
     }
 
+    private void Start()
+    {
+        interval = 1f / shotsPerSecond;
+    }
 
     private void Update()
     {
-        float interval = 1f / shotsPerSecond;
-
         while (Time.time >= nextShotTime)
         {
             ShootAllRays();

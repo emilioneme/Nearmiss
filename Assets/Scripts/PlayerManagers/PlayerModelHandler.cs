@@ -21,12 +21,6 @@ public class PlayerModelHandler : MonoBehaviour
     [SerializeField]
     AnimationCurve dashRotationSpeed;
 
-    [Header("Trails")]
-    [SerializeField]
-    float trailFadeTimeMultiplier = 5;
-    [SerializeField]
-    float maxDroneSpeedForTrail = 300;
-
     [Header("Cam")]
     [SerializeField]
     Camera PlayerCamera;
@@ -52,20 +46,6 @@ public class PlayerModelHandler : MonoBehaviour
             PlayerModelGO = Instantiate(PlayerModelPrefab, transform);
 
         PlayerModelContainer = PlayerModelGO.GetComponent<PlayerModelContainer>();
-    }
-    #endregion
-
-    #region Trials
-    private void FixedUpdate()
-    {
-        if (PlayerModelContainer) 
-        {
-            foreach (TrailRenderer trail in PlayerModelContainer.TrailRenderers)
-            {
-                float velocityNomralized = UserData.Instance.droneVelocity.magnitude / maxDroneSpeedForTrail;
-                trail.time = velocityNomralized * trailFadeTimeMultiplier;
-            }
-        }
     }
     #endregion
 

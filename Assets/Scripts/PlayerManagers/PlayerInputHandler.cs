@@ -95,6 +95,8 @@ public class PlayerInputHandler : MonoBehaviour
         if (interpretedLook.sqrMagnitude > 0.000001f)
             OnLook.Invoke(interpretedLook);
 
+
+
         if (dashAction.IsPressed())
             OnDashPerformed(dashAction.ReadValue<Vector2>());
 

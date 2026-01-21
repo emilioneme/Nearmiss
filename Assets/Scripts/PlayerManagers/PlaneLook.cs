@@ -10,6 +10,7 @@ public class PlaneLook : MonoBehaviour
     [SerializeField]
     public float lookSpeedMultiplier = 1.0f;
     float lookSpeed = 1;
+    Vector2 currentLook;
 
     [Header("Manuvers")]
     public float manuverRotationSpeedMultiplier = 1.0f;

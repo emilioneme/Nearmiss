@@ -92,8 +92,8 @@ public class PlayerInputHandler : MonoBehaviour
         Vector2 interpretedLook = InterpretLook(rawLook);
         interpretedLook *= UserData.Instance.lookSensitivity;
 
-        if (interpretedLook.sqrMagnitude > 0.000001f)
-            OnLook.Invoke(interpretedLook);
+        // if (interpretedLook.sqrMagnitude > 0.000001f)
+        OnLook.Invoke(interpretedLook);
 
 
 

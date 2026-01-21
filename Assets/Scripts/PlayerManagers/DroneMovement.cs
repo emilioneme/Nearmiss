@@ -125,11 +125,17 @@ public class DroneMovement : MonoBehaviour
     #endregion
 
     #region Dash
+    public void Boost() 
+    {
+            
+    }
+
     public Coroutine DashRutine;
     public void Dash(Vector2 direction)  
     {
-        if(!allowDash)
+        if (!allowDash || !this.enabled)
             return;
+
         if(eneme.Tools.CooldownSince(lastTimeDashed, dashCooldwon) < 1) 
             return;
 

@@ -16,8 +16,6 @@ public class TextParticleHandler : MonoBehaviour
     [SerializeField]
     float textParticleDistance = 1.2f;
     [SerializeField]
-    float plusPointsMultiplier = 10;
-    [SerializeField]
     [Range(0f, 1f)]
     float textParticleCooldown = .2f;
     [SerializeField]
@@ -30,6 +28,7 @@ public class TextParticleHandler : MonoBehaviour
     [SerializeField]
     List<GameObject> TextParticleList = new List<GameObject>();
     float lastTextParticle = 0;
+    float acumulatedPoints = 0;
 
     [Header("Cam")]
     [SerializeField]
@@ -45,21 +44,25 @@ public class TextParticleHandler : MonoBehaviour
         }
     }
 
-    public void NeamissEffetcSpawner(float normalDistance, int numberOfHits, Vector3 origin, RaycastHit hit)
+    public void InitiateSpawning(float points, float normalDistance, Vector3 origin, RaycastHit hit)
     {
+        if(acumulatedPoints < 1)
+            acumulatedPoints = points;
+
         if (Time.time - lastTextParticle > textParticleCooldown)
-            SpawnTextParticle(normalDistance, transform.position + eneme.Tools.projectedDirection(textParticleDistance, Pivot, origin, hit));
+            SpawnTextParticle(acumulatedPoints, normalDistance, transform.position + eneme.Tools.projectedDirection(textParticleDistance, Pivot, origin, hit));
+        else
+            acumulatedPoints += points;
     }
 
     #region TexctParticles
-    public void SpawnTextParticle(float normalDistance, Vector3 position)
+    public void SpawnTextParticle(float points, float normalDistance, Vector3 position)
     {
         lastTextParticle = Time.time;
 
         Vector3 forwardOffset = transform.forward * particleForwardOffsett;
         Vector3 pos = position + forwardOffset;
 
-        float points = (1 + Mathf.Abs(normalDistance - 1)) * UserData.Instance.droneVelocity.magnitude * plusPointsMultiplier;
         string text = "+" + eneme.Tools.ProcessFloat(points, 1);
 
         GameObject TextParticleGO;
@@ -104,6 +107,7 @@ public class TextParticleHandler : MonoBehaviour
         );
 
         TextParticleQueue.Enqueue(TextParticleGO);
+        acumulatedPoints = 0;
     }
 
 

@@ -11,60 +11,58 @@ public class DroneMovement : MonoBehaviour
     public CharacterController cc;
 
     [Header("Flight Forward")]
-    [SerializeField][Range(1, 50)]
-    public float flyingSpeed = 20f;
-    [SerializeField][Range(1, 50)]
-    public float totalFlyingSpeedMultiplier = 1f;
+    [SerializeField][Range(1, 50)] public float flyingSpeed = 20f;
+    [SerializeField][Range(1, 50)] public float totalFlyingSpeedMultiplier = 1f;
 
     [Header("NoseDive")]
-    [SerializeField][Range(1, 50)]
-    public float maxNosedieveSpeed = 10f;
+    [SerializeField][Range(1, 50)] public float maxNosedieveSpeed = 10f;
 
     [Header("Gravity")]
-    [SerializeField][Range(1, 50)]
-    public float gravityForceMultiplier = 1.9f;
+    [SerializeField][Range(1, 50)] public float gravityForceMultiplier = 1.9f;
 
     [Header("PointsSpeed")]
-    [SerializeField]
-    float maxPointsSpeed = 10;
+    [SerializeField] float maxPointsSpeed = 10;
     public float maxPointsForSpeed = 60;
     public AnimationCurve pointsSpeedCurve;
     float totalPointsNormalized = 0;
-    [SerializeField]
-    float pointIncreaseSpeed = 1;
-
+    [SerializeField] float pointIncreaseSpeed = 1;
 
     [Header("Sprint")]
-    [SerializeField]
-    float maxSprintSpeed = 1;
-    [SerializeField]
-    float sprintIncreaseSpeed = 1;
+    [SerializeField] float maxSprintSpeed = 1;
+    [SerializeField] float sprintIncreaseSpeed = 1;
     float sprint = 0; // 0 to 1
     Coroutine sprintRoutine = null;
+    [SerializeField] AnimationCurve sprintCurve;
+
+    [Header("Thrill")] //Thrill boost -> basically meant for when u get points
+    [SerializeField] float thrillDuration = 3;
+    [SerializeField] float maxThrillSpeed = 1;
+    [SerializeField] float thrillIncreaseSpeed = 1;
+    float thrill = 0; // 0 to 1
+    Coroutine thrillRoutine = null;
+    [SerializeField] AnimationCurve thrillCurve;
+    [SerializeField] float maxPointsForThrill = 500;
+    float thrillPoints = 1;
 
     [Header("Dash")]
-    [SerializeField]
-    float dashCooldwon = 3;
-    [SerializeField]
-    public float dashSpeed = 10;
-    [SerializeField]
-    public float dashDuration = .75f;
+    [SerializeField]float dashCooldwon = 3;
+    [SerializeField]public float dashSpeed = 10;
+    [SerializeField] public float dashDuration = .75f;
     float lastTimeDashed = 0;
-    [HideInInspector]
-    public bool isDashing = false;
+    [HideInInspector] public bool isDashing = false;
     Vector3 dashDirection;
     float dashCurrentSpeed;
-    [SerializeField]
-    AnimationCurve dashSpeedOverTime;
-    [SerializeField]
-    UnityEvent<Vector2, float> DashStarted; //direction, duration
+    [SerializeField] AnimationCurve dashSpeedOverTime;
+    [SerializeField] UnityEvent<Vector2, float> DashStarted; //direction, duration
     public Coroutine DashRutine = null;
 
     [Header("Physics")]
     public bool applyGravity = true;
     public bool enableFlying = true;
     public bool allowDash = true;
-    public bool allowBoost = true;
+    public bool allowThrill = true;
+    public bool allowSprint = true;
+    public bool allowPointsSpeed = false;
 
 
     private void Awake()
@@ -107,13 +105,19 @@ public class DroneMovement : MonoBehaviour
 
     float CurrentForwardSpeed() 
     {
-        return (flyingSpeed + NoseDiveSpeed()) * GetSprintSpeed() * PointsSpeed() * totalFlyingSpeedMultiplier;
+        return (flyingSpeed + NoseDiveSpeed()) * GetThrillSpeed() * GetSprintSpeed() * PointsSpeed() * totalFlyingSpeedMultiplier;
     }
 
     float GetSprintSpeed() 
     {
-        if(!allowBoost) return 1f;
-        return 1 + (Mathf.Clamp01(sprint) * maxSprintSpeed);
+        if(!allowSprint) return 1f;
+        return 1 + (sprintCurve.Evaluate(Mathf.Clamp01(sprint)) * maxSprintSpeed);
+    }
+
+    float GetThrillSpeed()
+    {
+        if (!allowThrill) return 1f;
+        return 1 + (thrillCurve.Evaluate(Mathf.Clamp01(thrill)) * thrillPoints * maxThrillSpeed);
     }
 
     float NoseDiveSpeed() 
@@ -124,6 +128,7 @@ public class DroneMovement : MonoBehaviour
 
     float PointsSpeed() 
     {
+        if(allowPointsSpeed) return 1f;
         return 1 + pointsSpeedCurve.Evaluate(totalPointsNormalized) * maxPointsSpeed;
     }
     #endregion
@@ -233,6 +238,34 @@ public class DroneMovement : MonoBehaviour
     }
     #endregion
 
+    #region Thrill
+    public void EnagegeThrill(float runPoints)
+    {
+        this.StopSafely(ref thrillRoutine);
+        thrillRoutine = StartCoroutine(ThrillIncrease(runPoints));
+    }
+
+    IEnumerator ThrillIncrease(float runPoints)
+    {
+        thrillPoints = runPoints / maxPointsForThrill;
+        while (thrill < 1)
+        {
+            thrill += thrillIncreaseSpeed * Time.deltaTime;
+            Mathf.Clamp01(thrill);
+            yield return null;
+        }
+        yield return new WaitForSeconds(thrillDuration);
+
+        while (thrill > 0)
+        {
+            thrill -= thrillIncreaseSpeed * Time.deltaTime;
+            Mathf.Clamp01(thrill);
+            yield return null;
+        }
+        thrillPoints = 0;
+    }
+    #endregion
+
     #region Points Speed
 
     public void ResetedPoints(float totalPoints) 
@@ -274,12 +307,14 @@ public class DroneMovement : MonoBehaviour
         cc.enabled = true;
         this.StopSafely(ref DashRutine);
         this.StopSafely(ref sprintRoutine);
+        this.StopSafely(ref thrillRoutine);
     }
 
     private void OnDisable()
     {
         this.StopSafely(ref DashRutine);
         this.StopSafely(ref sprintRoutine);
+        this.StopSafely(ref thrillRoutine);
         cc.enabled = false;
     }
     #endregion

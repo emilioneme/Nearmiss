@@ -45,33 +45,36 @@ public class PointManager : MonoBehaviour
     #endregion
 
     #region Events
+    [Header("Secure")]
+    [SerializeField]
+    UnityEvent<float> ScuredPoints;
+
     [Header("Run")]
     [SerializeField]
     UnityEvent<float> RunStarted; //minTimeBeforeCombo and comboWindowDuration
     [SerializeField]
     UnityEvent<float> RunContinued; //minTimeBeforeCombo and comboWindowDuration
 
-    [Header("UpdatedPoints")]
+    [Header("Points")]
+    [SerializeField]
+    UnityEvent<float, float, Vector3, RaycastHit> CalculatedRayPoints; //points, normal dist, origin, hit
     [SerializeField]
     UnityEvent<float> UpdatedRunningPoints;
     [SerializeField]
     UnityEvent<float> UpdatedTotalPoints;
+    [Header("Combo")]
     [SerializeField]
     UnityEvent<float> UpdatedComboMultiplier; //comboMuliplierCalciation
-
-    [Header("UpdatedComb")]
     [SerializeField]
     UnityEvent<float> UpdatedNumberOfSkims; //comboMuliplierCalciation
     [SerializeField]
     UnityEvent<float> UpdatedNumberOfSwerves; //comboMuliplierCalciation
 
-
+    [Header("HighScore")]
     [SerializeField]
     UnityEvent<float> NewHighScore;
     [SerializeField]
     UnityEvent<float> NewPersonalHighScore;
-    [SerializeField]
-    UnityEvent<float> ScuredPoints;
     #endregion
 
     Coroutine secureTimer;
@@ -79,7 +82,7 @@ public class PointManager : MonoBehaviour
 
 
     #region NearmissHandler
-    public void OnNearmiss(float normalizedDistance, int numberOfHits, Vector3 playerPos, RaycastHit hit) //This is a float from 0 to 1
+    public void OnNearmiss(float normalizedDistance, int numberOfHits, Vector3 origin, RaycastHit hit) //This is a float from 0 to 1
     {
         float diff = Time.time - lastNearmiss;
         float normalized = diff / timeToSecurePoints;
@@ -97,7 +100,7 @@ public class PointManager : MonoBehaviour
 
 
         lastNearmiss = Time.time;
-        UpdatePoints(normalizedDistance, numberOfHits);
+        UpdatePoints(normalizedDistance, numberOfHits, origin, hit);
         SetSecureTimer();
     }
 
@@ -146,9 +149,12 @@ public class PointManager : MonoBehaviour
         dashCoroutine = null;
     }
 
-    void UpdatePoints(float normalizedDistance, int numberOfHits)
+    void UpdatePoints(float normalizedDistance, int numberOfHits, Vector3 origin, RaycastHit hit)
     {
         float points = RunnignPointsCalculation(normalizedDistance, numberOfHits, UserData.Instance.droneVelocity.magnitude);
+
+        CalculatedRayPoints.Invoke(points * comboMultiplier, normalizedDistance, origin, hit);
+
         runningPoints += points * comboMultiplier;
         expectedPoints = totalPoints + runningPoints;
 

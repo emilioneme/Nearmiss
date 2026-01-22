@@ -1240,7 +1240,6 @@ MonoBehaviour:
   maxParticleLife: 1
   particleForwardOffsett: 2
   textParticleDistance: 2
-  plusPointsMultiplier: 0.15
   textParticleCooldown: 0.15
   timeBeforeGavityOff: 0.1
   maxTextParticles: 10
@@ -2346,7 +2345,7 @@ GameObject:
   - component: {fileID: 8794480351909300740}
   - component: {fileID: 3581252083363026155}
   m_Layer: 5
-  m_Name: CurrentScore
+  m_Name: PersonalCurrentScore
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3074,7 +3073,7 @@ GameObject:
   - component: {fileID: 2708352356804847220}
   - component: {fileID: 533801553676684620}
   m_Layer: 5
-  m_Name: CurrentScoreTitle
+  m_Name: PErsonalCurrentScoreTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4192,7 +4191,59 @@ MonoBehaviour:
     m_RotationOrder: 4
   pointIncreaseSpeed: 1
   maxSprintSpeed: 1
-  sprintIncreaseSpeed: 5
+  sprintIncreaseSpeed: 7.5
+  sprintCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  thrillDuration: 1
+  maxThrillSpeed: 1
+  thrillIncreaseSpeed: 10
+  thrillCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  maxPointsForThrill: 500
   dashCooldwon: 0.75
   dashSpeed: 15
   dashDuration: 0.5
@@ -4272,7 +4323,9 @@ MonoBehaviour:
   applyGravity: 1
   enableFlying: 1
   allowDash: 1
-  allowBoost: 1
+  allowThrill: 1
+  allowSprint: 1
+  allowPointsSpeed: 0
 --- !u!114 &8714170458392586884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4352,18 +4405,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 3897300124618607200}
-        m_TargetAssemblyTypeName: TextParticleHandler, Assembly-CSharp
-        m_MethodName: NeamissEffetcSpawner
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1294992416625906839}
         m_TargetAssemblyTypeName: WallParticleHandler, Assembly-CSharp
         m_MethodName: NeamissEffetcSpawner
@@ -4401,6 +4442,57 @@ MonoBehaviour:
   skimMultiplier: 0.25
   timeToSecurePoints: 2
   timeToSkim: 0.3
+  ScuredPoints:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6069053146667210052}
+        m_TargetAssemblyTypeName: PointsUIManager, Assembly-CSharp
+        m_MethodName: PointsSecured
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2800100267976509757}
+        m_TargetAssemblyTypeName: CrashScreenManager, Assembly-CSharp
+        m_MethodName: UpdateCurrentScore
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8121728279894473426}
+        m_TargetAssemblyTypeName: PlayerAudioManager, Assembly-CSharp
+        m_MethodName: PlaySecureSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8634580918364863695}
+        m_TargetAssemblyTypeName: DroneMovement, Assembly-CSharp
+        m_MethodName: EnagegeThrill
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   RunStarted:
     m_PersistentCalls:
       m_Calls:
@@ -4471,6 +4563,21 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: PlayerAudioManager, Assembly-CSharp
         m_MethodName: PlayWallSound
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  CalculatedRayPoints:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3897300124618607200}
+        m_TargetAssemblyTypeName: TextParticleHandler, Assembly-CSharp
+        m_MethodName: InitiateSpawning
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4587,45 +4694,6 @@ MonoBehaviour:
       - m_Target: {fileID: 2800100267976509757}
         m_TargetAssemblyTypeName: CrashScreenManager, Assembly-CSharp
         m_MethodName: UpdatePersonalHighScore
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  ScuredPoints:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6069053146667210052}
-        m_TargetAssemblyTypeName: PointsUIManager, Assembly-CSharp
-        m_MethodName: PointsSecured
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2800100267976509757}
-        m_TargetAssemblyTypeName: CrashScreenManager, Assembly-CSharp
-        m_MethodName: UpdateCurrentScore
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 8121728279894473426}
-        m_TargetAssemblyTypeName: PlayerAudioManager, Assembly-CSharp
-        m_MethodName: PlaySecureSound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

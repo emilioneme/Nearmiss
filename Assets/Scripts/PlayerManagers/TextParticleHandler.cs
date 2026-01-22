@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,8 @@ public class TextParticleHandler : MonoBehaviour
     public GameObject TextParticlePrefab;
 
     [Header("TextParticleEffct")]
+    [SerializeField]
+    float maxParticleLife = 3;
     [SerializeField]
     float particleForwardOffsett = 1;
     [SerializeField]
@@ -108,7 +111,12 @@ public class TextParticleHandler : MonoBehaviour
     {
         yield return new WaitForSeconds(timeBeforeGavityOff);
         ParticleEffect.rb.useGravity = true;
-        yield return new WaitForSeconds(.5f);
+        ParticleEffect.transform
+            .DOScale(0, maxParticleLife)
+            .SetRelative();
+
+        yield return new WaitForSeconds(maxParticleLife);
+        ParticleEffect.transform.DOKill();
         ParticleEffect.rb.useGravity = false;
         TextParticleGO.SetActive(false);
     }

@@ -18,7 +18,7 @@ public class DroneMovement : MonoBehaviour
 
     [Header("NoseDive")]
     [SerializeField][Range(1, 50)]
-    public float noseDiveSpeedMultiplier = 10f;
+    public float maxNosedieveSpeed = 10f;
 
     [Header("Gravity")]
     [SerializeField][Range(1, 50)]
@@ -119,7 +119,7 @@ public class DroneMovement : MonoBehaviour
     float NoseDiveSpeed() 
     {
         float dot = Vector3.Dot(transform.forward, Vector3.down);
-        return Mathf.InverseLerp(-1f, 1f, dot) * noseDiveSpeedMultiplier;
+        return Mathf.InverseLerp(-1f, 1f, dot) * maxNosedieveSpeed;
     }
 
     float PointsSpeed() 
@@ -155,7 +155,7 @@ public class DroneMovement : MonoBehaviour
         if (!allowDash || !this.enabled)
             return;
 
-        if(eneme.Tools.CooldownSince(lastTimeDashed, dashCooldwon) < 1) 
+        if(Tools.CooldownSince(lastTimeDashed, dashCooldwon) < 1) 
             return;
 
         lastTimeDashed = Time.time;

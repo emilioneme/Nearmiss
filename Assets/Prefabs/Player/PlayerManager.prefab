@@ -1237,6 +1237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TextParticlePrefab: {fileID: 8626851510750251126, guid: e8ab91d8accfd02438145abde16ca5a8, type: 3}
+  maxParticleLife: 1
   particleForwardOffsett: 2
   textParticleDistance: 2
   plusPointsMultiplier: 0.15
@@ -4152,7 +4153,7 @@ MonoBehaviour:
   cc: {fileID: 0}
   flyingSpeed: 20
   totalFlyingSpeedMultiplier: 1.2
-  noseDiveSpeedMultiplier: 10
+  maxNosedieveSpeed: 10
   gravityForceMultiplier: 1
   maxPointsSpeed: 10
   maxPointsForSpeed: 100000
@@ -4190,7 +4191,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   pointIncreaseSpeed: 1
-  maxSprintSpeed: 15
+  maxSprintSpeed: 1
   sprintIncreaseSpeed: 5
   dashCooldwon: 0.75
   dashSpeed: 15
@@ -4394,7 +4395,8 @@ MonoBehaviour:
   numberOfSwerveCombos: 0
   numberOfSkimCombos: 0
   runningPointsMultiplier: 0.1
-  speedPointsMultiplier: 0.1
+  speedPointMultiplier: 0.1
+  maxDistancePoints: 1
   swerveMultiplier: 1
   skimMultiplier: 0.25
   timeToSecurePoints: 2
@@ -4755,7 +4757,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  mouseLookScale: 2
+  mouseLookScale: 1
   touchLookScale: 10
   tickLookScale: 3
   stickDeadzone: 0.1

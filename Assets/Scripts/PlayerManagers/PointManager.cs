@@ -24,7 +24,9 @@ public class PointManager : MonoBehaviour
     [SerializeField]
     public float runningPointsMultiplier = .5f;
     [SerializeField]
-    public float speedPointsMultiplier = .5f;
+    public float speedPointMultiplier = .5f;
+    [SerializeField]
+    public float maxDistancePoints = .5f;
 
     [Header("Combo Calculation")]
     [SerializeField]
@@ -146,7 +148,7 @@ public class PointManager : MonoBehaviour
 
     void UpdatePoints(float normalizedDistance, int numberOfHits)
     {
-        float points = RunnignPointsCalculation(normalizedDistance, numberOfHits, UserData.Instance.droneVelocity.magnitude, speedPointsMultiplier);
+        float points = RunnignPointsCalculation(normalizedDistance, numberOfHits, UserData.Instance.droneVelocity.magnitude);
         runningPoints += points * comboMultiplier;
         expectedPoints = totalPoints + runningPoints;
 
@@ -231,13 +233,17 @@ public class PointManager : MonoBehaviour
     #endregion
 
     #region Point Fomrulas
-    float RunnignPointsCalculation(float normalizedDistance, int numberOfHits, float velocity, float speedPointsMultiplier)
+    float RunnignPointsCalculation(float normalizedDistance, int numberOfHits, float velocity)
     {
-        return  SpeedPoints(velocity, speedPointsMultiplier, numberOfHits) * (1 + normalizedDistance) * runningPointsMultiplier;
+        return  SpeedPoints(velocity, numberOfHits) * DistancePoints(normalizedDistance) * runningPointsMultiplier;
     }
-    float SpeedPoints(float droneVelocity, float speedPointsMultiplier, int numberOfHits)
+    float DistancePoints(float normalizedDistance) 
     {
-        return droneVelocity * speedPointsMultiplier * numberOfHits;
+        return 1 + (normalizedDistance * normalizedDistance);
+    }
+    float SpeedPoints(float droneVelocity, int numberOfHits)
+    {
+        return 1 + (droneVelocity * numberOfHits * speedPointMultiplier);
     }
     #endregion
 

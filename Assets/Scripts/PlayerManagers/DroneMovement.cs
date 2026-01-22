@@ -29,7 +29,8 @@ public class DroneMovement : MonoBehaviour
 
     [Header("Sprint")]
     [SerializeField] float maxSprintSpeed = 1;
-    [SerializeField] float sprintIncreaseSpeed = 1;
+    [SerializeField] float sprintIncrease = 1;
+    [SerializeField] float sprintDecrease = 1;
     float sprint = 0; // 0 to 1
     Coroutine sprintRoutine = null;
     [SerializeField] AnimationCurve sprintCurve;
@@ -37,7 +38,8 @@ public class DroneMovement : MonoBehaviour
     [Header("Thrill")] //Thrill boost -> basically meant for when u get points
     [SerializeField] float thrillDuration = 3;
     [SerializeField] float maxThrillSpeed = 1;
-    [SerializeField] float thrillIncreaseSpeed = 1;
+    [SerializeField] float thrillIncrease = 7;
+    [SerializeField] float thrillDecrease = 3;
     float thrill = 0; // 0 to 1
     Coroutine thrillRoutine = null;
     [SerializeField] AnimationCurve thrillCurve;
@@ -117,6 +119,7 @@ public class DroneMovement : MonoBehaviour
     float GetThrillSpeed()
     {
         if (!allowThrill) return 1f;
+
         return 1 + (thrillCurve.Evaluate(Mathf.Clamp01(thrill)) * thrillPoints * maxThrillSpeed);
     }
 
@@ -214,7 +217,7 @@ public class DroneMovement : MonoBehaviour
     {
         while(sprint < 1) 
         {
-            sprint += sprintIncreaseSpeed * Time.deltaTime;
+            sprint += sprintIncrease * Time.deltaTime;
             Mathf.Clamp01(sprint);
             yield return null;
         }
@@ -231,7 +234,7 @@ public class DroneMovement : MonoBehaviour
     {
         while (sprint > 0)
         {
-            sprint -= sprintIncreaseSpeed * Time.deltaTime;
+            sprint -= sprintDecrease * Time.deltaTime;
             Mathf.Clamp01(sprint);
             yield return null;
         }
@@ -247,18 +250,17 @@ public class DroneMovement : MonoBehaviour
 
     IEnumerator ThrillIncrease(float runPoints)
     {
-        thrillPoints = runPoints / maxPointsForThrill;
+        thrillPoints = Mathf.Clamp01(runPoints / maxPointsForThrill);
         while (thrill < 1)
         {
-            thrill += thrillIncreaseSpeed * Time.deltaTime;
+            thrill += thrillIncrease * Time.deltaTime;
             Mathf.Clamp01(thrill);
             yield return null;
         }
         yield return new WaitForSeconds(thrillDuration);
-
         while (thrill > 0)
         {
-            thrill -= thrillIncreaseSpeed * Time.deltaTime;
+            thrill -= thrillDecrease * Time.deltaTime;
             Mathf.Clamp01(thrill);
             yield return null;
         }
@@ -308,6 +310,7 @@ public class DroneMovement : MonoBehaviour
         this.StopSafely(ref DashRutine);
         this.StopSafely(ref sprintRoutine);
         this.StopSafely(ref thrillRoutine);
+        thrillPoints = 0;
     }
 
     private void OnDisable()
@@ -316,6 +319,7 @@ public class DroneMovement : MonoBehaviour
         this.StopSafely(ref sprintRoutine);
         this.StopSafely(ref thrillRoutine);
         cc.enabled = false;
+        thrillPoints = 0;
     }
     #endregion
 

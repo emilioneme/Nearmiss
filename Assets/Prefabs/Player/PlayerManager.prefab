@@ -507,7 +507,7 @@ MonoBehaviour:
   degreesPerSpeed: 1
   maxFovOffset: 20
   fovSmoothSpeed: 8
-  cam: {fileID: 0}
+  cam: {fileID: 4626820148296802279}
 --- !u!1 &1734146175314828478
 GameObject:
   m_ObjectHideFlags: 0
@@ -4191,7 +4191,8 @@ MonoBehaviour:
     m_RotationOrder: 4
   pointIncreaseSpeed: 1
   maxSprintSpeed: 1
-  sprintIncreaseSpeed: 7.5
+  sprintIncrease: 3
+  sprintDecrease: 5
   sprintCurve:
     serializedVersion: 2
     m_Curve:
@@ -4216,9 +4217,10 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  thrillDuration: 1
-  maxThrillSpeed: 1
-  thrillIncreaseSpeed: 10
+  thrillDuration: 1.5
+  maxThrillSpeed: 1.1
+  thrillIncrease: 7
+  thrillDecrease: 3
   thrillCurve:
     serializedVersion: 2
     m_Curve:
@@ -4323,9 +4325,9 @@ MonoBehaviour:
   applyGravity: 1
   enableFlying: 1
   allowDash: 1
-  allowThrill: 1
+  allowThrill: 0
   allowSprint: 1
-  allowPointsSpeed: 0
+  allowPointsSpeed: 1
 --- !u!114 &8714170458392586884
 MonoBehaviour:
   m_ObjectHideFlags: 0

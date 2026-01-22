@@ -221,23 +221,14 @@ public class DroneMovement : MonoBehaviour
             Mathf.Clamp01(sprint);
             yield return null;
         }
-        sprintRoutine = null;
-    }
 
-    public void DecreseSprint()
-    {
-        this.StopSafely(ref sprintRoutine);
-        sprintRoutine = StartCoroutine(SprintDecrease());
-    }
-
-    IEnumerator SprintDecrease()
-    {
         while (sprint > 0)
         {
             sprint -= sprintDecrease * Time.deltaTime;
             Mathf.Clamp01(sprint);
             yield return null;
         }
+        sprintRoutine = null;
     }
     #endregion
 

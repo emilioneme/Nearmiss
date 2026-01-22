@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerAudioManager : MonoBehaviour
 {
@@ -74,14 +75,14 @@ public class PlayerAudioManager : MonoBehaviour
     #endregion
 
     #region Combo
-    public void PlaySkimSound()
+    public void PlaySkimSound(float amount, RaycastHit hit)
     {
-        Destroy(Instantiate(SkimAudioPrefab, transform.position, Quaternion.identity), 1f);
+        Destroy(Instantiate(SkimAudioPrefab, hit.transform.position, Quaternion.identity), 1f);
     }
 
-    public void PlaySwerveSound()
+    public void PlaySwerveSound(float amount, RaycastHit hit)
     {
-        Destroy(Instantiate(SwerveAudioPrefab, transform.position, Quaternion.identity), 1f);
+        Destroy(Instantiate(SwerveAudioPrefab, hit.transform.position, Quaternion.identity), 1f);
     }
     #endregion
 

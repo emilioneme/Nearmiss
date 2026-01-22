@@ -4219,8 +4219,8 @@ MonoBehaviour:
     m_RotationOrder: 4
   thrillDuration: 1.5
   maxThrillSpeed: 1.1
-  thrillIncrease: 7
-  thrillDecrease: 3
+  thrillIncrease: 10
+  thrillDecrease: 5
   thrillCurve:
     serializedVersion: 2
     m_Curve:
@@ -4325,7 +4325,7 @@ MonoBehaviour:
   applyGravity: 1
   enableFlying: 1
   allowDash: 1
-  allowThrill: 0
+  allowThrill: 1
   allowSprint: 1
   allowPointsSpeed: 1
 --- !u!114 &8714170458392586884
@@ -4483,18 +4483,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 8634580918364863695}
-        m_TargetAssemblyTypeName: DroneMovement, Assembly-CSharp
-        m_MethodName: EnagegeThrill
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   RunStarted:
     m_PersistentCalls:
       m_Calls:
@@ -4573,6 +4561,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  SkimBreak:
+    m_PersistentCalls:
+      m_Calls: []
   CalculatedRayPoints:
     m_PersistentCalls:
       m_Calls:
@@ -4651,7 +4642,7 @@ MonoBehaviour:
       - m_Target: {fileID: 8121728279894473426}
         m_TargetAssemblyTypeName: PlayerAudioManager, Assembly-CSharp
         m_MethodName: PlaySkimSound
-        m_Mode: 1
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4666,7 +4657,7 @@ MonoBehaviour:
       - m_Target: {fileID: 8121728279894473426}
         m_TargetAssemblyTypeName: PlayerAudioManager, Assembly-CSharp
         m_MethodName: PlaySwerveSound
-        m_Mode: 1
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4705,6 +4696,26 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  ThrillThruster:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8634580918364863695}
+        m_TargetAssemblyTypeName: DroneMovement, Assembly-CSharp
+        m_MethodName: EnagegeThrill
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  thrillOnSkimBreak: 0
+  thrillOnSkim: 0
+  thrillOnSwerve: 1
+  thrillOnSecure: 0
+  thrillOnCombo: 0
 --- !u!114 &2070999249770834481
 MonoBehaviour:
   m_ObjectHideFlags: 0

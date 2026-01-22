@@ -1,4 +1,6 @@
+using eneme;
 using System.Collections;
+using Unity.Burst;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -47,93 +49,134 @@ public class PointManager : MonoBehaviour
     #region Events
     [Header("Secure")]
     [SerializeField]
-    UnityEvent<float> ScuredPoints;
+    UnityEvent<float> ScuredPoints; //total points
 
     [Header("Run")]
     [SerializeField]
-    UnityEvent<float> RunStarted; //minTimeBeforeCombo and comboWindowDuration
+    UnityEvent<float> RunStarted; //secure duration
     [SerializeField]
-    UnityEvent<float> RunContinued; //minTimeBeforeCombo and comboWindowDuration
+    UnityEvent<float> RunContinued; //secure duration
+
+    [Header("Skim")]
+    [SerializeField]
+    UnityEvent SkimBreak; //points
 
     [Header("Points")]
     [SerializeField]
     UnityEvent<float, float, Vector3, RaycastHit> CalculatedRayPoints; //points, normal dist, origin, hit
     [SerializeField]
-    UnityEvent<float> UpdatedRunningPoints;
+    UnityEvent<float> UpdatedRunningPoints; //running pioints
     [SerializeField]
-    UnityEvent<float> UpdatedTotalPoints;
+    UnityEvent<float> UpdatedTotalPoints; //total points
+
     [Header("Combo")]
     [SerializeField]
-    UnityEvent<float> UpdatedComboMultiplier; //comboMuliplierCalciation
+    UnityEvent<float> UpdatedComboMultiplier; //combo mult
     [SerializeField]
-    UnityEvent<float> UpdatedNumberOfSkims; //comboMuliplierCalciation
+    UnityEvent<float, RaycastHit> UpdatedNumberOfSkims;  //numberOfSkims, hit
     [SerializeField]
-    UnityEvent<float> UpdatedNumberOfSwerves; //comboMuliplierCalciation
+    UnityEvent<float, RaycastHit> UpdatedNumberOfSwerves; //swerves and hit
 
     [Header("HighScore")]
     [SerializeField]
     UnityEvent<float> NewHighScore;
     [SerializeField]
     UnityEvent<float> NewPersonalHighScore;
+
+    [Header("Other")]
+    [SerializeField]
+    UnityEvent<float> ThrillThruster;
+    [SerializeField] bool thrillOnSkimBreak = false;
+    [SerializeField] bool thrillOnSkim = false;
+    [SerializeField] bool thrillOnSwerve = false;
+    [SerializeField] bool thrillOnSecure = false;
+    [SerializeField] bool thrillOnCombo = false;
     #endregion
 
     Coroutine secureTimer;
     Coroutine dashCoroutine;
+    Coroutine skimBreakCoroutie;
 
 
     #region NearmissHandler
     public void OnNearmiss(float normalizedDistance, int numberOfHits, Vector3 origin, RaycastHit hit) //This is a float from 0 to 1
     {
-        float diff = Time.time - lastNearmiss;
-        float normalized = diff / timeToSecurePoints;
-        
+        float timeDifferenceBetweenMisses = Time.time - lastNearmiss;
+        float normalized = timeDifferenceBetweenMisses / timeToSecurePoints;
+
+        this.StopSafely(ref skimBreakCoroutie);
+        skimBreakCoroutie = StartCoroutine(SkimBreakCourotine());
+
+        if (normalized > timeToSkim)
+            UpdateNumberOfSkims(hit);
+
         if (dashCoroutine != null) 
         {
-            DestroyCourutineSafely(ref dashCoroutine);
-            UpdateNumberOfSwerves(normalizedDistance);
+            this.StopSafely(ref dashCoroutine);
+            UpdateNumberOfSwerves(hit);
         }
-        
-        if (normalized > timeToSkim)
-        {
-            UpdateNumberOfSkims(normalizedDistance);
-        }
-
 
         lastNearmiss = Time.time;
         UpdatePoints(normalizedDistance, numberOfHits, origin, hit);
         SetSecureTimer();
     }
+    #endregion
 
-    void UpdateCombMult(float normalizedDistance)
+    #region Skim Done Update
+    IEnumerator SkimBreakCourotine() 
+    {
+        yield return new WaitForSeconds(timeToSkim);
+        SkimBreak.Invoke();
+
+        if(thrillOnSkimBreak)
+            ThrillThruster.Invoke(runningPoints);
+
+        skimBreakCoroutie = null;
+    }
+
+    #endregion
+
+    #region Combos
+    void UpdateCombMult()
     {
         float vel = UserData.Instance.droneVelocity.sqrMagnitude;
         float swerve = numberOfSwerveCombos * swerveMultiplier;
         float skims = numberOfSkimCombos * skimMultiplier;
         comboMultiplier = 1 + swerve + skims;
         UpdatedComboMultiplier.Invoke(comboMultiplier);
+
+        if (thrillOnCombo)
+            ThrillThruster.Invoke(runningPoints);
     }
 
-    void UpdateNumberOfSkims(float normalizedDistance) 
+    void UpdateNumberOfSkims(RaycastHit hit) 
     {
         numberOfSkimCombos++;
 
         if (numberOfSkimCombos == 1)
             return;
-        UpdatedNumberOfSkims.Invoke(numberOfSkimCombos);
-        UpdateCombMult(normalizedDistance);
+        UpdatedNumberOfSkims.Invoke(numberOfSkimCombos, hit);
+        UpdateCombMult();
+
+        if(thrillOnSkim)
+            ThrillThruster.Invoke(runningPoints);
     }
 
-    void UpdateNumberOfSwerves(float normalizedDistance)
+    void UpdateNumberOfSwerves(RaycastHit hit)
     {
         numberOfSwerveCombos++;
-        UpdatedNumberOfSwerves.Invoke(numberOfSwerveCombos);
-        UpdateCombMult(normalizedDistance);
+        UpdatedNumberOfSwerves.Invoke(numberOfSwerveCombos, hit);
+        UpdateCombMult();
+        if (thrillOnSwerve)
+            ThrillThruster.Invoke(runningPoints);
     }
+    #endregion
 
+    #region Dash
     public void Dashed(Vector2 dir, float duration) 
     {
         if (dashCoroutine == null)
-            DestroyCourutineSafely(ref dashCoroutine);
+            this.StopSafely(ref dashCoroutine);
         dashCoroutine = StartCoroutine(DashCoroutine(duration));
     }
 
@@ -145,10 +188,12 @@ public class PointManager : MonoBehaviour
             cooldown += Time.deltaTime;
             yield return null;
         }
-        DestroyCourutineSafely(ref dashCoroutine);
+        this.StopSafely(ref dashCoroutine);  
         dashCoroutine = null;
     }
+    #endregion
 
+    #region Points
     void UpdatePoints(float normalizedDistance, int numberOfHits, Vector3 origin, RaycastHit hit)
     {
         float points = RunnignPointsCalculation(normalizedDistance, numberOfHits, UserData.Instance.droneVelocity.magnitude);
@@ -173,6 +218,8 @@ public class PointManager : MonoBehaviour
         {
             yield return null;
         }
+        if (thrillOnSecure)
+            ThrillThruster.Invoke(runningPoints);
         PointsSecured();
         secureTimer = null;
     }
@@ -190,7 +237,7 @@ public class PointManager : MonoBehaviour
     {
         if (secureTimer != null)
         {
-            DestroyCourutineSafely(ref secureTimer);
+            this.StopSafely(ref secureTimer);
             secureTimer = null;
             return true;
         }
@@ -263,16 +310,9 @@ public class PointManager : MonoBehaviour
         numberOfSwerveCombos = 0;
 
         comboMultiplier = 1;
-        DestroyCourutineSafely(ref secureTimer);
-        DestroyCourutineSafely(ref dashCoroutine);
-    }
-
-
-    void DestroyCourutineSafely(ref Coroutine Routine)
-    {
-        if (Routine != null)
-            StopCoroutine(Routine);
-        Routine = null;
+        this.StopSafely(ref secureTimer);
+        this.StopSafely(ref dashCoroutine);
+        this.StopSafely(ref skimBreakCoroutie);
     }
     
 }

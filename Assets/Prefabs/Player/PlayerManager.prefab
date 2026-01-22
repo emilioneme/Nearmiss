@@ -4154,7 +4154,7 @@ MonoBehaviour:
   totalFlyingSpeedMultiplier: 1.2
   noseDiveSpeedMultiplier: 10
   gravityForceMultiplier: 1
-  pointsSpeedMultiplier: 2
+  maxPointsSpeed: 10
   maxPointsForSpeed: 100000
   pointsSpeedCurve:
     serializedVersion: 2
@@ -4190,7 +4190,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   pointIncreaseSpeed: 1
-  dashCooldwon: 0.51
+  maxSprintSpeed: 15
+  sprintIncreaseSpeed: 5
+  dashCooldwon: 0.75
   dashSpeed: 15
   dashDuration: 0.5
   isDashing: 0
@@ -4269,6 +4271,7 @@ MonoBehaviour:
   applyGravity: 1
   enableFlying: 1
   allowDash: 1
+  allowBoost: 1
 --- !u!114 &8714170458392586884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4714,6 +4717,36 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: DroneMovement, Assembly-CSharp
         m_MethodName: Dash
         m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnSprintPressed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8634580918364863695}
+        m_TargetAssemblyTypeName: DroneMovement, Assembly-CSharp
+        m_MethodName: IncreaseSprint
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnSprintReleased:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8634580918364863695}
+        m_TargetAssemblyTypeName: DroneMovement, Assembly-CSharp
+        m_MethodName: DecreseSprint
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

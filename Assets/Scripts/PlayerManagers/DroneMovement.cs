@@ -26,14 +26,21 @@ public class DroneMovement : MonoBehaviour
 
     [Header("PointsSpeed")]
     [SerializeField]
-    float pointsSpeedMultiplier = 1;
+    float maxPointsSpeed = 10;
     public float maxPointsForSpeed = 60;
     public AnimationCurve pointsSpeedCurve;
-
     float totalPointsNormalized = 0;
-
     [SerializeField]
     float pointIncreaseSpeed = 1;
+
+
+    [Header("Sprint")]
+    [SerializeField]
+    float maxSprintSpeed = 1;
+    [SerializeField]
+    float sprintIncreaseSpeed = 1;
+    float sprint = 0; // 0 to 1
+    Coroutine sprintRoutine = null;
 
     [Header("Dash")]
     [SerializeField]
@@ -43,24 +50,22 @@ public class DroneMovement : MonoBehaviour
     [SerializeField]
     public float dashDuration = .75f;
     float lastTimeDashed = 0;
-
     [HideInInspector]
     public bool isDashing = false;
-
     Vector3 dashDirection;
     float dashCurrentSpeed;
-
     [SerializeField]
     AnimationCurve dashSpeedOverTime;
-
     [SerializeField]
     UnityEvent<Vector2, float> DashStarted; //direction, duration
+    public Coroutine DashRutine = null;
 
     [Header("Physics")]
     public bool applyGravity = true;
     public bool enableFlying = true;
     public bool allowDash = true;
-    public Coroutine DashRutine = null;
+    public bool allowBoost = true;
+
 
     private void Awake()
     {
@@ -81,6 +86,19 @@ public class DroneMovement : MonoBehaviour
     }
     #endregion
 
+    #region Total Velocity
+    Vector3 GetTotalVelocity()
+    {
+        Vector3 vel = CurrentDownVelocity() + GetForwardVelocity() + GetDashVelocity();
+        float speed = vel.magnitude;
+        float avgT = 1f - Mathf.Exp(-UserData.Instance.averageAdaptSpeed * Time.deltaTime); 
+        UserData.Instance.avgVelocity = Mathf.Lerp(UserData.Instance.avgVelocity, speed, avgT);
+        UserData.Instance.deltaVelocity = speed - UserData.Instance.avgVelocity;
+        UserData.Instance.droneVelocity = vel;
+        return vel;
+    }
+    #endregion
+
     #region FlyForward
     public Vector3 GetForwardVelocity()
     {
@@ -89,7 +107,13 @@ public class DroneMovement : MonoBehaviour
 
     float CurrentForwardSpeed() 
     {
-        return ((flyingSpeed + NoseDiveSpeed()) * PointsSpeed()) * totalFlyingSpeedMultiplier;
+        return (flyingSpeed + NoseDiveSpeed()) * GetSprintSpeed() * PointsSpeed() * totalFlyingSpeedMultiplier;
+    }
+
+    float GetSprintSpeed() 
+    {
+        if(!allowBoost) return 1f;
+        return 1 + (Mathf.Clamp01(sprint) * maxSprintSpeed);
     }
 
     float NoseDiveSpeed() 
@@ -100,7 +124,7 @@ public class DroneMovement : MonoBehaviour
 
     float PointsSpeed() 
     {
-        return 1 + pointsSpeedCurve.Evaluate(totalPointsNormalized) * pointsSpeedMultiplier;
+        return 1 + pointsSpeedCurve.Evaluate(totalPointsNormalized) * maxPointsSpeed;
     }
     #endregion
 
@@ -126,10 +150,6 @@ public class DroneMovement : MonoBehaviour
     #endregion
 
     #region Dash
-    public void Boost() 
-    {
-            
-    }
     public void Dash(Vector2 direction)  
     {
         if (!allowDash || !this.enabled)
@@ -178,16 +198,38 @@ public class DroneMovement : MonoBehaviour
 
     #endregion
 
-    #region Total Velocity
-    Vector3 GetTotalVelocity()
+    #region Sprint
+    public void IncreaseSprint() 
     {
-        Vector3 vel = CurrentDownVelocity() + GetForwardVelocity() + GetDashVelocity();
-        float speed = vel.magnitude;
-        float avgT = 1f - Mathf.Exp(-UserData.Instance.averageAdaptSpeed * Time.deltaTime); 
-        UserData.Instance.avgVelocity = Mathf.Lerp(UserData.Instance.avgVelocity, speed, avgT);
-        UserData.Instance.deltaVelocity = speed - UserData.Instance.avgVelocity;
-        UserData.Instance.droneVelocity = vel;
-        return vel;
+        this.StopSafely(ref sprintRoutine);
+        sprintRoutine = StartCoroutine(SprintIncrease());
+    }
+
+    IEnumerator SprintIncrease() 
+    {
+        while(sprint < 1) 
+        {
+            sprint += sprintIncreaseSpeed * Time.deltaTime;
+            Mathf.Clamp01(sprint);
+            yield return null;
+        }
+        sprintRoutine = null;
+    }
+
+    public void DecreseSprint()
+    {
+        this.StopSafely(ref sprintRoutine);
+        sprintRoutine = StartCoroutine(SprintDecrease());
+    }
+
+    IEnumerator SprintDecrease()
+    {
+        while (sprint > 0)
+        {
+            sprint -= sprintIncreaseSpeed * Time.deltaTime;
+            Mathf.Clamp01(sprint);
+            yield return null;
+        }
     }
     #endregion
 
@@ -231,11 +273,13 @@ public class DroneMovement : MonoBehaviour
     {
         cc.enabled = true;
         this.StopSafely(ref DashRutine);
+        this.StopSafely(ref sprintRoutine);
     }
 
     private void OnDisable()
     {
         this.StopSafely(ref DashRutine);
+        this.StopSafely(ref sprintRoutine);
         cc.enabled = false;
     }
     #endregion

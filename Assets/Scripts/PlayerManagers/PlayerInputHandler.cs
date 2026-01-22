@@ -14,6 +14,9 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] private UnityEvent OnRotateRight;
     [SerializeField] private UnityEvent<Vector2> OnDash;     // direction intent (-1..1)
 
+    [SerializeField] private UnityEvent OnSprintPressed;     // direction intent (-1..1)
+    [SerializeField] private UnityEvent OnSprintReleased;     // direction intent (-1..1)
+
     [Header("Look Tuning")]
     [Tooltip("Stick is already -1..1. Mouse is usually delta-per-frame.")]
     [Header("Mouse")]
@@ -33,6 +36,8 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] private string gamepadScheme = "Gamepad";
     [SerializeField] private string mobileScheme = "Mobile";
 
+    Coroutine shakeCoroutine;
+
     public enum ControlScheme
     {
         Unknown,
@@ -47,6 +52,7 @@ public class PlayerInputHandler : MonoBehaviour
     private InputAction rotateLeftAction;
     private InputAction rotateRightAction;
     private InputAction dashAction;
+    private InputAction sprintAction;
 
     #region Set up
     void EnableActions()
@@ -55,6 +61,7 @@ public class PlayerInputHandler : MonoBehaviour
         rotateLeftAction.Enable();
         rotateRightAction.Enable();
         dashAction.Enable();
+        sprintAction.Enable();
     }
     void DisabelActions()
     {
@@ -62,6 +69,7 @@ public class PlayerInputHandler : MonoBehaviour
         rotateLeftAction.Disable();
         rotateRightAction.Disable();
         dashAction.Disable();
+        sprintAction.Disable();
     }
 
     private void Awake()
@@ -70,11 +78,13 @@ public class PlayerInputHandler : MonoBehaviour
         rotateLeftAction = playerInput.actions["RotateLeft"];
         rotateRightAction = playerInput.actions["RotateRight"];
         dashAction = playerInput.actions["Dash"];
+        sprintAction = playerInput.actions["Sprint"];
     }
 
     private void OnEnable()
     {
         EnableActions();
+
         playerInput.onControlsChanged += OnControlsChanged;
         OnControlsChanged(playerInput); // initialize current scheme
     }
@@ -95,8 +105,6 @@ public class PlayerInputHandler : MonoBehaviour
         // if (interpretedLook.sqrMagnitude > 0.000001f)
         OnLook.Invoke(interpretedLook);
 
-
-
         if (dashAction.IsPressed())
             OnDashPerformed(dashAction.ReadValue<Vector2>());
 
@@ -105,6 +113,12 @@ public class PlayerInputHandler : MonoBehaviour
 
         if (rotateRightAction.inProgress)
             OnRotateRight.Invoke();
+
+        if (sprintAction.inProgress)
+            OnSprintPressed.Invoke();
+
+        if (sprintAction.WasCompletedThisFrame())
+            OnSprintReleased.Invoke();
 
     }
 
@@ -124,6 +138,8 @@ public class PlayerInputHandler : MonoBehaviour
         return ControlScheme.Unknown;
     }
     #endregion
+
+    #region Look
     private Vector2 InterpretLook(Vector2 raw)
     {
         if (currentScheme == ControlScheme.Gamepad)
@@ -146,13 +162,16 @@ public class PlayerInputHandler : MonoBehaviour
 
         return Vector2.zero;
     }
+    #endregion
 
+    #region Dash
     private void OnDashPerformed(Vector2 v)
     {
         if (v.sqrMagnitude < dashDeadzone * dashDeadzone)
             return;
         OnDash.Invoke(v.normalized);
     }
+    #endregion
 
     #region Shake
     public void NearmissFeedback() 
@@ -160,7 +179,6 @@ public class PlayerInputHandler : MonoBehaviour
         ShakeController();
     }
 
-    Coroutine shakeCoroutine;
     public void ShakeController(float lowFreq = .25f, float highFreq = .75f) 
     {
         if (shakeCoroutine != null)
@@ -169,8 +187,7 @@ public class PlayerInputHandler : MonoBehaviour
         if (currentScheme == ControlScheme.Gamepad)
             shakeCoroutine = StartCoroutine(ShakeCoroutine());
     }
-    #endregion
-
+    
     IEnumerator ShakeCoroutine(float lowFreq = .25f, float highFreq = .75f) 
     {
         if (currentScheme == ControlScheme.Gamepad)
@@ -178,6 +195,7 @@ public class PlayerInputHandler : MonoBehaviour
         yield return new WaitForSeconds(.1f);
         Gamepad.current.SetMotorSpeeds(0, 0);
     }
+    #endregion
 
     #region tools
     private static Vector2 ApplyRadialDeadzone(Vector2 v, float deadzone)

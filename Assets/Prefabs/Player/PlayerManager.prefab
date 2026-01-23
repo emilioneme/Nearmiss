@@ -4349,6 +4349,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  GotComboMultiplier:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2746193758524380571}
+        m_TargetAssemblyTypeName: PointManager, Assembly-CSharp
+        m_MethodName: AddComboMultiplier
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   layerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -4716,8 +4731,8 @@ MonoBehaviour:
         m_CallState: 2
   thrillOnSkimBreak: 0
   thrillOnSkim: 0
-  thrillOnSwerve: 1
-  thrillOnSecure: 0
+  thrillOnSwerve: 0
+  thrillOnSecure: 1
   thrillOnCombo: 0
 --- !u!114 &2070999249770834481
 MonoBehaviour:

@@ -93,8 +93,8 @@ public class TextIndicatorHandler : MonoBehaviour
 
             targetWorld = PlayerCamera.ViewportToWorldPoint(secureLerpToPosition);
             targetLocal = PlayerCamera.transform.InverseTransformPoint(targetWorld);
-
-            TextSecuredGO.transform.localPosition = Vector3.Lerp(startLocal, targetLocal, t);
+            if(TextSecuredGO)
+                TextSecuredGO.transform.localPosition = Vector3.Lerp(startLocal, targetLocal, t);
             yield return null;
         }
         DisableText();

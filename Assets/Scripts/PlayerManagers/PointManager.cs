@@ -137,12 +137,14 @@ public class PointManager : MonoBehaviour
     #endregion
 
     #region Combos
-    void UpdateCombMult()
+    public void AddComboMultiplier(float amount) 
     {
-        float vel = UserData.Instance.droneVelocity.sqrMagnitude;
-        float swerve = numberOfSwerveCombos * swerveMultiplier;
-        float skims = numberOfSkimCombos * skimMultiplier;
-        comboMultiplier = 1 + swerve + skims;
+        UpdateCombMult(amount);
+    }
+
+    void UpdateCombMult(float amount)
+    {
+        comboMultiplier += amount;
         UpdatedComboMultiplier.Invoke(comboMultiplier);
 
         if (thrillOnCombo)
@@ -155,18 +157,22 @@ public class PointManager : MonoBehaviour
 
         if (numberOfSkimCombos == 1)
             return;
+
         UpdatedNumberOfSkims.Invoke(numberOfSkimCombos, hit);
-        UpdateCombMult();
+
+        UpdateCombMult(numberOfSkimCombos * skimMultiplier);
 
         if(thrillOnSkim)
             ThrillThruster.Invoke(runningPoints);
     }
-
+   
     void UpdateNumberOfSwerves(RaycastHit hit)
     {
         numberOfSwerveCombos++;
+
         UpdatedNumberOfSwerves.Invoke(numberOfSwerveCombos, hit);
-        UpdateCombMult();
+        UpdateCombMult(numberOfSwerveCombos * swerveMultiplier);
+
         if (thrillOnSwerve)
             ThrillThruster.Invoke(runningPoints);
     }
@@ -261,6 +267,8 @@ public class PointManager : MonoBehaviour
         runningPoints = 0;
         numberOfSkimCombos = 0;
         numberOfSwerveCombos = 0;
+        comboMultiplier = 1;
+
         ResetSecureTimer();
     }
     #endregion
@@ -310,6 +318,7 @@ public class PointManager : MonoBehaviour
         numberOfSwerveCombos = 0;
 
         comboMultiplier = 1;
+
         this.StopSafely(ref secureTimer);
         this.StopSafely(ref dashCoroutine);
         this.StopSafely(ref skimBreakCoroutie);

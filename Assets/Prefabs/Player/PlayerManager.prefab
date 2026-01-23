@@ -3818,9 +3818,9 @@ GameObject:
   - component: {fileID: 337245745654256030}
   - component: {fileID: 5706241324656954214}
   - component: {fileID: 258765007938475946}
-  - component: {fileID: 7656071518626593655}
   - component: {fileID: 8634580918364863695}
   - component: {fileID: 8714170458392586884}
+  - component: {fileID: 7656071518626593655}
   - component: {fileID: 416101309412079257}
   - component: {fileID: 2746193758524380571}
   - component: {fileID: 2070999249770834481}
@@ -4098,45 +4098,6 @@ MonoBehaviour:
   pointManager: {fileID: 0}
   cc: {fileID: 0}
   playerModelHandler: {fileID: 0}
---- !u!114 &7656071518626593655
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8266162087823780538}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 963b7cebfca6e65498a3d7ecc36e4233, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerCrashed:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 258765007938475946}
-        m_TargetAssemblyTypeName: PlayerManager, Assembly-CSharp
-        m_MethodName: PlayerCrashed
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 8121728279894473426}
-        m_TargetAssemblyTypeName: PlayerAudioManager, Assembly-CSharp
-        m_MethodName: PlayCrashSound
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &8634580918364863695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4349,6 +4310,48 @@ MonoBehaviour:
   allowRotate: 1
   maxYawDegPerSec: 360
   maxPitchDegPerSec: 240
+--- !u!114 &7656071518626593655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8266162087823780538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 963b7cebfca6e65498a3d7ecc36e4233, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerCrashed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 258765007938475946}
+        m_TargetAssemblyTypeName: PlayerManager, Assembly-CSharp
+        m_MethodName: PlayerCrashed
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8121728279894473426}
+        m_TargetAssemblyTypeName: PlayerAudioManager, Assembly-CSharp
+        m_MethodName: PlayCrashSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &416101309412079257
 MonoBehaviour:
   m_ObjectHideFlags: 0

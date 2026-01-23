@@ -13,7 +13,8 @@ public class NearmissHandler : MonoBehaviour
     [SerializeField]
     public float rayDistance = 10;
     [SerializeField]
-    int numberOfRays = 10;
+    int startingNumberOfRays = 10;
+    Vector3[] rayDirections;
 
     [Header("Ray Timing")]
     [SerializeField]
@@ -42,6 +43,29 @@ public class NearmissHandler : MonoBehaviour
     private void Start()
     {
         interval = 1f / shotsPerSecond;
+        SetNumberOfRays(startingNumberOfRays);
+    }
+
+    public void SetShotsPerSecond(int amount) 
+    {
+        shotsPerSecond = amount;
+        interval = 1 / shotsPerSecond;
+    }
+
+    public void SetNumberOfRays(int amount) 
+    {
+        CalculateRayDirections(amount);
+    }
+
+    void CalculateRayDirections(int numberOfRays)
+    {
+        rayDirections = new Vector3[numberOfRays];
+
+        for (int i = 0; i < numberOfRays; i++)
+        {
+            Vector3 dir = FibonacciSphereDirection(i, numberOfRays);
+            rayDirections[i] = dir;
+        }
     }
 
     private void Update()
@@ -60,31 +84,40 @@ public class NearmissHandler : MonoBehaviour
     {
         float minDistance = rayDistance;
         int numberOfHits = 0;
+        float normalizedDistance = 0;
+
         Vector3 origin = transform.position;
-        ShootRaySpehere(origin, ref minDistance, ref numberOfHits);
-        float normalizedDistance = Mathf.Abs(minDistance / rayDistance) - 1;
-        if (numberOfHits > 0)
+
+        ShootRaySpehere(origin, ref minDistance, ref numberOfHits, ref normalizedDistance);
+
+        if (numberOfHits > 0) //if hit
             NearmissEvent.Invoke(normalizedDistance, numberOfHits, origin, hitPoint); //1 = as close as it can get, 0, is not close at all
     }
 
     #region RayShooting
-    void ShootRaySpehere(Vector3 rayOrigin, ref float minDistance, ref int numberOfHits) 
+    void ShootRaySpehere(Vector3 rayOrigin, ref float minDistance, ref int numberOfHits, ref float normalizedDistance) 
     {
-        for (int i = 0; i < numberOfRays; i++)
+        for (int i = 0; i < rayDirections.Length; i++)
         {
-            Vector3 dir = FibonacciSphereDirection(i, numberOfRays);
-            var ray = Physics.Raycast(rayOrigin, dir, out RaycastHit hit, rayDistance, layerMask, QueryTriggerInteraction.Ignore);
+            Vector3 dir = rayDirections[i];
+            var ray = Physics.Raycast(rayOrigin, transform.rotation * dir, out RaycastHit hit, rayDistance, layerMask, QueryTriggerInteraction.Ignore);
             if (ray) 
             {
                 numberOfHits++;
                 if (hit.distance < minDistance)
                 {
-                    minDistance = hit.distance;
                     hitPoint = hit;
-                    //Debug.DrawLine(rayOrigin, rayOrigin + dir, Color.red);
-                    float normalizedDistance = Mathf.Abs(minDistance / rayDistance) - 1;
+                    minDistance = hit.distance;
+                    normalizedDistance = Mathf.Abs(minDistance / rayDistance) - 1;
                     //NearmissEvent.Invoke(normalizedDistance, numberOfHits, rayOrigin, hitPoint); // this is very frame expensive
                 }
+
+                Debug.DrawLine(rayOrigin, hit.point, Color.red, .02f);
+            }
+            else if(drawGizmos)
+            {
+                Vector3 end = rayOrigin + (transform.rotation * dir) * rayDistance;
+                Debug.DrawLine(rayOrigin, end, Color.blue, .02f);
             }
         }
     }
@@ -104,27 +137,6 @@ public class NearmissHandler : MonoBehaviour
         return new Vector3(x, y, z);
     }
     #endregion
-
-    private void OnDrawGizmos()
-    {
-        if (drawGizmos) 
-        {
-            Vector3 origin = transform.position;
-            for (int i = 0; i < numberOfRays; i++)
-            {
-                Vector3 dir = FibonacciSphereDirection(i, numberOfRays);
-                if (Physics.Raycast(origin, dir, out RaycastHit hit, rayDistance, layerMask, QueryTriggerInteraction.Ignore))
-                {
-                    Gizmos.color = Color.red;
-                    Gizmos.DrawLine(origin, hit.point);
-                }
-                else
-                {
-                    Gizmos.color = Color.white;
-                    Gizmos.DrawRay(origin, dir * rayDistance);
-                }
-            }
-        }
-    }
+    
 }
 

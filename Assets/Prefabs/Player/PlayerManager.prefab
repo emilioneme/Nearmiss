@@ -4362,12 +4362,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rayDistance: 4
-  numberOfRays: 15
+  startingNumberOfRays: 20
   shotsPerSecond: 20
   layerMask:
     serializedVersion: 2
     m_Bits: 64
-  drawGizmos: 1
+  drawGizmos: 0
   NearmissEvent:
     m_PersistentCalls:
       m_Calls:

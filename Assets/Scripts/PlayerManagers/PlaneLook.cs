@@ -1,3 +1,5 @@
+using eneme;
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
@@ -72,10 +74,22 @@ public class PlaneLook : MonoBehaviour
     #endregion
 
     #region Rotate
+    Coroutine rotationCoroutine;
     public void Rotate(int direction)
     {
-        float rotationAmount = rotationSpeed * rotationSpeedMultiplier * Time.deltaTime;
-        transform.rotation = transform.rotation * Quaternion.Euler(0, 0, rotationAmount * direction);
+        float desiredRotation = rotationSpeed * rotationSpeedMultiplier * direction * Time.deltaTime;
+        this.StopSafely(ref rotationCoroutine);
+    }
+
+    IEnumerator RotationCoroutine(float desiredDotation) 
+    {
+        Quaternion currentRotationZ = transform.rotation * Quaternion.Euler(0, 0, 1);
+        Quaternion toRotationZ = transform.rotation * Quaternion.Euler(0, 0, desiredDotation);
+        while (currentRotationZ != toRotationZ) 
+        {
+
+            yield return null;
+        }
     }
 
     public void RotateLeft()

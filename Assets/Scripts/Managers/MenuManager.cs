@@ -14,8 +14,8 @@ public class MenuManager : MonoBehaviour
 
     private void Start()
     {
-        HighScoreText.text = Tools.ProcessFloat(GameManager.Instance.highScore, 2);
-        HighScorerText.text = GameManager.Instance.highScorer;
+        //HighScoreText.text = Tools.ProcessFloat(GameManager.Instance.highScore, 2);
+        //HighScorerText.text = GameManager.Instance.highScorer;
     }
 
     public void GoToScene(string sceneName) 

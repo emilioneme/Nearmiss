@@ -73,13 +73,11 @@ public class PlaneLook : MonoBehaviour
     #endregion
 
     #region Rotate
-    Coroutine rotationCoroutine;
     public void Rotate(int direction)
     {
         float rotationAmount = manuverSpeed * manuverSpeedMultiplier * -direction * Time.deltaTime;
         transform.rotation = transform.rotation * Quaternion.Euler(0, 0, rotationAmount);
     }
-
 
     public void RotateLeft()
     {

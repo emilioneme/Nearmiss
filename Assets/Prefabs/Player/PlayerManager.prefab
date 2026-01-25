@@ -4301,15 +4301,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47947e18e5dd4a44da1c0d1357e05351, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxYawDegPerSec: 360
+  maxPitchDegPerSec: 240
   lookSpeedMultiplier: 100
   manuverRotationSpeedMultiplier: 0.3
-  rotationSpeedMultiplier: 100
   manuverSpeedMultiplier: 100
+  rotationSpeedMultiplier: 100
+  catchUpRotationSpeed: 98
   allowLook: 1
   allowLookRotate: 1
   allowRotate: 1
-  maxYawDegPerSec: 360
-  maxPitchDegPerSec: 240
 --- !u!114 &7656071518626593655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4341,21 +4342,6 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: PlayerAudioManager, Assembly-CSharp
         m_MethodName: PlayCrashSound
         m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  GotComboMultiplier:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2746193758524380571}
-        m_TargetAssemblyTypeName: PointManager, Assembly-CSharp
-        m_MethodName: AddComboMultiplier
-        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4843,19 +4829,7 @@ MonoBehaviour:
         m_CallState: 2
   OnSprintReleased:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8634580918364863695}
-        m_TargetAssemblyTypeName: DroneMovement, Assembly-CSharp
-        m_MethodName: DecreseSprint
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   mouseLookScale: 1
   touchLookScale: 10
   tickLookScale: 3

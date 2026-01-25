@@ -7,6 +7,8 @@ using UnityEngine.Windows;
 
 public class PlaneLook : MonoBehaviour
 {
+    [SerializeField] float maxYawDegPerSec = 360f;
+    [SerializeField] float maxPitchDegPerSec = 240f;
 
     [Header("Look")]
     [SerializeField]
@@ -16,22 +18,19 @@ public class PlaneLook : MonoBehaviour
 
     [Header("Manuvers")]
     public float manuverRotationSpeedMultiplier = 1.0f;
-
-    [Header("Turning Rotation")]
-    [SerializeField]
-    public float rotationSpeedMultiplier = 1.0f;
-    float rotationSpeed = 1;
-    [SerializeField]
-    public float manuverSpeedMultiplier = 1.0f;
+    [SerializeField] public float manuverSpeedMultiplier = 1.0f;
     float manuverSpeed = 1;
 
+    [Header("Turning Rotation")]
+    [SerializeField] public float rotationSpeedMultiplier = 1.0f;
+    float rotationSpeed = 1;
+   
+    [Header("Other")]
     public bool allowLook = true;
     public bool allowLookRotate = true;
     public bool allowRotate = true;
 
-    [SerializeField] float maxYawDegPerSec = 360f;
-    [SerializeField] float maxPitchDegPerSec = 240f;
-
+   
     #region Look
     public void Look(Vector2 input) 
     {
@@ -77,20 +76,10 @@ public class PlaneLook : MonoBehaviour
     Coroutine rotationCoroutine;
     public void Rotate(int direction)
     {
-        float desiredRotation = rotationSpeed * rotationSpeedMultiplier * direction * Time.deltaTime;
-        this.StopSafely(ref rotationCoroutine);
+        float rotationAmount = manuverSpeed * manuverSpeedMultiplier * -direction * Time.deltaTime;
+        transform.rotation = transform.rotation * Quaternion.Euler(0, 0, rotationAmount);
     }
 
-    IEnumerator RotationCoroutine(float desiredDotation) 
-    {
-        Quaternion currentRotationZ = transform.rotation * Quaternion.Euler(0, 0, 1);
-        Quaternion toRotationZ = transform.rotation * Quaternion.Euler(0, 0, desiredDotation);
-        while (currentRotationZ != toRotationZ) 
-        {
-
-            yield return null;
-        }
-    }
 
     public void RotateLeft()
     {

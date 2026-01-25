@@ -4306,8 +4306,10 @@ MonoBehaviour:
   lookSpeedMultiplier: 100
   manuverRotationSpeedMultiplier: 0.3
   manuverSpeedMultiplier: 100
-  rotationSpeedMultiplier: 100
-  catchUpRotationSpeed: 98
+  startRotationSpeed: 90
+  maxRotationSpeed: 120
+  rotationSpeedIncrease: 50
+  resetRotationTime: 0.1
   allowLook: 1
   allowLookRotate: 1
   allowRotate: 1

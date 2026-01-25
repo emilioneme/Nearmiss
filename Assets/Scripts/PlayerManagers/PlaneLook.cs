@@ -22,9 +22,13 @@ public class PlaneLook : MonoBehaviour
     float manuverSpeed = 1;
 
     [Header("Turning Rotation")]
-    [SerializeField] public float rotationSpeedMultiplier = 1.0f;
-    float rotationSpeed = 1;
-   
+    [SerializeField] public float startRotationSpeed = 75f;
+    [SerializeField] public float maxRotationSpeed = 125f;
+    [SerializeField] float rotationSpeedIncrease = 1;
+    [SerializeField] float resetRotationTime = 1;
+    float rotationSpeed = 75f;
+    float lastTimeRotated = 0;
+
     [Header("Other")]
     public bool allowLook = true;
     public bool allowLookRotate = true;
@@ -75,8 +79,15 @@ public class PlaneLook : MonoBehaviour
     #region Rotate
     public void Rotate(int direction)
     {
-        float rotationAmount = manuverSpeed * manuverSpeedMultiplier * -direction * Time.deltaTime;
+        if (Time.time - lastTimeRotated > resetRotationTime)
+            rotationSpeed = startRotationSpeed;
+        else
+            rotationSpeed = Mathf.Clamp(rotationSpeed + (rotationSpeedIncrease * Time.deltaTime), startRotationSpeed, maxRotationSpeed);
+
+        float rotationAmount = rotationSpeed * direction * Time.deltaTime;
         transform.rotation = transform.rotation * Quaternion.Euler(0, 0, rotationAmount);
+
+        lastTimeRotated = Time.time;
     }
 
     public void RotateLeft()

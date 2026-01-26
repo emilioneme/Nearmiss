@@ -26,7 +26,7 @@ public class CrashScreenManager : MonoBehaviour
 
     public void UpdateHighScore() 
     {
-        highScoreText.text = Tools.ProcessFloat(GameManager.Instance.highScore, 1);
+        //highScoreText.text = Tools.ProcessFloat(GameManager.Instance.highScore, 1);
     }
 
     public void UpdatePersonalHighScore()

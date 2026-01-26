@@ -276,12 +276,12 @@ public class PointManager : MonoBehaviour
     #region HighScore
     void HighSchoreCheck()
     {
-        if (GameManager.Instance.highScore >= totalPoints)
+        //if (GameManager.Instance.highScore >= totalPoints)
             return;
 
-        NewHighScore.Invoke(totalPoints);
-        GameManager.Instance.highScore = totalPoints;
-        GameManager.Instance.highScorer = UserData.Instance.UserName;
+        //NewHighScore.Invoke(totalPoints);
+        //GameManager.Instance.highScore = totalPoints;
+        //GameManager.Instance.highScorer = UserData.Instance.UserName;
     }
     void PersonalHighSchoreCheck()
     {

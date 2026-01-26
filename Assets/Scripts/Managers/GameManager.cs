@@ -19,11 +19,4 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    [SerializeField]
-    public float highScore = 0;
-    [SerializeField]
-    public string highScorer = "Anonymus";
-
-
-
 }

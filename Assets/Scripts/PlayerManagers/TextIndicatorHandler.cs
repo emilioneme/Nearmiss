@@ -1,11 +1,20 @@
+using DG.Tweening;
 using eneme;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class TextIndicatorHandler : MonoBehaviour
 {
+    [SerializeField] public GameObject TextIndicatorPrefab;
+
+    [SerializeField] public GameObject ComboTextPivot;
+
     [SerializeField]
-    public GameObject TextIndicatorPrefab;
+    TMP_Text RunText;
+
+    [SerializeField]
+    TMP_Text ComboText;
 
     [Header("Cam")]
     [SerializeField]
@@ -13,10 +22,7 @@ public class TextIndicatorHandler : MonoBehaviour
     [SerializeField]
     Transform Pivot;
 
-    [Header("TextIndicatorEffct")]
-    [SerializeField]
-    float textIndicatorDistance = 1;
-
+ 
     [Header("SecureTextIndicatorEffct")]
     [SerializeField]
     float securePointsEffectDuration = 1;
@@ -31,55 +37,42 @@ public class TextIndicatorHandler : MonoBehaviour
     GameObject TextSecuredGO = null;
     TextIndicatorEffect TextIndicatorEffect;
 
-    Coroutine RunRoutine;
+    Coroutine SecureAnimationRoutine;
 
     private void Awake()
     {
         TextIndicatorEffect = TextIndicatorGO.GetComponent<TextIndicatorEffect>();
         TextIndicatorEffect.cam = PlayerCamera;
-        TextIndicatorEffect.SetText(" ");
-    }
-
-    public void NeamissEffetcSpawner(float normalDistance, int numberOfHits, Vector3 origin, RaycastHit hit)
-    {
-        if (!TextIndicatorGO.activeSelf)
-            SetTextIndicator(transform.position + eneme.Tools.projectedDirection(textIndicatorDistance, transform, origin, hit));
-    }
-
-    void SetTextIndicator(Vector3 position)
-    {
-        TextIndicatorGO.transform.position = position;
-        TextIndicatorGO.SetActive(true);
+        RunText.text = " ";
+        ComboText.text = " ";
     }
 
     #region  Run Start
     public void RunStarted(float timeToSecure)
     {
-        if (!TextIndicatorGO)
-            return;
-        this.StopSafely(ref RunRoutine);
-        RunRoutine = StartCoroutine(RunCooldownCoroutine(timeToSecure));
+        TextIndicatorGO.SetActive(true);
+        DOBounceTween(ref TextIndicatorGO, 1.3f, .25f);
     }
 
-    public void RunContinued(float timeToSecure)
+    #region SecureAnimation
+    public void StartPointsSecureAnimation()
     {
-        this.StopSafely(ref RunRoutine);
-        RunRoutine = StartCoroutine(RunCooldownCoroutine(timeToSecure));
-    }
-
-    IEnumerator RunCooldownCoroutine(float timeToSecure)
-    {
-        yield return new WaitForSeconds(timeToSecure);
-
-        Transform textTransform = TextIndicatorGO.transform;
-        TextSecuredGO = Instantiate(TextIndicatorGO, textTransform.position, textTransform.rotation, textTransform.parent);
-        Destroy(TextSecuredGO, securePointsEffectDuration + .01f);
-
-        TextSecuredGO.transform.SetParent(PlayerCamera.transform, true);
-
+        //Swap
         TextIndicatorGO.SetActive(false);
+        ComboText.text = " ";
+        Transform textTransform = TextIndicatorGO.transform;
 
+        this.StopSafely(ref SecureAnimationRoutine);
+        SecureAnimationRoutine = StartCoroutine(SecureAnimationCoroutine(textTransform));
+    }
 
+    IEnumerator SecureAnimationCoroutine(Transform textTransform)
+    {
+        TextSecuredGO = Instantiate(TextIndicatorGO, textTransform.position, textTransform.rotation, textTransform.parent);
+        TextSecuredGO.transform.SetParent(PlayerCamera.transform, true);
+        TextSecuredGO.SetActive(true);
+
+        //STart Effect
         float timer = 0f;
         Vector3 startLocal = TextSecuredGO.transform.localPosition;
         Vector3 targetWorld = PlayerCamera.ViewportToWorldPoint(secureLerpToPosition);
@@ -93,17 +86,36 @@ public class TextIndicatorHandler : MonoBehaviour
 
             targetWorld = PlayerCamera.ViewportToWorldPoint(secureLerpToPosition);
             targetLocal = PlayerCamera.transform.InverseTransformPoint(targetWorld);
-            if(TextSecuredGO)
+            if (TextSecuredGO)
                 TextSecuredGO.transform.localPosition = Vector3.Lerp(startLocal, targetLocal, t);
             yield return null;
         }
         DisableText();
+        Destroy(TextSecuredGO);
+        SecureAnimationRoutine = null;
     }
+    #endregion
+    
 
     public void UpdateRunPoints(float points)
     {
-        if (TextIndicatorEffect != null)
-            TextIndicatorEffect.SetText(eneme.Tools.ProcessFloat(points, 2));
+        RunText.text = eneme.Tools.ProcessFloat(points, 2);
+        TextIndicatorGO.SetActive(true);
+    }
+    #endregion
+
+    #region Combos
+    public void UpdateComboMult(float comboMult)
+    {
+        if (comboMult > 1)
+        {
+            ComboText.text = "x" + Tools.LimitNumberLength(comboMult, 4);
+            DOBounceTween(ref ComboTextPivot, 1.5f, .25f);
+        }
+        else
+        {
+            ComboText.text = " ";
+        }
     }
     #endregion
 
@@ -113,6 +125,18 @@ public class TextIndicatorHandler : MonoBehaviour
             Destroy(TextSecuredGO);
 
         TextIndicatorGO.SetActive(false);
-        this.StopSafely(ref RunRoutine);
+        this.StopSafely(ref SecureAnimationRoutine);
     }
+
+    #region Tools
+    public void DOBounceTween(ref GameObject GO, float toScale, float duration, Ease easeType = Ease.InOutSine)
+    {
+        GO.transform.DOKill();
+        GO.transform.localScale = Vector3.one;
+        GO.transform
+            .DOScale(toScale, duration)
+            .SetEase(easeType)
+            .SetLoops(2, LoopType.Yoyo);
+    }
+    #endregion
 }

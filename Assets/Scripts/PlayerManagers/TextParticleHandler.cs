@@ -50,7 +50,7 @@ public class TextParticleHandler : MonoBehaviour
             acumulatedPoints = points;
 
         if (Time.time - lastTextParticle > textParticleCooldown)
-            SpawnTextParticle(acumulatedPoints, normalDistance, transform.position + eneme.Tools.projectedDirection(textParticleDistance, Pivot, origin, hit));
+            SpawnTextParticle(acumulatedPoints, normalDistance, Pivot.position + eneme.Tools.projectedDirection(textParticleDistance, Pivot, origin, hit));
         else
             acumulatedPoints += points;
     }
@@ -63,7 +63,12 @@ public class TextParticleHandler : MonoBehaviour
         Vector3 forwardOffset = transform.forward * particleForwardOffsett;
         Vector3 pos = position + forwardOffset;
 
-        string text = "+" + eneme.Tools.ProcessFloat(points, 1);
+        string text;
+
+        if (points < 1)
+            text = "1";
+        else
+            text = "+" + eneme.Tools.ProcessFloat(points, 1);
 
         GameObject TextParticleGO;
 

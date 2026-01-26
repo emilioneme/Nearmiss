@@ -8,15 +8,7 @@ public class TextIndicatorEffect : MonoBehaviour
     Canvas Canvas;
 
     [SerializeField]
-    TMP_Text RunText;
-
-    [SerializeField]
     public Camera cam;
-
-    public void SetText(string text)
-    {
-        RunText.text = text;
-    }
 
     void LateUpdate()
     {

@@ -102,6 +102,10 @@ public class PointManager : MonoBehaviour
     Coroutine dashCoroutine;
     Coroutine skimBreakCoroutie;
 
+    private void Start()
+    {
+        secureTime = maxSecureTime;
+    }
 
     #region NearmissHandler
     public void OnNearmiss(float normalizedDistance, int numberOfHits, Vector3 origin, RaycastHit hit) //This is a float from 0 to 1
@@ -145,7 +149,6 @@ public class PointManager : MonoBehaviour
         numberOfBreaks++;
         secureTime -= scureTimeDecrease;
         secureTime = Mathf.Clamp(secureTime, minSecureTime, maxSecureTime);
-        Debug.Log(secureTime);
     }
     #endregion
 

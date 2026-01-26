@@ -18,7 +18,7 @@ public class DroneMovement : MonoBehaviour
     [SerializeField][Range(1, 50)] public float maxNosedieveSpeed = 10f;
 
     [Header("Gravity")]
-    [SerializeField][Range(1, 50)] public float gravityForceMultiplier = 1.9f;
+    [SerializeField] public float gravityForceMultiplier = 1.9f;
 
     [Header("PointsSpeed")]
     [SerializeField] float maxPointsSpeed = 10;
@@ -107,7 +107,7 @@ public class DroneMovement : MonoBehaviour
 
     float CurrentForwardSpeed() 
     {
-        return (flyingSpeed + NoseDiveSpeed()) * GetThrillSpeed() * GetSprintSpeed() * PointsSpeed() * totalFlyingSpeedMultiplier;
+        return ( flyingSpeed + NoseDiveSpeed() + PointsSpeed() ) * GetThrillSpeed() * GetSprintSpeed() * totalFlyingSpeedMultiplier;
     }
 
     float GetSprintSpeed() 

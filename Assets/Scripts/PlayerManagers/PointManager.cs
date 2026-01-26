@@ -31,19 +31,24 @@ public class PointManager : MonoBehaviour
     public float maxDistancePoints = .5f;
 
     [Header("Combo Calculation")]
-    [SerializeField]
-    float swerveMultiplier = 2;
-    [SerializeField]
-    float skimMultiplier = .25f;
+
+
+    [SerializeField] float maxSwerveCombo = 2;
+
+
+    [SerializeField] float maxSkimCombo = 1f;
     #endregion
 
     #region Expected Points
     float lastNearmiss = 0;
-    [Header("Time For")] //time to secure point is minTimeBeforeCombo + comboWindowDuration
-    [SerializeField]
-    public float timeToSecurePoints = 1;
-    [SerializeField]
-    public float timeToSkim = .3f;
+    [Header("Time For")] //time to secure point is minTimeBeforeCombo + comboWindowDuratio
+    [SerializeField] public int numberOfBreaks = 0;
+    [SerializeField] public float scureTimeDecrease = .25f;
+    [SerializeField] float minSecureTime = 1;
+    [SerializeField] float maxSecureTime = 2;
+    float secureTime;
+
+    [SerializeField] public float timeToSkim = .3f;
     #endregion
 
     #region Events
@@ -102,18 +107,18 @@ public class PointManager : MonoBehaviour
     public void OnNearmiss(float normalizedDistance, int numberOfHits, Vector3 origin, RaycastHit hit) //This is a float from 0 to 1
     {
         float timeDifferenceBetweenMisses = Time.time - lastNearmiss;
-        float normalized = timeDifferenceBetweenMisses / timeToSecurePoints;
+        float normalized = timeDifferenceBetweenMisses / secureTime;
 
         this.StopSafely(ref skimBreakCoroutie);
         skimBreakCoroutie = StartCoroutine(SkimBreakCourotine());
 
         if (normalized > timeToSkim)
-            UpdateNumberOfSkims(hit);
+            UpdateNumberOfSkims(normalizedDistance, hit);
 
         if (dashCoroutine != null) 
         {
             this.StopSafely(ref dashCoroutine);
-            UpdateNumberOfSwerves(hit);
+            UpdateNumberOfSwerves(normalizedDistance, hit);
         }
 
         lastNearmiss = Time.time;
@@ -127,13 +132,21 @@ public class PointManager : MonoBehaviour
     {
         yield return new WaitForSeconds(timeToSkim);
         SkimBreak.Invoke();
+        UpdateSecureTime();
 
-        if(thrillOnSkimBreak)
+        if (thrillOnSkimBreak)
             ThrillThruster.Invoke(runningPoints);
 
         skimBreakCoroutie = null;
     }
 
+    public void UpdateSecureTime() 
+    {
+        numberOfBreaks++;
+        secureTime -= scureTimeDecrease;
+        secureTime = Mathf.Clamp(secureTime, minSecureTime, maxSecureTime);
+        Debug.Log(secureTime);
+    }
     #endregion
 
     #region Combos
@@ -151,27 +164,27 @@ public class PointManager : MonoBehaviour
             ThrillThruster.Invoke(runningPoints);
     }
 
-    void UpdateNumberOfSkims(RaycastHit hit) 
+    void UpdateNumberOfSkims(float normalizedDistance, RaycastHit hit) 
     {
         numberOfSkimCombos++;
-
         if (numberOfSkimCombos == 1)
             return;
-
         UpdatedNumberOfSkims.Invoke(numberOfSkimCombos, hit);
 
-        UpdateCombMult(numberOfSkimCombos * skimMultiplier);
+        float multiplierAdded = normalizedDistance + .5f * maxSkimCombo;
+        UpdateCombMult(multiplierAdded);
 
         if(thrillOnSkim)
             ThrillThruster.Invoke(runningPoints);
     }
    
-    void UpdateNumberOfSwerves(RaycastHit hit)
+    void UpdateNumberOfSwerves(float normalizedDistance, RaycastHit hit)
     {
         numberOfSwerveCombos++;
-
         UpdatedNumberOfSwerves.Invoke(numberOfSwerveCombos, hit);
-        UpdateCombMult(numberOfSwerveCombos * swerveMultiplier);
+
+        float multiplierAdded = normalizedDistance + .5f * maxSwerveCombo;
+        UpdateCombMult(multiplierAdded);
 
         if (thrillOnSwerve)
             ThrillThruster.Invoke(runningPoints);
@@ -213,10 +226,25 @@ public class PointManager : MonoBehaviour
     }
     #endregion
 
+    #region Point Fomrulas
+    float RunnignPointsCalculation(float normalizedDistance, int numberOfHits, float velocity)
+    {
+        return  SpeedPoints(velocity, numberOfHits) * DistancePoints(normalizedDistance) * runningPointsMultiplier;
+    }
+    float DistancePoints(float normalizedDistance) 
+    {
+        return 1 + (normalizedDistance * normalizedDistance);
+    }
+    float SpeedPoints(float droneVelocity, int numberOfHits)
+    {
+        return 1 + (droneVelocity * numberOfHits * speedPointMultiplier);
+    }
+    #endregion
+
     #region SecurePoints
     public float SecurePointsCooldown()
     {
-        return eneme.Tools.CooldownSince(lastNearmiss, timeToSecurePoints);
+        return eneme.Tools.CooldownSince(lastNearmiss, secureTime);
     }
     IEnumerator SecureTimer()
     {
@@ -232,9 +260,9 @@ public class PointManager : MonoBehaviour
     void SetSecureTimer()
     {
         if (!ResetSecureTimer())
-            RunStarted.Invoke(timeToSecurePoints);
+            RunStarted.Invoke(secureTime);
         else
-            RunContinued.Invoke(timeToSecurePoints);
+            RunContinued.Invoke(secureTime);
 
         secureTimer = StartCoroutine(SecureTimer());
     }
@@ -261,16 +289,6 @@ public class PointManager : MonoBehaviour
 
         ResetRunPoints();
     }
-
-    void ResetRunPoints()
-    {
-        runningPoints = 0;
-        numberOfSkimCombos = 0;
-        numberOfSwerveCombos = 0;
-        comboMultiplier = 1;
-
-        ResetSecureTimer();
-    }
     #endregion
 
     #region HighScore
@@ -293,20 +311,18 @@ public class PointManager : MonoBehaviour
     }
     #endregion
 
-    #region Point Fomrulas
-    float RunnignPointsCalculation(float normalizedDistance, int numberOfHits, float velocity)
+    void ResetRunPoints()
     {
-        return  SpeedPoints(velocity, numberOfHits) * DistancePoints(normalizedDistance) * runningPointsMultiplier;
+        runningPoints = 0;
+        numberOfSkimCombos = 0;
+        numberOfSwerveCombos = 0;
+        comboMultiplier = 1;
+        numberOfBreaks = 0;
+
+        secureTime = maxSecureTime;
+
+        ResetSecureTimer();
     }
-    float DistancePoints(float normalizedDistance) 
-    {
-        return 1 + (normalizedDistance * normalizedDistance);
-    }
-    float SpeedPoints(float droneVelocity, int numberOfHits)
-    {
-        return 1 + (droneVelocity * numberOfHits * speedPointMultiplier);
-    }
-    #endregion
 
     public void ResetPointManager()
     {
@@ -316,6 +332,9 @@ public class PointManager : MonoBehaviour
 
         numberOfSkimCombos = 0;
         numberOfSwerveCombos = 0;
+
+        numberOfBreaks = 0;
+        secureTime = maxSecureTime;
 
         comboMultiplier = 1;
 

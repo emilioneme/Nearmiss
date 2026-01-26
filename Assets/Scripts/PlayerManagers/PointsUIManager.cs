@@ -17,7 +17,7 @@ public class PointsUIManager : MonoBehaviour
 
     [Header("Circles")]
     [SerializeField] Image ComboNumImage;
-    [SerializeField] Image TotalPointsImage;
+    [SerializeField] Image TotalPointsCircle;
     [SerializeField] AnimationCurve CircleFillCurve;
 
     Coroutine RunRoutine;
@@ -76,7 +76,6 @@ public class PointsUIManager : MonoBehaviour
         {
             ComboNumText.text = "x" + Tools.LimitNumberLength(comboMult, 4);
             DOBounceTween(ref ComboGO, .5f, .25f);
-            TotalPointsImage.gameObject.SetActive(true);
             DOBounceTween(ref TotalPointsGO, .9f, .25f);
         }
         else
@@ -89,10 +88,17 @@ public class PointsUIManager : MonoBehaviour
     #region Totalpoints
     public void UpdateTotalPoints(float points)
     {
-        if (points == 0)
+        if (points == 0) 
+        {
             TotalPointsText.text = " ";
-        else
+        }
+        else 
+        {
+            TotalPointsCircle.gameObject.SetActive(true);
             TotalPointsText.text = Tools.ProcessFloat(points, 2);
+            TotalPointsCircle.fillAmount = points / 1000;
+        }
+            
     }
     #endregion
 
@@ -121,7 +127,7 @@ public class PointsUIManager : MonoBehaviour
     {
         ComboNumText.text = " ";
         TotalPointsText.text = " ";
-        TotalPointsImage.gameObject.SetActive(false);
+        TotalPointsCircle.gameObject.SetActive(false);
         ComboGO.SetActive(false);
     }
 

@@ -7,6 +7,8 @@ using UnityEngine.Events;
 [RequireComponent(typeof(CharacterController))]
 public class DroneMovement : MonoBehaviour
 {
+    [SerializeField] MovementData movementData;
+
     [HideInInspector]
     public CharacterController cc;
 
@@ -16,10 +18,7 @@ public class DroneMovement : MonoBehaviour
 
     [Header("NoseDive")]
     [SerializeField][Range(1, 50)] public float maxNosedieveSpeed = 10f;
-
-    [Header("Gravity")]
-    [SerializeField] public float gravityForceMultiplier = 1.9f;
-
+   
     [Header("PointsSpeed")]
     [SerializeField] float maxPointsSpeed = 10;
     public float maxPointsForSpeed = 60;
@@ -47,8 +46,8 @@ public class DroneMovement : MonoBehaviour
     float thrillPoints = 1;
 
     [Header("Dash")]
-    [SerializeField]float dashCooldwon = 3;
-    [SerializeField]public float dashSpeed = 10;
+    [SerializeField] float dashCooldwon = 3;
+    [SerializeField] public float dashSpeed = 10;
     [SerializeField] public float dashDuration = .75f;
     float lastTimeDashed = 0;
     [HideInInspector] public bool isDashing = false;
@@ -59,7 +58,6 @@ public class DroneMovement : MonoBehaviour
     public Coroutine DashRutine = null;
 
     [Header("Physics")]
-    public bool applyGravity = true;
     public bool enableFlying = true;
     public bool allowDash = true;
     public bool allowThrill = true;
@@ -70,6 +68,36 @@ public class DroneMovement : MonoBehaviour
     private void Awake()
     {
         cc = GetComponent<CharacterController>();
+        if (movementData == null) return;
+
+        flyingSpeed = movementData.flyingSpeed;
+        totalFlyingSpeedMultiplier = movementData.totalFlyingSpeedMultiplier;
+
+        maxNosedieveSpeed = movementData.maxNosedieveSpeed;
+
+        maxPointsSpeed = movementData.maxPointsSpeed;
+        maxPointsForSpeed = movementData.maxPointsForSpeed;
+        pointIncreaseSpeed = movementData.pointIncreaseSpeed;
+
+        maxSprintSpeed = movementData.maxSprintSpeed;
+        sprintIncrease = movementData.sprintIncrease;
+        sprintDecrease = movementData.sprintDecrease;
+
+        thrillDuration = movementData.thrillDuration;
+        maxThrillSpeed = movementData.maxThrillSpeed;
+        thrillIncrease = movementData.thrillIncrease;
+        thrillDecrease = movementData.thrillDecrease;
+        maxPointsForThrill = movementData.maxPointsForThrill;
+
+        dashCooldwon = movementData.dashCooldwon;
+        dashSpeed = movementData.dashSpeed;
+        dashDuration = movementData.dashDuration;
+
+        allowDash = movementData.allowDash;
+        allowThrill = movementData.allowThrill;
+        allowSprint = movementData.allowSprint;
+        allowPointsSpeed = movementData.allowPointsSpeed;
+
     }
 
     private void Update()
@@ -89,7 +117,7 @@ public class DroneMovement : MonoBehaviour
     #region Total Velocity
     Vector3 GetTotalVelocity()
     {
-        Vector3 vel = CurrentDownVelocity() + GetForwardVelocity() + GetDashVelocity();
+        Vector3 vel =  GetForwardVelocity() + GetDashVelocity();
         float speed = vel.magnitude;
         float avgT = 1f - Mathf.Exp(-UserData.Instance.averageAdaptSpeed * Time.deltaTime); 
         UserData.Instance.avgVelocity = Mathf.Lerp(UserData.Instance.avgVelocity, speed, avgT);
@@ -133,27 +161,6 @@ public class DroneMovement : MonoBehaviour
     {
         if(allowPointsSpeed) return 1f;
         return 1 + pointsSpeedCurve.Evaluate(totalPointsNormalized) * maxPointsSpeed;
-    }
-    #endregion
-
-    #region Gravity
-    Vector3 CurrentDownVelocity()
-    {
-        return applyGravity? Vector3.down * CurrentDownSpeed() : Vector3.zero;
-    }
-
-    float CurrentDownSpeed()
-    {
-        float downSpeed = GravityForceSpeed() * gravityForceMultiplier;
-        return downSpeed;
-    }
-
-    float GravityForceSpeed() 
-    {
-        float dot = Vector3.Dot(transform.up,Vector3.up);
-        float flatAmount = Mathf.Abs(dot);
-        float gravityFactor = 1f - flatAmount;  // 0 when flat, 1 when vertical
-        return gravityFactor;
     }
     #endregion
 

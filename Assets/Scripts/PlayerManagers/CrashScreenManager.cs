@@ -2,6 +2,7 @@ using DG.Tweening;
 using eneme;
 using TMPro;
 using TMPro.EditorUtilities;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CrashScreenManager : MonoBehaviour
@@ -9,7 +10,7 @@ public class CrashScreenManager : MonoBehaviour
     [SerializeField]
     GameObject CrashPanel;
     [SerializeField]
-    RectTransform Panel;
+    RectTransform rt;
 
     [SerializeField]
     TMP_Text currentScoreText;
@@ -17,6 +18,8 @@ public class CrashScreenManager : MonoBehaviour
     TMP_Text highScoreText;
     [SerializeField]
     TMP_Text personalScoreText;
+
+    [SerializeField] Camera cam;
 
     public void Start()
     {
@@ -44,10 +47,12 @@ public class CrashScreenManager : MonoBehaviour
         UpdateHighScore();
         UpdatePersonalHighScore();
 
+
         CrashPanel.SetActive(true);
-        Panel.transform.localScale = Vector3.zero;
-        Panel.transform
-            .DOScale(1, .2f);
+        float canvasWidth = rt.rect.width;
+
+        rt.anchoredPosition = new Vector2(canvasWidth, 0);
+        rt.DOAnchorPos(Vector2.zero, .25f).SetEase(Ease.OutCubic);
 
         UserData.Instance.canPause = false;
         Cursor.visible = true;
@@ -56,10 +61,10 @@ public class CrashScreenManager : MonoBehaviour
 
     public void CloseCrashCanvas()
     {
-        CrashPanel.SetActive(false);
-        Panel.transform.localScale = Vector3.one;
-        Panel.transform
-            .DOScale(0, .2f);
+        float canvasWidth = rt.rect.width;
+        rt.anchoredPosition = Vector2.zero;
+        rt.DOAnchorPos(new Vector2(-canvasWidth, 0), .25f).SetEase(Ease.OutCubic)
+           .OnComplete(() => CrashPanel.SetActive(false));
 
         UserData.Instance.canPause = true;
         Cursor.visible = false;

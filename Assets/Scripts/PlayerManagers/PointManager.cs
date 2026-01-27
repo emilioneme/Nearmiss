@@ -6,49 +6,45 @@ using UnityEngine.Events;
 
 public class PointManager : MonoBehaviour
 {
+    [SerializeField] PointData pointData;
+
     [Header("Points")]
-    [SerializeField]
-    public float totalPoints = 0;
-    [SerializeField]
-    public float runningPoints = 0;
-    [SerializeField]
-    public float expectedPoints = 0;
-    [SerializeField]
-    public float comboMultiplier = 1;
+    public float startTotalPoints = 0;
+    public float startRunningPoints = 0;
+    public float startExpectedPoints = 0;
+    public float startComboMultiplier = 1;
+
+    float totalPoints = 0;
+    float runningPoints = 0;
+    float expectedPoints = 0;
+    float comboMultiplier = 1;
 
     [Header("TypesOfCOmbo")]
-    [SerializeField] int numberOfSwerveCombos = 0;
-    [SerializeField] int numberOfSkimCombos = 0;
+    int numberOfSwerveCombos = 0;
+    int numberOfSkimCombos = 0;
 
 
     #region  Multipliers
     [Header("Point Calculation")]
-    [SerializeField]
     public float runningPointsMultiplier = .5f;
-    [SerializeField]
     public float speedPointMultiplier = .5f;
-    [SerializeField]
     public float maxDistancePoints = .5f;
 
     [Header("Combo Calculation")]
-
-
-    [SerializeField] float maxSwerveCombo = 2;
-
-
-    [SerializeField] float maxSkimCombo = 1f;
+    public float maxSwerveCombo = 2;
+    public float maxSkimCombo = 1f;
     #endregion
 
     #region Expected Points
-    float lastNearmiss = 0;
-    [Header("Time For")] //time to secure point is minTimeBeforeCombo + comboWindowDuratio
-    [SerializeField] public int numberOfBreaks = 0;
-    [SerializeField] public float scureTimeDecrease = .25f;
-    [SerializeField] float minSecureTime = 1;
-    [SerializeField] float maxSecureTime = 2;
-    float secureTime;
 
-    [SerializeField] public float timeToSkim = .3f;
+    [Header("Time For")] //time to secure point is minTimeBeforeCombo + comboWindowDuratio
+    public float scureTimeDecrease = .25f;
+    public float minSecureTime = 1;
+    public float maxSecureTime = 2;
+    float secureTime;
+    int numberOfBreaks = 0;
+    float timeToSkim = .3f;
+    float lastNearmiss = 0;
     #endregion
 
     #region Events
@@ -67,30 +63,21 @@ public class PointManager : MonoBehaviour
     UnityEvent SkimBreak; //points
 
     [Header("Points")]
-    [SerializeField]
-    UnityEvent<float, float, Vector3, RaycastHit> CalculatedRayPoints; //points, normal dist, origin, hit
-    [SerializeField]
-    UnityEvent<float> UpdatedRunningPoints; //running pioints
-    [SerializeField]
-    UnityEvent<float> UpdatedTotalPoints; //total points
+    [SerializeField] UnityEvent<float, float, Vector3, RaycastHit> CalculatedRayPoints; //points, normal dist, origin, hit
+    [SerializeField] UnityEvent<float> UpdatedRunningPoints; //running pioints
+    [SerializeField] UnityEvent<float> UpdatedTotalPoints; //total points
 
     [Header("Combo")]
-    [SerializeField]
-    UnityEvent<float> UpdatedComboMultiplier; //combo mult
-    [SerializeField]
-    UnityEvent<float, RaycastHit> UpdatedNumberOfSkims;  //numberOfSkims, hit
-    [SerializeField]
-    UnityEvent<float, RaycastHit> UpdatedNumberOfSwerves; //swerves and hit
+    [SerializeField] UnityEvent<float> UpdatedComboMultiplier; //combo mult
+    [SerializeField] UnityEvent<float, RaycastHit> UpdatedNumberOfSkims;  //numberOfSkims, hit
+    [SerializeField] UnityEvent<float, RaycastHit> UpdatedNumberOfSwerves; //swerves and hit
 
     [Header("HighScore")]
-    [SerializeField]
-    UnityEvent<float> NewHighScore;
-    [SerializeField]
-    UnityEvent<float> NewPersonalHighScore;
+    [SerializeField] UnityEvent<float> NewHighScore;
+    [SerializeField] UnityEvent<float> NewPersonalHighScore;
 
     [Header("Other")]
-    [SerializeField]
-    UnityEvent<float> ThrillThruster;
+    [SerializeField] UnityEvent<float> ThrillThruster;
     [SerializeField] bool thrillOnSkimBreak = false;
     [SerializeField] bool thrillOnSkim = false;
     [SerializeField] bool thrillOnSwerve = false;
@@ -102,9 +89,30 @@ public class PointManager : MonoBehaviour
     Coroutine dashCoroutine;
     Coroutine skimBreakCoroutie;
 
+    private void Awake()
+    {
+        if (pointData == null) return;
+        SetStartData(pointData);
+    }
+    public void SetStartData(PointData pointData) 
+    {
+        startTotalPoints = pointData.startTotalPoints;
+        startRunningPoints = pointData.startRunningPoints;
+        startExpectedPoints = pointData.startExpectedPoints;
+        startComboMultiplier = pointData.startComboMultiplier;
+
+        runningPointsMultiplier = pointData.runningPointsMultiplier;
+        speedPointMultiplier = pointData.speedPointMultiplier;
+        maxDistancePoints = pointData.maxDistancePoints;
+
+        scureTimeDecrease = pointData.scureTimeDecrease;
+        minSecureTime = pointData.minSecureTime;
+        maxSecureTime = pointData.maxSecureTime;
+    }
+
     private void Start()
     {
-        secureTime = maxSecureTime;
+        ResetPointManager();
     }
 
     #region NearmissHandler
@@ -316,10 +324,10 @@ public class PointManager : MonoBehaviour
 
     void ResetRunPoints()
     {
-        runningPoints = 0;
+        runningPoints = startTotalPoints;
         numberOfSkimCombos = 0;
         numberOfSwerveCombos = 0;
-        comboMultiplier = 1;
+        comboMultiplier = startComboMultiplier;
         numberOfBreaks = 0;
 
         secureTime = maxSecureTime;
@@ -329,9 +337,9 @@ public class PointManager : MonoBehaviour
 
     public void ResetPointManager()
     {
-        totalPoints = 0;
-        runningPoints = 0;
-        expectedPoints = 0;
+        totalPoints = startTotalPoints;
+        runningPoints = startRunningPoints;
+        expectedPoints = startExpectedPoints;
 
         numberOfSkimCombos = 0;
         numberOfSwerveCombos = 0;
@@ -339,7 +347,7 @@ public class PointManager : MonoBehaviour
         numberOfBreaks = 0;
         secureTime = maxSecureTime;
 
-        comboMultiplier = 1;
+        comboMultiplier = startComboMultiplier;
 
         this.StopSafely(ref secureTimer);
         this.StopSafely(ref dashCoroutine);

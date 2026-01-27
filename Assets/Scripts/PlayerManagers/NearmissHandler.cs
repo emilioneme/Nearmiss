@@ -9,6 +9,8 @@ using static UnityEngine.UI.Image;
 
 public class NearmissHandler : MonoBehaviour
 {
+    [SerializeField] NearmissData nearmissData;
+
     [Header("Rays")]
     [SerializeField]
     public float rayDistance = 10;
@@ -35,15 +37,28 @@ public class NearmissHandler : MonoBehaviour
     [SerializeField]
     UnityEvent<float, int, Vector3, RaycastHit> NearmissEvent; //distance normalized, total distance, number of hits  playerPosition, hit 
 
-    void OnEnable()
+    private void Awake()
     {
-        nextShotTime = Time.time;
+        if (nearmissData == null) return;
+        SetStartData(nearmissData);
+    }
+
+    public void SetStartData(NearmissData nearmissData) 
+    {
+        rayDistance = nearmissData.rayDistance;
+        startingNumberOfRays = nearmissData.startingNumberOfRays;
+        shotsPerSecond = nearmissData.shotsPerSecond;
     }
 
     private void Start()
     {
         interval = 1f / shotsPerSecond;
         SetNumberOfRays(startingNumberOfRays);
+    }
+
+    void OnEnable()
+    {
+        nextShotTime = Time.time;
     }
 
     public void SetShotsPerSecond(int amount) 

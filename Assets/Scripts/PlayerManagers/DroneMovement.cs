@@ -70,6 +70,11 @@ public class DroneMovement : MonoBehaviour
         cc = GetComponent<CharacterController>();
         if (movementData == null) return;
 
+        SetStartData(movementData);
+    }
+
+    public void SetStartData(MovementData movementData) 
+    {
         flyingSpeed = movementData.flyingSpeed;
         totalFlyingSpeedMultiplier = movementData.totalFlyingSpeedMultiplier;
 
@@ -97,7 +102,6 @@ public class DroneMovement : MonoBehaviour
         allowThrill = movementData.allowThrill;
         allowSprint = movementData.allowSprint;
         allowPointsSpeed = movementData.allowPointsSpeed;
-
     }
 
     private void Update()

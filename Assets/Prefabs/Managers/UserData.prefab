@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2511b8160a5cc4c479b329461c7513a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UserName: Anonymus
+  UserName: eneme
   personalHighScore: 0
   startDroneData: {fileID: 11400000, guid: 9635c47a91f233a4fb482c4354e2f83d, type: 2}
   lookSensitivity: 0.5

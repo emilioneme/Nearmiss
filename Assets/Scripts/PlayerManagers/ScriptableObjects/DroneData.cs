@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "DroneData", menuName = "Scriptable Objects/DroneData")]
 public class DroneData : ScriptableObject
@@ -8,4 +9,8 @@ public class DroneData : ScriptableObject
     public NearmissData NearmissData;
 
     public GameObject PlayerModel;
+    public Sprite DroneImage;
+
+    public string DroneName; 
+
 }

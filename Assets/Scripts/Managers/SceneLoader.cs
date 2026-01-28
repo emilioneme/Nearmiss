@@ -25,10 +25,11 @@ namespace eneme
         }
         #endregion
 
-        [SerializeField]
-        GameObject LoadingCanvas;
-        [SerializeField]
-        Image LoadingBar;
+
+        [SerializeField] GameObject LoadingCanvas;
+        [SerializeField] Image LoadingBar;
+
+        [SerializeField] RectTransform rt;
 
         public void LoadScene(string sceneName)
         {
@@ -39,24 +40,27 @@ namespace eneme
         {
             var scene = SceneManager.LoadSceneAsync(sceneName);
 
-            //rt.anchoredPosition = new Vector2(canvasWidth, 0);
-            //rt.DOAnchorPos(Vector2.zero, .25f).SetEase(Ease.OutCubic);
+            float canvasWidth = rt.rect.width;
 
-            scene.allowSceneActivation = false;
             LoadingCanvas.SetActive(true);
+            scene.allowSceneActivation = false;
+
+            rt.anchoredPosition = new Vector2(canvasWidth, 0);
+            rt.DOAnchorPos(Vector2.zero, .25f).SetEase(Ease.OutCubic);
 
             while (scene.progress < 0.9f)
             {
                 LoadingBar.fillAmount = Mathf.Clamp01(scene.progress + .1f);
-                yield return null; // <- the key
+                yield return null;
             }
 
-            scene.allowSceneActivation = true;
-
-            //float canvasWidth = rt.rect.width;
-            //rt.anchoredPosition = Vector2.zero;
-            //rt.DOAnchorPos(new Vector2(-canvasWidth, 0), .25f).SetEase(Ease.OutCubic)
-               //.OnComplete(() => CrashPanel.SetActive(false));
+            rt.anchoredPosition = Vector2.zero;
+            rt.DOAnchorPos(new Vector2(-canvasWidth, 0), .25f).SetEase(Ease.OutCubic)
+               .OnComplete(() => 
+               {
+                   scene.allowSceneActivation = true;
+                   LoadingCanvas.SetActive(true);
+               });
         }
 
         void OnEnable()

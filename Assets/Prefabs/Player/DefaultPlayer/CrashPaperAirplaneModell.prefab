@@ -306,7 +306,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7430715403184252540}
   - component: {fileID: 8201504930894363328}
-  - component: {fileID: 6070936560581655777}
+  - component: {fileID: 4334679844445426609}
   - component: {fileID: 7896451702303709628}
   m_Layer: 3
   m_Name: CrashPaperAirplaneModell
@@ -361,7 +361,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 3
---- !u!114 &6070936560581655777
+--- !u!114 &4334679844445426609
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -370,14 +370,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 4506088508073926183}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ca33fbf2f1fbf44e92fca9fb5631367, type: 3}
+  m_Script: {fileID: 11500000, guid: 55e59b75c8e7fb54ba34d3001a8df0f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   lifeTime: 10
   innitialForceStrength: 1
-  crashParticlesLifetime: 3
+  crashParticlesLifetime: 2
   crashParticles: {fileID: 2195842101445726814, guid: 02b1025541dadd3438ec70ab62fee7a5, type: 3}
-  destroyParticlesLifetime: 3
+  destroyParticlesLifetime: 10
   destroyParticles: {fileID: 2195842101445726814, guid: 02b1025541dadd3438ec70ab62fee7a5, type: 3}
 --- !u!65 &7896451702303709628
 BoxCollider:

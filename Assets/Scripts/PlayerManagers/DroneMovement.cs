@@ -68,9 +68,9 @@ public class DroneMovement : MonoBehaviour
     private void Awake()
     {
         cc = GetComponent<CharacterController>();
-        if (movementData == null) return;
 
-        SetStartData(movementData);
+        if (movementData != null)
+            SetStartData(movementData);
     }
 
     public void SetStartData(MovementData movementData) 

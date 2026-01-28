@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7757d89387093ac4f85e5e5e15533b8e, type: 3}
+  m_Name: DefaultDroneData
+  m_EditorClassIdentifier: 
+  MovementData: {fileID: 11400000, guid: 34a638cd7233c064ca175789cd77c0be, type: 2}
+  PointData: {fileID: 11400000, guid: f678ae613839983408dbd4db0e4142dc, type: 2}
+  NearmissData: {fileID: 11400000, guid: 1b1872e0822e43b42890f14a5e274ffb, type: 2}
+  PlayerModel: {fileID: 4506088508073926183, guid: ff188c265458e6b499fdeeeb9e90c538, type: 3}

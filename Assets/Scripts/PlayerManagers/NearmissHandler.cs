@@ -39,8 +39,8 @@ public class NearmissHandler : MonoBehaviour
 
     private void Awake()
     {
-        if (nearmissData == null) return;
-        SetStartData(nearmissData);
+        if (nearmissData != null)
+            SetStartData(nearmissData);
     }
 
     public void SetStartData(NearmissData nearmissData) 

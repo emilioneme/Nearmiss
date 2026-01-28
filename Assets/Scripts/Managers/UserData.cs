@@ -27,6 +27,8 @@ public class UserData : MonoBehaviour
     [SerializeField]
     public float personalHighScore = 0;
 
+    public DroneData startDroneData;
+
     [Header("Sense")]
     public float lookSensitivity = 1;
 

@@ -16,6 +16,8 @@ using UnityEngine.TextCore.Text;
 [RequireComponent(typeof(PointManager))]
 public class PlayerManager : MonoBehaviour
 {
+    [SerializeField] DroneData droneData;
+
     [Header("Spawn")]
     [SerializeField]
     float freezeDuration;
@@ -80,14 +82,25 @@ public class PlayerManager : MonoBehaviour
         cc = GetComponent<CharacterController>();
 
         playerModelHandler = GetComponentInChildren<PlayerModelHandler>();
+
+        DisablePlayer();
+
+        if (droneData != null) 
+            SetStartData(droneData);
     }
 
-    private void Start()
+    public void SetStartData(DroneData droneData) 
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        if(droneData.MovementData)
+            droneMovement.SetStartData(droneData.MovementData);
+        if (droneData.NearmissData)
+            nearmissHandler.SetStartData(droneData.NearmissData);
+        if (droneData.PointData)
+            pointManager.SetStartData(droneData.PointData);
+        if (droneData.PlayerModel)
+            playerModelHandler.SetPlayerModelVisual(droneData.PlayerModel);
+
         playerModelHandler.InitiatePlayerModel();
-        DisablePlayer();
         SpawnPlayer(freezeDuration);
     }
 
@@ -124,6 +137,8 @@ public class PlayerManager : MonoBehaviour
 
     IEnumerator FreezeSpawn(float freezeDuration) 
     {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         PlayerSpawnInitiated.Invoke(freezeDuration);
         TeleportPlayer(GetRandomSpawn());
         planeLook.enabled = true;

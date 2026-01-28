@@ -1,4 +1,5 @@
 using eneme;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -10,7 +11,7 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -18,5 +19,26 @@ public class GameManager : MonoBehaviour
         }
     }
     #endregion
+
+    public GameObject playerPrefab;
+    GameObject player;
+    PlayerManager playerManager;
+
+    //[Header("Cameras")]
+    //[SerializeField] int globalCameraPriority = -10;
+    //[SerializeField] CinemachineCamera globalCam;
+
+    private void Start()
+    {
+        InitiatePlayer();
+    }
+
+    void InitiatePlayer() 
+    {
+        player = Instantiate(playerPrefab);
+        playerManager = player.GetComponent<PlayerManager>();
+        playerManager.SetStartData(UserData.Instance.startDroneData);
+        //globalCam.Priority = globalCameraPriority;
+    }
 
 }

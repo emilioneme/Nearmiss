@@ -8,8 +8,7 @@ public class PlayerModelHandler : MonoBehaviour
 {
     [SerializeField]
     public GameObject PlayerModelPrefab;
-    [SerializeField]
-    public GameObject TextIndicatorPrefab;
+
     [HideInInspector]
     public GameObject PlayerModelGO;
     [HideInInspector]
@@ -31,7 +30,6 @@ public class PlayerModelHandler : MonoBehaviour
             Destroy(PlayerModelGO);
 
         PlayerModelPrefab = newPlayerModelPrefab;
-        InitiatePlayerModel();
     }
 
     public void InitiatePlayerModel() 

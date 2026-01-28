@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Threading.Tasks;
 using System.Collections;
+using DG.Tweening;
 
 namespace eneme
 {
@@ -38,6 +39,9 @@ namespace eneme
         {
             var scene = SceneManager.LoadSceneAsync(sceneName);
 
+            //rt.anchoredPosition = new Vector2(canvasWidth, 0);
+            //rt.DOAnchorPos(Vector2.zero, .25f).SetEase(Ease.OutCubic);
+
             scene.allowSceneActivation = false;
             LoadingCanvas.SetActive(true);
 
@@ -48,6 +52,11 @@ namespace eneme
             }
 
             scene.allowSceneActivation = true;
+
+            //float canvasWidth = rt.rect.width;
+            //rt.anchoredPosition = Vector2.zero;
+            //rt.DOAnchorPos(new Vector2(-canvasWidth, 0), .25f).SetEase(Ease.OutCubic)
+               //.OnComplete(() => CrashPanel.SetActive(false));
         }
 
         void OnEnable()

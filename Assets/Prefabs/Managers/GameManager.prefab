@@ -44,5 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 857d90e1261420144a6cc85adb92f3ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highScore: 0
-  highScorer: eneme
+  playerPrefab: {fileID: 8266162087823780538, guid: 130673d89d250e74ca56250c5d6a3e96, type: 3}
+  globalCameraPriority: -10
+  globalCam: {fileID: 0}

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7757d89387093ac4f85e5e5e15533b8e, type: 3}
+  m_Name: JetDroneData
+  m_EditorClassIdentifier: 
+  MovementData: {fileID: 11400000, guid: 6f17866c3e569cb41a4a94c8b6a95e14, type: 2}
+  PointData: {fileID: 11400000, guid: 078f407c080d9d540b8451a8f54fd0e0, type: 2}
+  NearmissData: {fileID: 11400000, guid: a826f55aad2e4ee45828af9fc24c8820, type: 2}
+  Mesh: {fileID: 3089700977496306480, guid: 8ad5e21a7bbdb8a4986fe35459ba397b, type: 3}
+  Container: {fileID: 4914468441184511891, guid: c428f762f1022b64697e3899a0571fd9, type: 3}
+  DroneName: Jet

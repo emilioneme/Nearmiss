@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7757d89387093ac4f85e5e5e15533b8e, type: 3}
+  m_Name: GliderDroneData
+  m_EditorClassIdentifier: 
+  MovementData: {fileID: 11400000, guid: 6ca65799effbf48468791a56638c8a6a, type: 2}
+  PointData: {fileID: 11400000, guid: d7cc9b447bba57c40bcb0f457ebf52e7, type: 2}
+  NearmissData: {fileID: 11400000, guid: f066b8de0bde3e44f864b1605e73e320, type: 2}
+  Mesh: {fileID: 3089700977496306480, guid: cb3e64b8ecd3c74489959c2667789c38, type: 3}
+  Container: {fileID: 4914468441184511891, guid: 0fec3af0399fae24ca6f04a1e9cc0ea2, type: 3}
+  DroneName: Glider

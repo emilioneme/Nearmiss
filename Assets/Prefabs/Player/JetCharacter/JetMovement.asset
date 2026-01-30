@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a9e130095f97fd4ba270fa615b33f26, type: 3}
+  m_Name: JetMovement
+  m_EditorClassIdentifier: 
+  cc: {fileID: 0}
+  flyingSpeed: 30
+  totalFlyingSpeedMultiplier: 1.2
+  maxNosedieveSpeed: 5
+  maxPointsSpeed: 20
+  maxPointsForSpeed: 100000
+  pointIncreaseSpeed: 1
+  maxSprintSpeed: 1.2
+  sprintIncrease: 3
+  sprintDecrease: 2
+  thrillDuration: 1.5
+  maxThrillSpeed: 1.1
+  thrillIncrease: 10
+  thrillDecrease: 5
+  maxPointsForThrill: 500
+  dashCooldwon: 0.75
+  dashSpeed: 20
+  dashDuration: 0.5
+  allowDash: 1
+  allowThrill: 1
+  allowSprint: 1
+  allowPointsSpeed: 0

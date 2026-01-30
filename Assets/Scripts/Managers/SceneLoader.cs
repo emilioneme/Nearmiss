@@ -40,27 +40,17 @@ namespace eneme
         {
             var scene = SceneManager.LoadSceneAsync(sceneName);
 
-            float canvasWidth = rt.rect.width;
-
             LoadingCanvas.SetActive(true);
             scene.allowSceneActivation = false;
-
-            rt.anchoredPosition = new Vector2(canvasWidth, 0);
-            rt.DOAnchorPos(Vector2.zero, .25f).SetEase(Ease.OutCubic);
 
             while (scene.progress < 0.9f)
             {
                 LoadingBar.fillAmount = Mathf.Clamp01(scene.progress + .1f);
                 yield return null;
             }
-
-            rt.anchoredPosition = Vector2.zero;
-            rt.DOAnchorPos(new Vector2(-canvasWidth, 0), .25f).SetEase(Ease.OutCubic)
-               .OnComplete(() => 
-               {
-                   scene.allowSceneActivation = true;
-                   LoadingCanvas.SetActive(true);
-               });
+            
+            scene.allowSceneActivation = true;
+            LoadingCanvas.SetActive(true);
         }
 
         void OnEnable()

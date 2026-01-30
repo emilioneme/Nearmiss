@@ -97,8 +97,8 @@ public class PlayerManager : MonoBehaviour
             nearmissHandler.SetStartData(droneData.NearmissData);
         if (droneData.PointData)
             pointManager.SetStartData(droneData.PointData);
-        if (droneData.PlayerModel)
-            playerModelHandler.SetPlayerModelVisual(droneData.PlayerModel);
+        if (droneData.Container)
+            playerModelHandler.SetPlayerModelVisual(droneData.Container);
 
         playerModelHandler.InitiatePlayerModel();
         SpawnPlayer(freezeDuration);

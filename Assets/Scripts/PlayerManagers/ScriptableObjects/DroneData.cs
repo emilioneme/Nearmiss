@@ -8,8 +8,8 @@ public class DroneData : ScriptableObject
     public PointData PointData;
     public NearmissData NearmissData;
 
-    public GameObject PlayerModel;
-    public Sprite DroneImage;
+    public GameObject Mesh;
+    public GameObject Container;
 
     public string DroneName; 
 

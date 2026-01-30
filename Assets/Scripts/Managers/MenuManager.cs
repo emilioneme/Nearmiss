@@ -3,19 +3,30 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using DG.Tweening;
 
 public class MenuManager : MonoBehaviour
 {
     [Header("Canvases")]
-    [SerializeField]
-    TMP_Text HighScoreText;
-    [SerializeField]
-    TMP_Text HighScorerText;
+    [SerializeField] GameObject CharacterSelectionGO;
+    [SerializeField] RectTransform CharacterSelectionRT;
 
-    private void Start()
+
+    public void OpenCharacterSelection()
     {
-        //HighScoreText.text = Tools.ProcessFloat(GameManager.Instance.highScore, 2);
-        //HighScorerText.text = GameManager.Instance.highScorer;
+        CharacterSelectionGO.SetActive(true);
+        float canvasWidth = CharacterSelectionRT.rect.width;
+
+        CharacterSelectionRT.anchoredPosition = new Vector2(canvasWidth, 0);
+        CharacterSelectionRT.DOAnchorPos(Vector2.zero, .25f).SetEase(Ease.OutCubic);
+    }
+
+    public void CloseCrashCanvas()
+    {
+        float canvasWidth = CharacterSelectionRT.rect.width;
+        CharacterSelectionRT.anchoredPosition = Vector2.zero;
+        CharacterSelectionRT.DOAnchorPos(new Vector2(-canvasWidth, 0), .25f).SetEase(Ease.OutCubic)
+           .OnComplete(() => CharacterSelectionGO.SetActive(false));
     }
 
     public void GoToScene(string sceneName) 

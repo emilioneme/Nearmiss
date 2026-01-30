@@ -1,22 +1,39 @@
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CharacterSelectManager : MonoBehaviour
 {
-    
+    [Header("Characters")]
     [SerializeField] DroneData[] droneData;
-
     int currentDrone = 0;
+
+    [Header("RectTransforms")]
+    [SerializeField] GameObject currentRT;
+    [SerializeField] GameObject rightRT;
+    [SerializeField] GameObject leftRT;
+
+    [Header("Text")]
     [SerializeField] TMP_Text selecButtonText;
-
     [SerializeField] TMP_Text currentCharacterName;
-    [SerializeField] Image currentCharacter;
 
-    [SerializeField] Image leftCharacter;
+    [Header("Buttons")]
+    [SerializeField] Button leftButton;
+    [SerializeField] Button rightButton;
+    [SerializeField] Button selectButton;
 
-    [SerializeField] Image rightCharacter;
+    [Header("Pivots")]
+    [SerializeField] GameObject selectCharacterPivot;
 
+    [SerializeField] GameObject currentCharacterPivot;
+    [SerializeField] GameObject leftCharacterPivot;
+    [SerializeField] GameObject rightCharacterPivot;
+
+    private void Start()
+    {
+        InitiateSelectionMenu();
+    }
 
     public void InitiateSelectionMenu() 
     {
@@ -28,30 +45,73 @@ public class CharacterSelectManager : MonoBehaviour
     {
         //current
         if (SelectedDroneID() == currentDrone)
-            selecButtonText.alpha = .5f;
+            selecButtonText.alpha = .1f;
         else
             selecButtonText.alpha = 1f;
 
-        currentCharacter.sprite = droneData[currentDrone].DroneImage;
+        //Select
+        ReplaceMesh(ref selectCharacterPivot, SelectedDroneID());
+
+        //current
         currentCharacterName.text = droneData[currentDrone].DroneName;
+        ReplaceMesh(ref currentCharacterPivot, currentDrone);
 
         //left
-        leftCharacter.sprite = droneData[LeftDrone()].DroneImage;
+        ReplaceMesh(ref leftCharacterPivot, LeftDrone());
 
         //right
-        rightCharacter.sprite = droneData[RightDrone()].DroneImage;
+        ReplaceMesh(ref rightCharacterPivot, RightDrone());
+    }
+
+    void ReplaceMesh(ref GameObject pivot, int i) 
+    {
+        if (pivot.transform.childCount > 0)
+            Destroy(pivot.transform.GetChild(0).gameObject);
+
+        Instantiate(droneData[i].Container, pivot.transform);
     }
 
     public void RightButton() 
     {
-        currentDrone = RightDrone();
-        UpdateSelectionMenu();
+        ButtonPressed(RightDrone());
     }
 
     public void LeftButton()
     {
-        currentDrone = LeftDrone();
-        UpdateSelectionMenu();
+        ButtonPressed(LeftDrone());
+    }
+
+    void ButtonPressed(int toDrone) 
+    {
+        rightButton.interactable = false;
+        leftButton.interactable = false;
+        selectButton.interactable = false;
+
+        currentRT.transform.DOKill();
+        currentRT.transform.localScale = Vector3.one;
+        currentRT.transform
+            .DOScale(0, .15f)
+            .SetLoops(2, LoopType.Yoyo)
+            .OnComplete(() =>
+            {
+                currentDrone = toDrone; // left
+                UpdateSelectionMenu();
+                rightButton.interactable = true;
+                leftButton.interactable = true;
+                selectButton.interactable = true;
+            });
+
+        rightRT.transform.DOKill();
+        rightRT.transform.localScale = Vector3.one;
+        rightRT.transform
+            .DOScale(0, .15f)
+            .SetLoops(2, LoopType.Yoyo);
+
+        leftRT.transform.DOKill();
+        leftRT.transform.localScale = Vector3.one;
+        leftRT.transform
+            .DOScale(0, .15f)
+            .SetLoops(2, LoopType.Yoyo);
     }
 
     int LeftDrone() 
@@ -67,6 +127,22 @@ public class CharacterSelectManager : MonoBehaviour
     public void SelectCharacter()
     {
         UserData.Instance.startDroneData = droneData[currentDrone];
+        selectButton.interactable = false;
+        rightButton.interactable = false;
+        leftButton.interactable = false;
+
+        currentRT.transform.DOKill();
+        currentRT.transform.localScale = Vector3.one;
+        currentRT.transform
+            .DOScale(1.15f, .15f)
+            .SetLoops(2, LoopType.Yoyo)
+            .OnComplete(() =>
+            {
+                UpdateSelectionMenu();
+                rightButton.interactable = true;
+                leftButton.interactable = true;
+                selectButton.interactable = true;
+            });
     }
 
     int SelectedDroneID() 

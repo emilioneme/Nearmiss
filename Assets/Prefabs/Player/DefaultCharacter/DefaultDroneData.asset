@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7757d89387093ac4f85e5e5e15533b8e, type: 3}
+  m_Name: DefaultDroneData
+  m_EditorClassIdentifier: 
+  MovementData: {fileID: 11400000, guid: 79475b50eef7dc147b437a65c5bc4f7e, type: 2}
+  PointData: {fileID: 11400000, guid: 7332fcf877366234a8d34d9c1f583f61, type: 2}
+  NearmissData: {fileID: 11400000, guid: de09542a0b5f6f648b0b456b445a80ea, type: 2}
+  Mesh: {fileID: 3089700977496306480, guid: fe0369225340981489266034e3e6604d, type: 3}
+  Container: {fileID: 4914468441184511891, guid: cd4b3c0751e5d8f4ba122c137e1b18d1, type: 3}
+  DroneName: Default

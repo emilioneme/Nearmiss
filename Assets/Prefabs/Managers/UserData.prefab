@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UserName: eneme
   personalHighScore: 0
-  startDroneData: {fileID: 11400000, guid: 9635c47a91f233a4fb482c4354e2f83d, type: 2}
+  startDroneData: {fileID: 11400000, guid: 21fd5af369cb74a438892a0e5042c0cd, type: 2}
   lookSensitivity: 0.5
   masterVolume: 0.5
   musicVolume: 0.5

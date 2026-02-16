@@ -2276,7 +2276,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 2037359947}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: InspectiCharacter, Assembly-CSharp
         m_MethodName: RotatePivot
         m_Mode: 0
@@ -2288,7 +2288,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1322255516}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: InspectiCharacter, Assembly-CSharp
         m_MethodName: RotatePivot
         m_Mode: 0
@@ -2327,7 +2327,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 2037359947}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: InspectiCharacter, Assembly-CSharp
         m_MethodName: CanRotate
         m_Mode: 1
@@ -2592,7 +2592,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 614076003}
-  - component: {fileID: 614076005}
   - component: {fileID: 614076004}
   m_Layer: 12
   m_Name: SelectedCharacterPivot
@@ -2629,34 +2628,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10a90088502218d429d337ead536174e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAngularVel: 1
---- !u!54 &614076005
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 614076002}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 14
-  m_CollisionDetection: 0
+  speed: 100
 --- !u!1 &622016926
 GameObject:
   m_ObjectHideFlags: 0
@@ -2834,7 +2806,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 678000262}
-  - component: {fileID: 678000263}
   - component: {fileID: 678000264}
   m_Layer: 12
   m_Name: RIghtCharacterPivot
@@ -2859,33 +2830,6 @@ Transform:
   - {fileID: 1053984423}
   m_Father: {fileID: 2037359946}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &678000263
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 678000261}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 14
-  m_CollisionDetection: 0
 --- !u!114 &678000264
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2898,7 +2842,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10a90088502218d429d337ead536174e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAngularVel: 1
+  speed: 100
 --- !u!1 &699346797
 GameObject:
   m_ObjectHideFlags: 0
@@ -3057,7 +3001,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 704064591}
-  - component: {fileID: 704064590}
   - component: {fileID: 704064589}
   m_Layer: 12
   m_Name: CurrentCharacterPivot
@@ -3078,34 +3021,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10a90088502218d429d337ead536174e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAngularVel: 1
---- !u!54 &704064590
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 704064588}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 14
-  m_CollisionDetection: 0
+  speed: 100
 --- !u!4 &704064591
 Transform:
   m_ObjectHideFlags: 0
@@ -4541,7 +4457,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1251059173}
-  - component: {fileID: 1251059174}
   - component: {fileID: 1251059175}
   m_Layer: 12
   m_Name: LeftCharacterPivot
@@ -4566,33 +4481,6 @@ Transform:
   - {fileID: 776586951}
   m_Father: {fileID: 1322255515}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &1251059174
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1251059172}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 14
-  m_CollisionDetection: 0
 --- !u!114 &1251059175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4605,7 +4493,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10a90088502218d429d337ead536174e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAngularVel: 1
+  speed: 100
 --- !u!1 &1278697795
 GameObject:
   m_ObjectHideFlags: 0
@@ -4651,8 +4539,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1322255515}
-  - component: {fileID: 1322255517}
-  - component: {fileID: 1322255516}
   m_Layer: 0
   m_Name: LeftCharacter
   m_TagString: Untagged
@@ -4677,46 +4563,6 @@ Transform:
   - {fileID: 1251059173}
   m_Father: {fileID: 514587906}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1322255516
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1322255514}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10a90088502218d429d337ead536174e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxAngularVel: 1
---- !u!54 &1322255517
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1322255514}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &1340311341
 GameObject:
   m_ObjectHideFlags: 0
@@ -5696,8 +5542,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2037359946}
-  - component: {fileID: 2037359948}
-  - component: {fileID: 2037359947}
   m_Layer: 0
   m_Name: RightCharacter
   m_TagString: Untagged
@@ -5722,46 +5566,6 @@ Transform:
   - {fileID: 678000262}
   m_Father: {fileID: 514587906}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2037359947
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2037359945}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10a90088502218d429d337ead536174e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxAngularVel: 1
---- !u!54 &2037359948
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2037359945}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1001 &2118245108
 PrefabInstance:
   m_ObjectHideFlags: 0

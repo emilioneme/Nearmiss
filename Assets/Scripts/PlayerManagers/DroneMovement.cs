@@ -30,7 +30,7 @@ public class DroneMovement : MonoBehaviour
     [SerializeField] float maxSprintSpeed = 1;
     [SerializeField] float sprintIncrease = 1;
     [SerializeField] float sprintDecrease = 1;
-    float sprint = 0; // 0 to 1
+    [HideInInspector]public float sprint = 0; // 0 to 1
     Coroutine sprintRoutine = null;
     [SerializeField] AnimationCurve sprintCurve;
 
@@ -178,7 +178,11 @@ public class DroneMovement : MonoBehaviour
             return;
 
         lastTimeDashed = Time.time;
-        dashDirection = transform.rotation * direction.normalized; //set it wihtin class scope
+
+        if(direction.magnitude != 0)
+            dashDirection = transform.rotation * direction.normalized; //set it wihtin class scope
+        else 
+            dashDirection = transform.forward.normalized;
 
         if(DashRutine == null)
             DashRutine = StartCoroutine(DashCoroutine()); //takes direction from the classes scope
@@ -320,6 +324,7 @@ public class DroneMovement : MonoBehaviour
         this.StopSafely(ref DashRutine);
         this.StopSafely(ref sprintRoutine);
         this.StopSafely(ref thrillRoutine);
+        sprint = 0;
         cc.enabled = false;
         thrillPoints = 0;
     }

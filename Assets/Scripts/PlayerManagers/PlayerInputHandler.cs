@@ -13,6 +13,7 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] private UnityEvent OnRotateLeft;
     [SerializeField] private UnityEvent OnRotateRight;
     [SerializeField] private UnityEvent<Vector2> OnDash;     // direction intent (-1..1)
+    [SerializeField] private UnityEvent<Vector2> OnDashForward;
 
     [SerializeField] private UnityEvent OnSprintPressed;     // direction intent (-1..1)
     [SerializeField] private UnityEvent OnSprintReleased;     // direction intent (-1..1)
@@ -52,6 +53,7 @@ public class PlayerInputHandler : MonoBehaviour
     private InputAction rotateLeftAction;
     private InputAction rotateRightAction;
     private InputAction dashAction;
+    private InputAction dashForwardAction;
     private InputAction sprintAction;
 
     #region Set up
@@ -61,6 +63,7 @@ public class PlayerInputHandler : MonoBehaviour
         rotateLeftAction.Enable();
         rotateRightAction.Enable();
         dashAction.Enable();
+        dashForwardAction.Enable();
         sprintAction.Enable();
     }
     void DisabelActions()
@@ -69,6 +72,7 @@ public class PlayerInputHandler : MonoBehaviour
         rotateLeftAction.Disable();
         rotateRightAction.Disable();
         dashAction.Disable();
+        dashForwardAction.Disable();
         sprintAction.Disable();
     }
 
@@ -79,6 +83,7 @@ public class PlayerInputHandler : MonoBehaviour
         rotateRightAction = playerInput.actions["RotateRight"];
         dashAction = playerInput.actions["Dash"];
         sprintAction = playerInput.actions["Sprint"];
+        dashForwardAction = playerInput.actions["DashForward"];
     }
 
     private void OnEnable()
@@ -120,6 +125,9 @@ public class PlayerInputHandler : MonoBehaviour
         if (sprintAction.WasCompletedThisFrame())
             OnSprintReleased.Invoke();
 
+        if (dashForwardAction.IsPressed())
+            OnDashForward.Invoke(Vector3.zero);
+    
     }
 
     #region Control Scheme CHange

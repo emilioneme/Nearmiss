@@ -999,8 +999,8 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.45
-      value: 1.0009413
+      time: 0.74891967
+      value: 1.0033216
       inSlope: 0.009761942
       outSlope: 0.009761942
       tangentMode: 0
@@ -1116,7 +1116,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3424252737124397031}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.00000016826144, z: -1, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: -10.74}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1795,9 +1795,9 @@ MonoBehaviour:
   rt: {fileID: 8499950506930239205}
   camTransform: {fileID: 3632274432742203077}
   droneTransform: {fileID: 6394622754353006204}
-  minLagSpeed: 20
+  minLagSpeed: 1
   maxLagSpeed: 3
-  maxLagDistance: 1
+  maxLagDistance: 0.5
   distStrength: 10
 --- !u!1 &5075593940913405232
 GameObject:
@@ -2104,7 +2104,7 @@ Transform:
   m_GameObject: {fileID: 5909604393937184005}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5499878, z: -2}
+  m_LocalPosition: {x: 0, y: 0.38138962, z: -2.1488352}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2413,7 +2413,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 1.0023193, y: 9.68573}
+  m_AnchoredPosition: {x: 1.0023193, y: -77}
   m_SizeDelta: {x: 31.7235, y: 100.7873}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &6868936656276479381
@@ -3297,6 +3297,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 6243719523112130423}
+        m_TargetAssemblyTypeName: PlayerModelHandler, Assembly-CSharp
+        m_MethodName: DisableTrails
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   CrashScreen:
     m_PersistentCalls:
       m_Calls:
@@ -3366,6 +3378,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 6243719523112130423}
+        m_TargetAssemblyTypeName: PlayerModelHandler, Assembly-CSharp
+        m_MethodName: DisableTrails
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   PlayerSpawned:
     m_PersistentCalls:
       m_Calls:
@@ -3384,6 +3408,18 @@ MonoBehaviour:
       - m_Target: {fileID: 6069053146667210052}
         m_TargetAssemblyTypeName: PointsUIManager, Assembly-CSharp
         m_MethodName: UnHidePointsUI
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 6243719523112130423}
+        m_TargetAssemblyTypeName: PlayerModelHandler, Assembly-CSharp
+        m_MethodName: EnableTrails
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3417,7 +3453,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementData: {fileID: 0}
   cc: {fileID: 0}
-  flyingSpeed: 20
+  flyingSpeed: 25
   totalFlyingSpeedMultiplier: 1.2
   maxNosedieveSpeed: 10
   maxPointsSpeed: 20
@@ -3512,7 +3548,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   maxPointsForThrill: 500
-  dashCooldwon: 0.75
+  dashCooldwon: 0.6
   dashSpeed: 15
   dashDuration: 0.5
   isDashing: 0

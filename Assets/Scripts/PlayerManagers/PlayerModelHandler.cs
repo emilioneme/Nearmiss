@@ -89,4 +89,19 @@ public class PlayerModelHandler : MonoBehaviour
         transform.localRotation = Quaternion.Euler(Vector3.zero); //fixing its rotation before spawnign in cse player dashes and dies
     }
 
+    public void EnableTrails() 
+    {
+        foreach(TrailRenderer trail in PlayerModelContainer.TrailRenderers) 
+        {
+            trail.enabled = true;
+        }
+    }
+
+    public void DisableTrails()
+    {
+        foreach (TrailRenderer trail in PlayerModelContainer.TrailRenderers)
+        {
+            trail.enabled = false;
+        }
+    }
 }

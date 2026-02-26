@@ -7,12 +7,21 @@ public class CharacterSelectManager : MonoBehaviour
 {
     [Header("Characters")]
     [SerializeField] DroneData[] droneData;
-    int currentDrone = 0;
+    int currentDroneID = 0;
 
     [Header("RectTransforms")]
     [SerializeField] GameObject currentRT;
     [SerializeField] GameObject rightRT;
     [SerializeField] GameObject leftRT;
+
+    [Header("Circles")]
+    [SerializeField] Image leftCircle;
+    [SerializeField] Image rightCircle;
+    [SerializeField] Image currentCircle;
+
+    [SerializeField] Color selectedColor = Color.blue;
+    [SerializeField] Color normalColor = Color.white;
+    [SerializeField] Color lockedColor = Color.gray;
 
     [Header("Text")]
     [SerializeField] TMP_Text selecButtonText;
@@ -37,30 +46,54 @@ public class CharacterSelectManager : MonoBehaviour
 
     public void InitiateSelectionMenu() 
     {
-        currentDrone = SelectedDroneID();
+        currentDroneID = SelectedDroneID();
         UpdateSelectionMenu();
     }
 
     public void UpdateSelectionMenu()
     {
-        //current
-        if (SelectedDroneID() == currentDrone)
-            selecButtonText.alpha = .1f;
-        else
-            selecButtonText.alpha = 1f;
-
-        //Select
+        //Selected
         ReplaceMesh(ref selectCharacterPivot, SelectedDroneID());
 
-        //current
-        currentCharacterName.text = droneData[currentDrone].DroneName;
-        ReplaceMesh(ref currentCharacterPivot, currentDrone);
+        //Current
+        if (SelectedDroneID() == currentDroneID)
+        {
+            selecButtonText.alpha = .1f;
+            selecButtonText.text = "Selected";
+            currentCharacterName.color = selectedColor;
+        }
+        else
+        {
+            selecButtonText.alpha = 1;
+            selecButtonText.text = "Select";
+            currentCharacterName.color = normalColor;
+            selectButton.interactable = true;
+        }
+        currentCharacterName.text = droneData[currentDroneID].DroneName;
+        ReplaceMesh(ref currentCharacterPivot, currentDroneID);
 
-        //left
-        ReplaceMesh(ref leftCharacterPivot, LeftDrone());
+        ReplaceMesh(ref leftCharacterPivot, LeftDroneID());
+        
+        ReplaceMesh(ref rightCharacterPivot, RightDroneID());
 
-        //right
-        ReplaceMesh(ref rightCharacterPivot, RightDrone());
+        UpdateCircleColors();
+
+    }
+
+
+    void UpdateCircleColors()
+    {
+        // Reset all to normal first
+        currentCircle.color = normalColor;
+        rightCircle.color = normalColor;
+        leftCircle.color = normalColor;
+
+        if (SelectedDroneID() == currentDroneID)
+            currentCircle.color = selectedColor;
+        else if (SelectedDroneID() == LeftDroneID()) // This was correct
+            leftCircle.color = selectedColor;
+        else if (SelectedDroneID() == RightDroneID()) // FIX: Changed from LeftDroneID to RightDroneID
+            rightCircle.color = selectedColor;
     }
 
     void ReplaceMesh(ref GameObject pivot, int i) 
@@ -73,12 +106,12 @@ public class CharacterSelectManager : MonoBehaviour
 
     public void RightButton() 
     {
-        ButtonPressed(RightDrone());
+        ButtonPressed(RightDroneID());
     }
 
     public void LeftButton()
     {
-        ButtonPressed(LeftDrone());
+        ButtonPressed(LeftDroneID());
     }
 
     void ButtonPressed(int toDrone) 
@@ -94,7 +127,7 @@ public class CharacterSelectManager : MonoBehaviour
             .SetLoops(2, LoopType.Yoyo)
             .OnComplete(() =>
             {
-                currentDrone = toDrone; // left
+                currentDroneID = toDrone; // left
                 UpdateSelectionMenu();
                 rightButton.interactable = true;
                 leftButton.interactable = true;
@@ -114,19 +147,19 @@ public class CharacterSelectManager : MonoBehaviour
             .SetLoops(2, LoopType.Yoyo);
     }
 
-    int LeftDrone() 
+    int LeftDroneID() 
     {
-        return (currentDrone - 1 + droneData.Length) % droneData.Length;
+        return (currentDroneID - 1 + droneData.Length) % droneData.Length;
     }
 
-    int RightDrone()
+    int RightDroneID()
     {
-        return (currentDrone + 1) % droneData.Length;
+        return (currentDroneID + 1) % droneData.Length;
     }
 
     public void SelectCharacter()
     {
-        UserData.Instance.startDroneData = droneData[currentDrone];
+        UserData.Instance.startDroneData = droneData[currentDroneID];
         selectButton.interactable = false;
         rightButton.interactable = false;
         leftButton.interactable = false;

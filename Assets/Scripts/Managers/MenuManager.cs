@@ -11,6 +11,11 @@ public class MenuManager : MonoBehaviour
     [SerializeField] GameObject CharacterSelectionGO;
     [SerializeField] RectTransform CharacterSelectionRT;
 
+    private void Start()
+    {
+        if(CharacterSelectionGO.activeInHierarchy)
+            CharacterSelectionGO.SetActive(false);
+    }
 
     public void OpenCharacterSelection()
     {

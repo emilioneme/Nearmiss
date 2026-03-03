@@ -64,6 +64,7 @@ namespace eneme
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             LoadingCanvas.SetActive(false);
+            StopAllCoroutines();
             LoadingBar.fillAmount = .1f;
         }
     }

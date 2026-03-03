@@ -317,8 +317,8 @@ public class PointManager : MonoBehaviour
         if (UserData.Instance.personalHighScore >= totalPoints)
             return;
 
-        NewPersonalHighScore.Invoke(totalPoints);
         UserData.Instance.personalHighScore = totalPoints;
+        NewPersonalHighScore.Invoke(UserData.Instance.personalHighScore);
     }
     #endregion
 

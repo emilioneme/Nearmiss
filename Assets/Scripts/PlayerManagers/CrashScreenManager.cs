@@ -73,6 +73,7 @@ public class CrashScreenManager : MonoBehaviour
 
     public void GoToScene(string sceneName)
     {
+        DOTween.KillAll();
         SceneLoader.Instance.LoadScene(sceneName);
     }
 

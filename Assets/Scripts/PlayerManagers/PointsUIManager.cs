@@ -10,22 +10,33 @@ public class PointsUIManager : MonoBehaviour
     [SerializeField] GameObject PointsCanvas;
     //[SerializeField] GameObject ComboGO;
     [SerializeField] GameObject TotalPointsGO;
+    [SerializeField] GameObject HighScoreGO;
 
     [Header("Texts")]
     [SerializeField] TMP_Text TotalPointsText;
-    //[SerializeField] TMP_Text ComboNumText;
+    [SerializeField] TMP_Text HighScoreText;
 
     [Header("Circles")]
     //[SerializeField] Image ComboNumImage;
     //[SerializeField] Image TotalPointsCircle;
     [SerializeField] AnimationCurve CircleFillCurve;
 
+
+
     #region Securing
     public void PointsSecured(float points)
     {
+        TotalPointsGO.SetActive(true);
         TotalPointsText.text = Tools.ProcessFloat(points, 2);
-        DOBounceTween(ref TotalPointsGO, .5f, .25f);
+        DOBounceTween(ref TotalPointsGO, new Vector3(1.2f, 1.2f, 1.2f), .5f, .25f);
     }
+
+    public void UpdatePersonalHighScore()
+    {
+        HighScoreText.text = Tools.ProcessFloat(UserData.Instance.personalHighScore, 1);
+        DOBounceTween(ref HighScoreGO, new Vector3(0.66f, 0.66f, 0.66f), .5f, .25f);
+    }
+
     #endregion
 
     #region Totalpoints
@@ -45,6 +56,7 @@ public class PointsUIManager : MonoBehaviour
 
     public void HidePointsUI() 
     {
+        TotalPointsGO.SetActive(false);
         PointsCanvas.transform.localScale = Vector3.one;
         PointsCanvas.transform.DOKill();
         PointsCanvas.transform
@@ -55,6 +67,7 @@ public class PointsUIManager : MonoBehaviour
 
     public void UnHidePointsUI()
     {
+        TotalPointsGO.SetActive(true);
         PointsCanvas.SetActive(true);
         ResetText();
 
@@ -66,14 +79,15 @@ public class PointsUIManager : MonoBehaviour
 
     public void ResetText() 
     {
-        TotalPointsText.text = " ";
+        TotalPointsText.text = "0";
+        TotalPointsGO.SetActive(false);
     }
 
     #region Tools
-    public void DOBounceTween(ref GameObject GO, float toScale, float duration, Ease easeType = Ease.InOutSine)
+    public void DOBounceTween(ref GameObject GO, Vector3 fromScale, float toScale, float duration, Ease easeType = Ease.InOutSine)
     {
         GO.transform.DOKill();
-        GO.transform.localScale = Vector3.one;
+        GO.transform.localScale = fromScale;
         GO.transform
             .DOScale(toScale, duration)
             .SetEase(easeType)

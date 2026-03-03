@@ -10,6 +10,8 @@ public class PlayerUIManager : MonoBehaviour
 {
     [SerializeField] GameObject CanvasGO;
 
+    [SerializeField] TMP_Text SpeedometerText;
+
     #region Pause
     public void Paused() 
     {
@@ -21,5 +23,10 @@ public class PlayerUIManager : MonoBehaviour
         CanvasGO.SetActive(true);
     }
     #endregion
+
+    private void Update()
+    {
+        SpeedometerText.text = Tools.ProcessFloat(UserData.Instance.droneVelocity.magnitude, 1);
+    }
 
 }

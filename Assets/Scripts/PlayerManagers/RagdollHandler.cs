@@ -39,9 +39,4 @@ public class RagdollHandler : MonoBehaviour
         rb.AddForce(force * innitialForceStrength, ForceMode.Impulse);
         rb.AddTorque(force * innitialRotationStrength, ForceMode.Impulse);
     }
-
-    private void OnDestroy()
-    {
-        Destroy(Instantiate(destroyParticles, transform.position, Quaternion.identity), destroyParticlesLifetime);
-    }
 }

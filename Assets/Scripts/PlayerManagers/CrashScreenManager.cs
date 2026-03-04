@@ -19,12 +19,23 @@ public class CrashScreenManager : MonoBehaviour
     [SerializeField]
     TMP_Text personalScoreText;
 
+    [SerializeField]
+    GameObject highScoreGO;
+    [SerializeField]
+    GameObject personalScoreGO;
+
+    Vector3 startHighScoreScale;
+    Vector3 startScoreScale;
+
     [SerializeField] Camera cam;
 
     public void Start()
     {
         UpdateHighScore();
         UpdatePersonalHighScore();
+
+        startHighScoreScale = highScoreGO.transform.localScale;
+        startScoreScale = personalScoreGO.transform.localScale;
     }
 
     public void UpdateHighScore() 
@@ -87,4 +98,23 @@ public class CrashScreenManager : MonoBehaviour
         SettingsManager.Instance.CloseSettings();
     }
 
+    public void HighScoreBounce() 
+    {
+        DOBounceTween(ref highScoreGO, startHighScoreScale, .5f, .25f);
+    }
+
+    public void PersonalScoreBounce()
+    {
+        DOBounceTween(ref personalScoreGO, startScoreScale, .5f, .25f);
+    }
+
+    public void DOBounceTween(ref GameObject GO, Vector3 fromScale, float toScale, float duration, Ease easeType = Ease.InOutSine)
+    {
+        GO.transform.DOKill();
+        GO.transform.localScale = fromScale;
+        GO.transform
+            .DOScale(toScale, duration)
+            .SetEase(easeType)
+            .SetLoops(2, LoopType.Yoyo);
+    }
 }

@@ -29,6 +29,8 @@ public class PauseManager : MonoBehaviour
     [SerializeField]
     Camera GlobalCamera;
 
+    public UnityEvent OnTogglePause;
+
     private void Start()
     {
         UnPause();
@@ -47,6 +49,7 @@ public class PauseManager : MonoBehaviour
             UnPause();
         else
             Pause();
+        OnTogglePause.Invoke();
     }
     public void UnPause()
     {
@@ -82,6 +85,7 @@ public class PauseManager : MonoBehaviour
     #endregion
     public void GoToScene(string sceneName)
     {
+        UnPause();
         SceneLoader.Instance.LoadScene(sceneName);
     }
 

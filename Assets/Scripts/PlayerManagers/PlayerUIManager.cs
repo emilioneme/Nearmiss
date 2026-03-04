@@ -29,4 +29,9 @@ public class PlayerUIManager : MonoBehaviour
         SpeedometerText.text = Tools.ProcessFloat(UserData.Instance.droneVelocity.magnitude, 1);
     }
 
+    public void OpenSettings() 
+    {
+        SettingsManager.Instance.OpenSettings();
+    }
+
 }

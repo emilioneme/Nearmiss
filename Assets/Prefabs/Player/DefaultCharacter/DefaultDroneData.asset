@@ -17,4 +17,4 @@ MonoBehaviour:
   NearmissData: {fileID: 0}
   Mesh: {fileID: 3089700977496306480, guid: fe0369225340981489266034e3e6604d, type: 3}
   Container: {fileID: 4914468441184511891, guid: cd4b3c0751e5d8f4ba122c137e1b18d1, type: 3}
-  DroneName: Default
+  DroneName: Classic

@@ -11,10 +11,24 @@ public class MenuManager : MonoBehaviour
     [SerializeField] GameObject CharacterSelectionGO;
     [SerializeField] RectTransform CharacterSelectionRT;
 
+    [Header("HighScore")]
+    [SerializeField] GameObject HighScoreGO;
+    [SerializeField] TMP_Text HighScoreText;
+
+    Vector3 startHighScoreScale;
+
     private void Start()
     {
         if(CharacterSelectionGO.activeInHierarchy)
             CharacterSelectionGO.SetActive(false);
+
+        startHighScoreScale = HighScoreGO.transform.localScale;
+        HighScoreText.text = Tools.ProcessFloat(UserData.Instance.personalHighScore, 2);
+    }
+
+    public void HighScoreBounce() 
+    {
+        DOBounceTween(ref HighScoreGO, startHighScoreScale, .5f, .25f);
     }
 
     public void OpenCharacterSelection()
@@ -50,5 +64,15 @@ public class MenuManager : MonoBehaviour
         SettingsManager.Instance.OpenSettings();
     }
     #endregion
+
+    public void DOBounceTween(ref GameObject GO, Vector3 fromScale, float toScale, float duration, Ease easeType = Ease.InOutSine)
+    {
+        GO.transform.DOKill();
+        GO.transform.localScale = fromScale;
+        GO.transform
+            .DOScale(toScale, duration)
+            .SetEase(easeType)
+            .SetLoops(2, LoopType.Yoyo);
+    }
 
 }

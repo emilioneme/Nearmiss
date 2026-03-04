@@ -16,7 +16,7 @@ RenderSettings:
   serializedVersion: 10
   m_Fog: 1
   m_FogColor: {r: 0.28773582, g: 0.6516666, b: 1, a: 1}
-  m_FogMode: 1
+  m_FogMode: 3
   m_FogDensity: 0.002
   m_LinearFogStart: 14.7
   m_LinearFogEnd: 710.01

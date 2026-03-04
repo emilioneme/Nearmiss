@@ -21,20 +21,27 @@ public class PointsUIManager : MonoBehaviour
     //[SerializeField] Image TotalPointsCircle;
     [SerializeField] AnimationCurve CircleFillCurve;
 
+    Vector3 startHighScoreGOScale = Vector3.one;
+    Vector3 startTotalScoreGOScale = Vector3.one;
 
+    private void Start()
+    {
+        startHighScoreGOScale = HighScoreGO.transform.localScale;
+        startTotalScoreGOScale = TotalPointsGO.transform.localScale;
+    }
 
     #region Securing
     public void PointsSecured(float points)
     {
         TotalPointsGO.SetActive(true);
         TotalPointsText.text = Tools.ProcessFloat(points, 2);
-        DOBounceTween(ref TotalPointsGO, new Vector3(1.2f, 1.2f, 1.2f), .5f, .25f);
+        DOBounceTween(ref TotalPointsGO, startTotalScoreGOScale, .5f, .25f);
     }
 
     public void UpdatePersonalHighScore()
     {
         HighScoreText.text = Tools.ProcessFloat(UserData.Instance.personalHighScore, 1);
-        DOBounceTween(ref HighScoreGO, new Vector3(0.66f, 0.66f, 0.66f), .5f, .25f);
+        DOBounceTween(ref HighScoreGO, startHighScoreGOScale, .5f, .25f);
     }
 
     #endregion

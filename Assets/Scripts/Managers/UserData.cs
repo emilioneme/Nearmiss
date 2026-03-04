@@ -26,6 +26,7 @@ public class UserData : MonoBehaviour
     int UserID;
     [SerializeField]
     public float personalHighScore = 0;
+    public float currentScore = 0;
 
     public DroneData startDroneData;
 
@@ -92,6 +93,7 @@ public class UserData : MonoBehaviour
     }
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        currentScore = 0;
         canPause = true;
         isPaused = false;
         isDead = false;

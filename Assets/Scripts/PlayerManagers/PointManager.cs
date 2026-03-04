@@ -233,6 +233,7 @@ public class PointManager : MonoBehaviour
         runningPoints += points * comboMultiplier;
         expectedPoints = totalPoints + runningPoints;
 
+        UserData.Instance.currentScore = runningPoints;
         UpdatedRunningPoints.Invoke(runningPoints);
     }
     #endregion

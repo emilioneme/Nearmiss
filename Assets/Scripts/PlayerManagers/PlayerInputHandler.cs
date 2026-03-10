@@ -88,6 +88,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OnEnable()
     {
+        playerInput.enabled = true;
         EnableActions();
 
         playerInput.onControlsChanged += OnControlsChanged;
@@ -98,6 +99,7 @@ public class PlayerInputHandler : MonoBehaviour
     {
         playerInput.onControlsChanged -= OnControlsChanged;
         DisabelActions();
+        playerInput.enabled = false;
     }
     #endregion
 
@@ -217,4 +219,6 @@ public class PlayerInputHandler : MonoBehaviour
         return v.normalized * Mathf.Clamp01(scaled);
     }
     #endregion
+
+
 }

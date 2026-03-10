@@ -45,11 +45,14 @@ public class PauseManager : MonoBehaviour
     Vector3 startHighScoreScale;
     Vector3 startScoreScale;
 
-
+    public UnityEvent OnPause;
+    public UnityEvent OnUnpause;
     public UnityEvent OnTogglePause;
 
     private void Start()
     {
+        startHighScoreScale = highScoreGO.transform.localScale;
+        startScoreScale = personalScoreGO.transform.localScale;
         UnPause();
     }
 
@@ -141,7 +144,8 @@ public class PauseManager : MonoBehaviour
         GO.transform
             .DOScale(toScale, duration)
             .SetEase(easeType)
-            .SetLoops(2, LoopType.Yoyo);
+            .SetLoops(2, LoopType.Yoyo)
+            .SetUpdate(true); 
     }
 
 }

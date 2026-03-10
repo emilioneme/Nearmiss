@@ -49,6 +49,8 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     GameObject PlayerModel;
 
+    bool PlayerEnabled;
+
     #region Managers
     [HideInInspector]
     public PlayerInputHandler playerInputHandler;
@@ -87,6 +89,9 @@ public class PlayerManager : MonoBehaviour
 
         if (droneData != null) 
             SetStartData(droneData);
+
+        PauseManager.Instance.OnPause.AddListener(onPause);
+        PauseManager.Instance.OnUnpause.AddListener(onUnpause);
     }
 
     public void SetStartData(DroneData droneData) 
@@ -181,8 +186,20 @@ public class PlayerManager : MonoBehaviour
     }
     #endregion
 
+    public void onPause() 
+    {
+        playerInputHandler.enabled = false;
+    }
+
+    public void onUnpause()
+    {
+        if(PlayerEnabled) playerInputHandler.enabled = true;
+    }
+
     void DisablePlayer() 
     {
+        PlayerEnabled = false;
+
         droneMovement.enabled = false;
         nearmissHandler.enabled = false;
         collisionHandler.enabled = false;
@@ -197,6 +214,8 @@ public class PlayerManager : MonoBehaviour
     }
     void EnablePlayer()
     {
+        PlayerEnabled = true;
+
         droneMovement.enabled = true;
         nearmissHandler.enabled = true;
         collisionHandler.enabled = true;

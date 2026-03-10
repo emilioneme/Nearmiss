@@ -10,7 +10,7 @@ public class FOVManager : MonoBehaviour
     [SerializeField] float fovSmoothSpeed = 8f;
     float currentFov;
 
-
+    [SerializeField] PlayerManager pm;
     [SerializeField] CinemachineCamera cam;
 
     //public void UpdateFOV()
@@ -21,7 +21,7 @@ public class FOVManager : MonoBehaviour
 
     public void UpdateFOV()
     {
-        float targetOffset = Mathf.Clamp(UserData.Instance.deltaVelocity * degreesPerSpeed, -maxFovOffset, maxFovOffset);
+        float targetOffset = Mathf.Clamp(pm.droneMovement.deltaVelocity * degreesPerSpeed, -maxFovOffset, maxFovOffset);
         float targetFov = baseFov + targetOffset;
         float fovT = 1f - Mathf.Exp(-fovSmoothSpeed * Time.deltaTime);
         currentFov = Mathf.Lerp(currentFov == 0 ? baseFov : currentFov, targetFov, fovT);

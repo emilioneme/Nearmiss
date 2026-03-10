@@ -42,6 +42,10 @@ public class PauseManager : MonoBehaviour
     [SerializeField]
     GameObject personalScoreGO;
 
+    [Header("Bools")]
+    public bool canPause = false;
+    public bool isPaused = false;
+
     Vector3 startHighScoreScale;
     Vector3 startScoreScale;
 
@@ -58,14 +62,14 @@ public class PauseManager : MonoBehaviour
 
     private void Update()
     {
-        if (Keyboard.current.escapeKey.wasReleasedThisFrame && UserData.Instance.canPause) 
+        if (Keyboard.current.escapeKey.wasReleasedThisFrame && canPause) 
             TogglePause();
     }   
 
     #region Pausing
     public void TogglePause() 
     {
-        if (UserData.Instance.isPaused)
+        if (isPaused)
             UnPause();
         else
             Pause();
@@ -73,7 +77,8 @@ public class PauseManager : MonoBehaviour
     }
     public void UnPause()
     {
-        UserData.Instance.isPaused = false;
+        OnUnpause.Invoke();
+        isPaused = false;
         pauseCanvas.SetActive(false);
 
         if(!UserData.Instance.isDead) 
@@ -81,14 +86,13 @@ public class PauseManager : MonoBehaviour
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
-        
         SettingsManager.Instance.CloseSettings();
         Time.timeScale = 1;
     }
 
     public void OpenedCrashScreen() 
     {
-        UserData.Instance.isPaused = false;
+        isPaused = false;
         SettingsManager.Instance.CloseSettings();
         pauseCanvas.SetActive(false);
         Time.timeScale = 1;
@@ -96,8 +100,9 @@ public class PauseManager : MonoBehaviour
 
     public void Pause()
     {
+        OnPause.Invoke();
         UpdateScoresText();
-        UserData.Instance.isPaused = true;
+        isPaused = true;
         pauseCanvas.SetActive(true);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;

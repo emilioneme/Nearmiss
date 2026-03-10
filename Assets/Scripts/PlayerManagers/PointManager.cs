@@ -7,6 +7,7 @@ using UnityEngine.Events;
 public class PointManager : MonoBehaviour
 {
     [SerializeField] PointData pointData;
+    [SerializeField] PlayerManager playerManager;
 
     [Header("Points")]
     public float startTotalPoints = 0;
@@ -226,7 +227,7 @@ public class PointManager : MonoBehaviour
     #region Points
     void UpdatePoints(float normalizedDistance, int numberOfHits, Vector3 origin, RaycastHit hit)
     {
-        float points = RunnignPointsCalculation(normalizedDistance, numberOfHits, UserData.Instance.droneVelocity.magnitude);
+        float points = RunnignPointsCalculation(normalizedDistance, numberOfHits, playerManager.droneMovement.droneVelocity.magnitude);
 
         CalculatedRayPoints.Invoke(points * comboMultiplier, normalizedDistance, origin, hit);
 

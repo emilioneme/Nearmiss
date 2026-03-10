@@ -46,19 +46,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UserName: eneme
   personalHighScore: 0
+  currentScore: 0
   startDroneData: {fileID: 11400000, guid: 21fd5af369cb74a438892a0e5042c0cd, type: 2}
   lookSensitivity: 0.5
   masterVolume: 0.5
-  musicVolume: 0.5
+  musicVolume: 0.1
   automaticRespawn: 0
   freezeBeforeSpawn: 1
-  canPause: 0
-  isPaused: 0
   isDead: 0
-  droneVelocity: {x: 0, y: 0, z: 0}
-  deltaVelocity: 0
-  avgVelocity: 0
-  averageAdaptSpeed: 1
   MusicVolumeChange:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: set_volume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

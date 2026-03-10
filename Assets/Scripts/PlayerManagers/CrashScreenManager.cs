@@ -65,7 +65,7 @@ public class CrashScreenManager : MonoBehaviour
         rt.anchoredPosition = new Vector2(canvasWidth, 0);
         rt.DOAnchorPos(Vector2.zero, .25f).SetEase(Ease.OutCubic);
 
-        UserData.Instance.canPause = false;
+        PauseManager.Instance.canPause = false;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
@@ -77,7 +77,7 @@ public class CrashScreenManager : MonoBehaviour
         rt.DOAnchorPos(new Vector2(-canvasWidth, 0), .25f).SetEase(Ease.OutCubic)
            .OnComplete(() => CrashPanel.SetActive(false));
 
-        UserData.Instance.canPause = true;
+        PauseManager.Instance.canPause = true;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }

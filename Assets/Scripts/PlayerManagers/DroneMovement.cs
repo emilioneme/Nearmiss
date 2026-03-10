@@ -64,6 +64,16 @@ public class DroneMovement : MonoBehaviour
     public bool allowSprint = true;
     public bool allowPointsSpeed = false;
 
+    [Header("Public")]
+    [SerializeReference]
+    public Vector3 droneVelocity = Vector3.zero;
+    [SerializeReference]
+    public float deltaVelocity = 0;
+    [SerializeReference]
+    public float avgVelocity = 0;
+    [SerializeField]
+    public float averageAdaptSpeed = 1;
+
 
     private void Awake()
     {
@@ -123,10 +133,10 @@ public class DroneMovement : MonoBehaviour
     {
         Vector3 vel =  GetForwardVelocity() + GetDashVelocity();
         float speed = vel.magnitude;
-        float avgT = 1f - Mathf.Exp(-UserData.Instance.averageAdaptSpeed * Time.deltaTime); 
-        UserData.Instance.avgVelocity = Mathf.Lerp(UserData.Instance.avgVelocity, speed, avgT);
-        UserData.Instance.deltaVelocity = speed - UserData.Instance.avgVelocity;
-        UserData.Instance.droneVelocity = vel;
+        float avgT = 1f - Mathf.Exp(-averageAdaptSpeed * Time.deltaTime); 
+        avgVelocity = Mathf.Lerp(avgVelocity, speed, avgT);
+        deltaVelocity = speed - avgVelocity;
+        droneVelocity = vel;
         return vel;
     }
     #endregion

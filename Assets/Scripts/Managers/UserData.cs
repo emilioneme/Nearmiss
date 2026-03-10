@@ -44,19 +44,9 @@ public class UserData : MonoBehaviour
     public bool automaticRespawn = false;
     public bool freezeBeforeSpawn;
 
-    public bool canPause = false;
-    public bool isPaused = false;
     public bool isDead = false;
 
-    [Header("In Game Stats")]
-    [SerializeReference]
-    public Vector3 droneVelocity = Vector3.zero;
-    [SerializeReference]
-    public float deltaVelocity = 0;
-    [SerializeReference]
-    public float avgVelocity = 0;
-    [SerializeField] 
-    public float averageAdaptSpeed = 1;
+    
 
     public UnityEvent<float> MusicVolumeChange;
 
@@ -94,8 +84,9 @@ public class UserData : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         currentScore = 0;
-        canPause = true;
-        isPaused = false;
+        PauseManager.Instance.canPause = true;
+        PauseManager.Instance.isPaused = false;
         isDead = false;
+        AudioListener.volume = masterVolume;
     }
 }

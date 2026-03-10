@@ -928,6 +928,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CanvasGO: {fileID: 5747174012559405633}
   SpeedometerText: {fileID: 8280336320706585610}
+  PlayerManager: {fileID: 258765007938475946}
 --- !u!114 &8538000186698567135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1035,6 +1036,7 @@ MonoBehaviour:
   degreesPerSpeed: 1
   maxFovOffset: 20
   fovSmoothSpeed: 8
+  pm: {fileID: 0}
   cam: {fileID: 4626820148296802279}
 --- !u!114 &8226055711315264092
 MonoBehaviour:
@@ -2208,7 +2210,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3424252737124397031}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.00000016826144, z: -1, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10.74}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2620,7 +2622,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.3443396, g: 0.8277283, b: 1, a: 0.85882354}
+  m_Color: {r: 0, g: 0.3045111, b: 0.8301887, a: 0.85882354}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3578,7 +3580,7 @@ Transform:
   m_GameObject: {fileID: 5909604393937184005}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.38138962, z: -2.1488352}
+  m_LocalPosition: {x: 0, y: 0.5499878, z: -2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5409,6 +5411,10 @@ MonoBehaviour:
   allowThrill: 0
   allowSprint: 1
   allowPointsSpeed: 1
+  droneVelocity: {x: 0, y: 0, z: 0}
+  deltaVelocity: 0
+  avgVelocity: 0
+  averageAdaptSpeed: 1
 --- !u!114 &8714170458392586884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5547,6 +5553,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointData: {fileID: 0}
+  playerManager: {fileID: 258765007938475946}
   startTotalPoints: 0
   startRunningPoints: 0
   startExpectedPoints: 0

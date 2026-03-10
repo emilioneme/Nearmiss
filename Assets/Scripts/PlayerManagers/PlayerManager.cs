@@ -33,7 +33,7 @@ public class PlayerManager : MonoBehaviour
 
     [Header("Events")]
     [SerializeField]
-    UnityEvent PlayerDied; //freeze duration
+    UnityEvent PlayerDied;
 
     [SerializeField]
     UnityEvent CrashScreen;
@@ -92,6 +92,10 @@ public class PlayerManager : MonoBehaviour
 
         PauseManager.Instance.OnPause.AddListener(onPause);
         PauseManager.Instance.OnUnpause.AddListener(onUnpause);
+
+        PlayerDied.AddListener(MusicManager.Instance.onCrash);
+        PlayerSpawned.AddListener(MusicManager.Instance.onSpawn);
+
     }
 
     public void SetStartData(DroneData droneData) 

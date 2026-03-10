@@ -12,6 +12,8 @@ public class PlayerUIManager : MonoBehaviour
 
     [SerializeField] TMP_Text SpeedometerText;
 
+    [SerializeField] PlayerManager PlayerManager;
+
     #region Pause
     public void Paused() 
     {
@@ -26,7 +28,7 @@ public class PlayerUIManager : MonoBehaviour
 
     private void Update()
     {
-        SpeedometerText.text = Tools.ProcessFloat(UserData.Instance.droneVelocity.magnitude, 1);
+        SpeedometerText.text = Tools.ProcessFloat(PlayerManager.droneMovement.droneVelocity.magnitude, 1);
     }
 
     public void OpenSettings() 

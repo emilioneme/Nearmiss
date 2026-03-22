@@ -77,8 +77,8 @@ public class MusicManager : MonoBehaviour
         Music.volume = UserData.Instance.musicVolume;
         UserData.Instance.MusicVolumeChange.AddListener(onMusicVolumeChange);
 
-        PauseManager.Instance.OnPause.AddListener(onPause);
-        PauseManager.Instance.OnUnpause.AddListener(onUnPause);
+        if(PauseManager.Instance) PauseManager.Instance.OnPause.AddListener(onPause);
+        if(PauseManager.Instance) PauseManager.Instance.OnUnpause.AddListener(onUnPause);
 
         if (scene.name == "MenuScene") LerpPitch(menuPitch);
         else LerpPitch(gamePitch);

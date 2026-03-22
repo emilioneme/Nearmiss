@@ -40,6 +40,7 @@ public class PointsUIManager : MonoBehaviour
 
     public void UpdatePersonalHighScore()
     {
+        Debug.Log("Perosnal score");
         HighScoreText.text = Tools.ProcessFloat(UserData.Instance.personalHighScore, 1);
         DOBounceTween(ref HighScoreGO, startHighScoreGOScale, .5f, .25f);
     }

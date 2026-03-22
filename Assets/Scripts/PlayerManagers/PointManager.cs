@@ -74,7 +74,6 @@ public class PointManager : MonoBehaviour
     [SerializeField] UnityEvent<float, RaycastHit> UpdatedNumberOfSwerves; //swerves and hit
 
     [Header("HighScore")]
-    [SerializeField] UnityEvent<float> NewHighScore;
     [SerializeField] UnityEvent<float> NewPersonalHighScore;
 
     [Header("Other")]
@@ -298,22 +297,11 @@ public class PointManager : MonoBehaviour
         UpdatedTotalPoints.Invoke(totalPoints);
 
         PersonalHighSchoreCheck();
-        HighSchoreCheck();
-
         ResetRunPoints();
     }
     #endregion
 
     #region HighScore
-    void HighSchoreCheck()
-    {
-        //if (GameManager.Instance.highScore >= totalPoints)
-            return;
-
-        //NewHighScore.Invoke(totalPoints);
-        //GameManager.Instance.highScore = totalPoints;
-        //GameManager.Instance.highScorer = UserData.Instance.UserName;
-    }
     void PersonalHighSchoreCheck()
     {
         if (UserData.Instance.personalHighScore >= totalPoints)

@@ -100,6 +100,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: dart
       objectReference: {fileID: 0}
+    - target: {fileID: 2940240394619216861, guid: 962b7a70e126a754094c3e89901326a0, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

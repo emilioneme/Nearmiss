@@ -995,7 +995,7 @@ MonoBehaviour:
   TotalPointsGO: {fileID: 8908917712433015089}
   HighScoreGO: {fileID: 4407342749345948004}
   TotalPointsText: {fileID: 8524537365371121813}
-  HighScoreText: {fileID: 158193236019221617}
+  HighScoreText: {fileID: 8569116768200017133}
   CircleFillCurve:
     serializedVersion: 2
     m_Curve:
@@ -2577,7 +2577,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &154554109476132050
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5788,26 +5788,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  NewHighScore:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2800100267976509757}
-        m_TargetAssemblyTypeName: CrashScreenManager, Assembly-CSharp
-        m_MethodName: UpdateHighScore
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   NewPersonalHighScore:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2800100267976509757}
-        m_TargetAssemblyTypeName: CrashScreenManager, Assembly-CSharp
+      - m_Target: {fileID: 6069053146667210052}
+        m_TargetAssemblyTypeName: PointsUIManager, Assembly-CSharp
         m_MethodName: UpdatePersonalHighScore
         m_Mode: 1
         m_Arguments:
@@ -5818,8 +5803,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 6069053146667210052}
-        m_TargetAssemblyTypeName: PointsUIManager, Assembly-CSharp
+      - m_Target: {fileID: 2800100267976509757}
+        m_TargetAssemblyTypeName: CrashScreenManager, Assembly-CSharp
         m_MethodName: UpdatePersonalHighScore
         m_Mode: 1
         m_Arguments:

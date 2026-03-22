@@ -84,8 +84,8 @@ public class UserData : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         currentScore = 0;
-        PauseManager.Instance.canPause = true;
-        PauseManager.Instance.isPaused = false;
+        if(PauseManager.Instance) PauseManager.Instance.canPause = true;
+        if (PauseManager.Instance) PauseManager.Instance.isPaused = false;
         isDead = false;
         AudioListener.volume = masterVolume;
     }

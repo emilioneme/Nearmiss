@@ -77,7 +77,7 @@ public class SettingsManager : MonoBehaviour
 
     public void SetMusic()
     {
-        UserData.Instance.ChangeMusicVolume(volumeSlider.value);
+        UserData.Instance.ChangeMusicVolume(musicSlider.value);
         UserData.Instance.SaveData();
     }
 

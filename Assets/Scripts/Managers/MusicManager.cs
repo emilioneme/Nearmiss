@@ -69,20 +69,19 @@ public class MusicManager : MonoBehaviour
 
     public void onMusicVolumeChange(float vol) 
     {
+        Debug.Log("Music Volume Change: " + vol);
         Music.volume = vol;
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         Music.volume = UserData.Instance.musicVolume;
-        UserData.Instance.MusicVolumeChange.AddListener(onMusicVolumeChange);
 
         if(PauseManager.Instance) PauseManager.Instance.OnPause.AddListener(onPause);
         if(PauseManager.Instance) PauseManager.Instance.OnUnpause.AddListener(onUnPause);
 
         if (scene.name == "MenuScene") LerpPitch(menuPitch);
         else LerpPitch(gamePitch);
-       
     }
 
 

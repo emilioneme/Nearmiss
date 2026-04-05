@@ -29,7 +29,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 1.3900001, z: -6.5860004}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2537683327402555403}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2328613598138408059
@@ -44,22 +45,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2511b8160a5cc4c479b329461c7513a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UserName: eneme
   personalHighScore: 0
+  personalHighScoreKey: HighScore
   currentScore: 0
   startDroneData: {fileID: 11400000, guid: 21fd5af369cb74a438892a0e5042c0cd, type: 2}
   lookSensitivity: 0.5
+  lookSensitivityKey: LookSensitivity
   masterVolume: 0.5
+  masterVolumeKey: MasterVolume
   musicVolume: 0.1
+  musicVolumeKey: MusicVolume
   automaticRespawn: 0
+  automaticRespawnKey: AutomaticRespawn
   freezeBeforeSpawn: 1
+  freezeBeforeSpawnKey: FreezeBeforeSpawn
   isDead: 0
   MusicVolumeChange:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: set_volume
+      - m_Target: {fileID: 6900027939180126743}
+        m_TargetAssemblyTypeName: MusicManager, Assembly-CSharp
+        m_MethodName: onMusicVolumeChange
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -69,3 +75,76 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1001 &6934318240486377973
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8267916591403750055}
+    m_Modifications:
+    - target: {fileID: 4831249942333977086, guid: aa7622be0aea2cc4786cbf66961c190a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 382.1632
+      objectReference: {fileID: 0}
+    - target: {fileID: 4831249942333977086, guid: aa7622be0aea2cc4786cbf66961c190a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 85.27287
+      objectReference: {fileID: 0}
+    - target: {fileID: 4831249942333977086, guid: aa7622be0aea2cc4786cbf66961c190a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 340.15826
+      objectReference: {fileID: 0}
+    - target: {fileID: 4831249942333977086, guid: aa7622be0aea2cc4786cbf66961c190a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4831249942333977086, guid: aa7622be0aea2cc4786cbf66961c190a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4831249942333977086, guid: aa7622be0aea2cc4786cbf66961c190a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4831249942333977086, guid: aa7622be0aea2cc4786cbf66961c190a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4831249942333977086, guid: aa7622be0aea2cc4786cbf66961c190a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4831249942333977086, guid: aa7622be0aea2cc4786cbf66961c190a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4831249942333977086, guid: aa7622be0aea2cc4786cbf66961c190a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4875345289646648167, guid: aa7622be0aea2cc4786cbf66961c190a, type: 3}
+      propertyPath: m_Name
+      value: MusicManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: aa7622be0aea2cc4786cbf66961c190a, type: 3}
+--- !u!4 &2537683327402555403 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4831249942333977086, guid: aa7622be0aea2cc4786cbf66961c190a, type: 3}
+  m_PrefabInstance: {fileID: 6934318240486377973}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6900027939180126743 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4610128463379688418, guid: aa7622be0aea2cc4786cbf66961c190a, type: 3}
+  m_PrefabInstance: {fileID: 6934318240486377973}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c88cd54cba5c9af408e30901e91c154d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MusicManager

@@ -309,6 +309,7 @@ public class PointManager : MonoBehaviour
 
         UserData.Instance.personalHighScore = totalPoints;
         NewPersonalHighScore.Invoke(UserData.Instance.personalHighScore);
+        UserData.Instance.SaveData();
     }
     #endregion
 

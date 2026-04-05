@@ -1,8 +1,6 @@
 using DG.Tweening;
 using eneme;
 using TMPro;
-using TMPro.EditorUtilities;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class CrashScreenManager : MonoBehaviour

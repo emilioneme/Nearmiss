@@ -72,17 +72,20 @@ public class SettingsManager : MonoBehaviour
     public void SetVolume() 
     {
         UserData.Instance.ChangeMasterVolume(volumeSlider.value);
+        UserData.Instance.SaveData();
     }
 
     public void SetMusic()
     {
         UserData.Instance.ChangeMusicVolume(volumeSlider.value);
+        UserData.Instance.SaveData();
     }
 
     //Mouse Sense
     public void SetLookSensitivity()
     {
         UserData.Instance.lookSensitivity = lookSensSlider.value;
+        UserData.Instance.SaveData();
     }
   
 
@@ -90,11 +93,13 @@ public class SettingsManager : MonoBehaviour
     public void SetRespawn() 
     {
         UserData.Instance.automaticRespawn = automaticRespawn.isOn;
+        UserData.Instance.SaveData();
     }
 
     public void SetFreezeRespawn()
     {
         UserData.Instance.freezeBeforeSpawn = freezeRespawn.isOn;
+        UserData.Instance.SaveData();
     }
     #endregion
 
